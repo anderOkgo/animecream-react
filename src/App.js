@@ -1,27 +1,21 @@
-import React from 'react';
-import Navbar from './components/Navbar';
-import './App.css';
-import Home from './components/pages/Home';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import Services from './components/pages/Services';
-import Products from './components/pages/Products';
-import ContactUs from './components/pages/ContactUs';
-import SignUp from './components/pages/SignUp';
-import Marketing from './components/pages/Marketing';
-import Consulting from './components/pages/Consulting';
+import "./App.css";
+import Sidebar from "./components/Sidebar";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Overview from "./pages/Overview";
+import { Reports, ReportsOne, ReportsTwo, ReportsThree } from "./pages/Reports";
+import Team from "./pages/Team";
 
 function App() {
   return (
     <Router>
-      <Navbar />
+      <Sidebar />
       <Switch>
-        <Route path='/' exact component={Home} />
-        <Route path='/services' component={Services} />
-        <Route path='/products' component={Products} />
-        <Route path='/contact-us' component={ContactUs} />
-        <Route path='/sign-up' component={SignUp} />
-        <Route path='/marketing' component={Marketing} />
-        <Route path='/consulting' component={Consulting} />
+        <Route path="/overview" exact component={Overview} />
+        <Route path="/reports" exact component={Reports} />
+        <Route path="/reports/reports1" exact component={ReportsOne} />
+        <Route path="/reports/reports2" exact component={ReportsTwo} />
+        <Route path="/reports/reports3" exact component={ReportsThree} />
+        <Route path="/team" exact component={Team} />
       </Switch>
     </Router>
   );
