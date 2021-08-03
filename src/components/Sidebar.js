@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import * as FaIcons from "react-icons/fa";
 import * as AiIcons from "react-icons/ai";
 import { SidebarData } from "./SidebarData";
+import { SidebarDataMain } from "./SidebarDataMain";
 import SubMenu from "./SubMenu";
 import { IconContext } from "react-icons/lib";
 
@@ -41,6 +42,12 @@ const SidebarWrap = styled.div`
   width: 100%;
 `;
 
+const FixBar = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+`;
+
 const Sidebar = () => {
   const [sidebar, setSidebar] = useState(false);
 
@@ -53,9 +60,11 @@ const Sidebar = () => {
           <NavIcon to="#">
             <FaIcons.FaBars onClick={showSidebar} />
           </NavIcon>
-          {SidebarData.map((item, index) => {
-            return <SubMenu item={item} key={index} />;
-          })}
+          <FixBar>
+            {SidebarDataMain.map((item, index) => {
+              return <SubMenu item={item} key={index} />;
+            })}
+          </FixBar>
         </Nav>
         <SidebarNav sidebar={sidebar}>
           <SidebarWrap>
