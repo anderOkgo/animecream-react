@@ -35,8 +35,8 @@ export default function CountDownEnd() {
         <tbody>
           <tr>
             <td>{timeTotal}</td>
-            <td>{timeNow.toFixed(4)}</td>
-            <td>{timeLeft.toFixed(4)}</td>
+            <td>{timeNow.toFixed(5)}</td>
+            <td>{timeLeft.toFixed(5)}</td>
           </tr>
         </tbody>
       </table>
