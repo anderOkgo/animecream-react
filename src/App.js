@@ -10,6 +10,7 @@ function App() {
     <Router>
       <Sidebar />
       <Switch>
+        <Route path="/" exact component={Overview} />
         <Route path="/principal" exact component={Overview} />
         <Route path="/reportes" exact component={Reports} />
         <Route path="/reportes/reportes1" exact component={ReportsOne} />
