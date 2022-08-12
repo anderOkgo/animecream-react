@@ -7,8 +7,8 @@ export default function CountDownEnd() {
 
   useEffect(() => {
     let id = setInterval(() => {
-      let dayIni = new Date("06/18/2021 00:00:00");
-      let dayEnd = new Date("01/31/2022 24:00:00");
+      let dayIni = new Date("03/14/2022 00:00:00");
+      let dayEnd = new Date("11/06/2022 24:00:00");
       let now = new Date();
       const calculateTime = (d1, d2) => Math.abs(d1 - d2) / (1000 * 3600 * 24);
 
