@@ -8,13 +8,4 @@ export const SidebarDataMain = [
 
     subNav: [],
   },
-  {
-    title: "Youtube",
-    path: "/anderinnervideo",
-    icon: "",
-    iconClosed: "",
-    iconOpened: "",
-
-    subNav: [],
-  },
 ];
