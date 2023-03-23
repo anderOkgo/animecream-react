@@ -12,23 +12,24 @@ const CrudApi = () => {
   const [loading, setLoading] = useState(false);
 
   let api = helpHttp();
-  let url = 'https://info.animecream.com/api/productions';
-  //console.log(url);
-
-  let opt = {
-    production_name: 'slayer',
-    production_number_chapters: '10,100',
-    production_description: 'mundo',
-    production_year: '1995,1998',
-    demographic_name: 'Shōnen',
-    genre_names: 'magia,Aventura',
-    limit: 2,
-  };
+  let url = 'https://info.animecream.com:/api/productions';
 
   useEffect(() => {
     setLoading(true);
+    let opt = {
+      method: 'POST',
+      body: {
+        production_name: 'slayer',
+        production_number_chapters: '10,100',
+        production_description: 'mundo',
+        production_year: '1995,1998',
+        demographic_name: 'Shōnen',
+        genre_names: 'magia,Aventura',
+        limit: 2,
+      },
+    };
     helpHttp()
-      .get(url, opt)
+      .post(url, opt)
       .then((res) => {
         console.log(res);
         if (!res.err) {
