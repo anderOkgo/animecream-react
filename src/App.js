@@ -1,25 +1,40 @@
-import "./App.css";
-import Sidebar from "./components/Sidebar";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Overview from "./pages/Overview";
-import { Reports, ReportsOne, ReportsTwo, ReportsThree } from "./pages/Reports";
-import Team from "./pages/Team";
+import './App.css';
+import Header from './Header';
+import CountDownEnd from './CountDownEnd';
+import CrudApi from './Components/CrudApi';
 
-function App() {
+import * as React from 'react';
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Unstable_Grid2';
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}));
+
+export default function BasicGrid() {
   return (
-    <Router>
-      <Sidebar />
-      <Switch>
-        <Route path="/" exact component={Overview} />
-        <Route path="/principal" exact component={Overview} />
-        <Route path="/reportes" exact component={Reports} />
-        <Route path="/reportes/reportes1" exact component={ReportsOne} />
-        <Route path="/reportes/reportes2" exact component={ReportsTwo} />
-        <Route path="/reportes/reportes3" exact component={ReportsThree} />
-        <Route path="/team" exact component={Team} />
-      </Switch>
-    </Router>
+    <Box sx={{ flexGrow: 1 }}>
+      <Grid container spacing={2}>
+        <Grid xs={12}>
+          <Header />
+        </Grid>
+        <Grid xs={8}>
+          <Item>
+            <CrudApi />
+          </Item>
+        </Grid>
+        <Grid xs={4}>
+          <Item>
+            <CountDownEnd />
+          </Item>
+        </Grid>
+      </Grid>
+    </Box>
   );
 }
-
-export default App;
