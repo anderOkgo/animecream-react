@@ -24,14 +24,14 @@ export default function BasicGrid() {
         <Grid xs={12}>
           <Header />
         </Grid>
+        <Grid xs={12}>
+          <Item>
+            <CountDownEnd />
+          </Item>
+        </Grid>
         <Grid xs={8}>
           <Item>
             <CrudApi />
-          </Item>
-        </Grid>
-        <Grid xs={4}>
-          <Item>
-            <CountDownEnd />
           </Item>
         </Grid>
       </Grid>
