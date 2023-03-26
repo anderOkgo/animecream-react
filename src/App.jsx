@@ -1,5 +1,5 @@
 import './App.css';
-import Header from './Header';
+import Header from './Header.jsx';
 import CountDownEnd from './CountDownEnd';
 import CrudApi from './Components/CrudApi';
 
@@ -29,7 +29,7 @@ export default function BasicGrid() {
             <CountDownEnd />
           </Item>
         </Grid>
-        <Grid xs={8}>
+        <Grid xs={12}>
           <Item>
             <CrudApi />
           </Item>
