@@ -9,6 +9,11 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Unstable_Grid2';
 
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
@@ -29,10 +34,13 @@ export default function BasicGrid() {
             <CountDownEnd />
           </Item>
         </Grid>
-        <Grid xs={12}>
+        <Grid xs={12} md={8}>
           <Item>
             <CrudApi />
           </Item>
+        </Grid>
+        <Grid xs={12} md={4}>
+          <Item>hola</Item>
         </Grid>
       </Grid>
     </Box>

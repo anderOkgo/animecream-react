@@ -10,24 +10,25 @@ const CrudApi = () => {
   const [dataToEdit, setDataToEdit] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  //const [opt, setOpt] = useState(false);
 
   let api = helpHttp();
-  let url = 'https://info.animecream.com:/api/productions';
 
   useEffect(() => {
-    setLoading(true);
+    let url = 'https://info.animecream.com:/api/productions';
     let opt = {
       method: 'POST',
       body: {
-        production_name: 'slayer',
-        production_number_chapters: '10,100',
-        production_description: 'mundo',
-        production_year: '1995,1998',
-        demographic_name: 'Shōnen',
-        genre_names: 'magia,Aventura',
-        limit: 2,
+        production_name: 'gpx',
+        production_number_chapters: '1,100',
+        production_description: '',
+        production_year: '1990,1999',
+        //demographic_name: '',
+        //genre_names: '',
+        limit: 20,
       },
     };
+    setLoading(true);
     helpHttp()
       .post(url, opt)
       .then((res) => {
@@ -41,7 +42,7 @@ const CrudApi = () => {
         }
         setLoading(false);
       });
-  }, [url]);
+  }, []);
 
   const createData = (data) => {
     //data.id = Date.now();
@@ -107,14 +108,14 @@ const CrudApi = () => {
 
   return (
     <div>
-      <h2>CRUD API</h2>
+      <h2></h2>
       <article className="grid-1-2">
-        <CrudForm
+        {/* <CrudForm
           createData={createData}
           updateData={updateData}
           dataToEdit={dataToEdit}
           setDataToEdit={setDataToEdit}
-        />
+        /> */}
         {loading && <Loader />}
         {error && <Message msg={`Error ${error.status}: ${error.statusText}`} bgColor="#dc3545" />}
         {db && <CrudTable data={db} setDataToEdit={setDataToEdit} deleteData={deleteData} />}
