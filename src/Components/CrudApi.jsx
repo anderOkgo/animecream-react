@@ -7,118 +7,60 @@ import Message from './Message';
 
 const CrudApi = () => {
   const [db, setDb] = useState(null);
-  const [dataToEdit, setDataToEdit] = useState(null);
   const [error, setError] = useState(null);
+  const [productions, setProductions] = useState();
+  const [years, setYears] = useState();
   const [loading, setLoading] = useState(false);
-  //const [opt, setOpt] = useState(false);
+  const [opt, setOpt] = useState({});
 
   let api = helpHttp();
 
+  /* opt = {
+    method: 'POST',
+    body: {
+      production_name: 'gpx',
+      production_number_chapters: '1,100',
+      production_description: '',
+      production_year: '1990,1999',
+      demographic_name: '',
+      genre_names: '',
+      limit: 20,
+    },
+  }; */
   useEffect(() => {
-    let url = 'https://info.animecream.com:/api/productions';
-    let opt = {
-      method: 'POST',
-      body: {
-        production_name: 'gpx',
-        production_number_chapters: '1,100',
-        production_description: '',
-        production_year: '1990,1999',
-        //demographic_name: '',
-        //genre_names: '',
-        limit: 20,
-      },
-    };
-    setLoading(true);
-    helpHttp()
-      .post(url, opt)
-      .then((res) => {
-        console.log(res);
-        if (!res.err) {
-          setDb(res);
-          setError(null);
-        } else {
-          setDb(null);
-          setError(res);
-        }
-        setLoading(false);
-      });
-  }, []);
+    const fetchData = async () => {
+      let urlProduction = 'https://info.animecream.com:/api/productions';
+      let urlProductionyears = 'https://info.animecream.com:/api/productions/years';
 
-  const createData = (data) => {
-    //data.id = Date.now();
-    console.log(data);
+      //console.log(artistUrl, songUrl);
 
-    let options = {
-      body: data,
-      headers: { 'content-type': 'application/json' },
+      //setLoading(true);
+      console.log(opt);
+
+      const [artistRes] = await Promise.all([
+        helpHttp().post(urlProduction, opt),
+        //helpHttp().get(urlProductionyears),
+      ]);
+
+      //console.log(artistRes, songRes);
+
+      setProductions(artistRes);
+      setDb(artistRes);
+      //setYears(songRes);
+      //setLoading(false);
     };
 
-    api.post(url, options).then((res) => {
-      console.log(res);
-      if (!res.err) {
-        setDb([...db, res]);
-      } else {
-        setError(res);
-      }
-    });
-  };
-
-  const updateData = (data) => {
-    let endpoint = `${url}/${data.id}`;
-    //console.log(endpoint);
-
-    let options = {
-      body: data,
-      headers: { 'content-type': 'application/json' },
-    };
-
-    api.put(endpoint, options).then((res) => {
-      //console.log(res);
-      if (!res.err) {
-        let newData = db.map((el) => (el.id === data.id ? data : el));
-        setDb(newData);
-      } else {
-        setError(res);
-      }
-    });
-  };
-
-  const deleteData = (id) => {
-    let isDelete = window.confirm(`¿Estás seguro de eliminar el registro con el id '${id}'?`);
-
-    if (isDelete) {
-      let endpoint = `${url}/${id}`;
-      let options = {
-        headers: { 'content-type': 'application/json' },
-      };
-
-      api.del(endpoint, options).then((res) => {
-        //console.log(res);
-        if (!res.err) {
-          let newData = db.filter((el) => el.id !== id);
-          setDb(newData);
-        } else {
-          setError(res);
-        }
-      });
-    } else {
-      return;
-    }
-  };
+    fetchData();
+  }, [opt]);
 
   return (
     <div>
       <h2></h2>
       <article className="grid-1-2">
-        {/* <CrudForm
-          createData={createData}
-          updateData={updateData}
-          dataToEdit={dataToEdit}
-          setDataToEdit={setDataToEdit}
-        /> */}
+        <CrudForm setOpt={setOpt} />
         {loading && <Loader />}
         {error && <Message msg={`Error ${error.status}: ${error.statusText}`} bgColor="#dc3545" />}
-        {db && <CrudTable data={db} setDataToEdit={setDataToEdit} deleteData={deleteData} />}
+        {db && <CrudTable data={db} years={years} />}
       </article>
     </div>
   );

@@ -1,21 +1,16 @@
 import React, { useState, useEffect } from 'react';
 
 const initailForm = {
-  name: '',
-  constellation: '',
-  id: null,
+  production_name: '',
+  limit: '',
 };
 
-const CrudForm = ({ createData, updateData, dataToEdit, setDataToEdit }) => {
+const CrudForm = ({ setOpt }) => {
   const [form, setForm] = useState(initailForm);
 
   useEffect(() => {
-    if (dataToEdit) {
-      setForm(dataToEdit);
-    } else {
-      setForm(initailForm);
-    }
-  }, [dataToEdit]);
+    setForm(initailForm);
+  }, []);
 
   const handleChange = (e) => {
     setForm({
@@ -27,36 +22,40 @@ const CrudForm = ({ createData, updateData, dataToEdit, setDataToEdit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!form.name || !form.constellation) {
+    if (!form.production_name || !form.limit) {
       alert('Datos incompletos');
       return;
     }
 
-    if (form.id === null) {
-      createData(form);
-    } else {
-      updateData(form);
-    }
+    setOpt({
+      method: 'POST',
+      body: form,
+    });
 
     handleReset();
   };
 
   const handleReset = (e) => {
     setForm(initailForm);
-    setDataToEdit(null);
   };
 
   return (
     <div>
-      <h3>{dataToEdit ? 'Editar' : 'Agregar'}</h3>
+      <h3>'Agregar'</h3>
       <form onSubmit={handleSubmit}>
-        <input type="text" name="name" placeholder="Nombre" onChange={handleChange} value={form.name} />
         <input
           type="text"
-          name="constellation"
+          name="production_name"
+          placeholder="Nombre"
+          onChange={handleChange}
+          value={form.production_name}
+        />
+        <input
+          type="text"
+          name="limit"
           placeholder="Constelación"
           onChange={handleChange}
-          value={form.constellation}
+          value={form.limit}
         />
         <input type="submit" value="Enviar" />
         <input type="reset" value="Limpiar" onClick={handleReset} />

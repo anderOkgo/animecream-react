@@ -30,9 +30,7 @@ export default function BasicGrid() {
           <Header />
         </Grid>
         <Grid xs={12}>
-          <Item>
-            <CountDownEnd />
-          </Item>
+          <Item>{/* <CountDownEnd /> */}</Item>
         </Grid>
         <Grid xs={12} md={8}>
           <Item>
