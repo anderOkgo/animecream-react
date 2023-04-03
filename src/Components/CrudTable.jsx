@@ -1,5 +1,6 @@
 import React from 'react';
 import CrudTableRow from './CrudTableRow';
+import ReactPaginate from 'react-paginate';
 
 const CrudTable = ({ data, setDataToEdit, deleteData }) => {
   return (

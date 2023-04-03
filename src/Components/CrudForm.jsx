@@ -41,22 +41,16 @@ const CrudForm = ({ setOpt }) => {
 
   return (
     <div>
-      <h3>'Agregar'</h3>
+      <h3>Search Method</h3>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
           name="production_name"
-          placeholder="Nombre"
+          placeholder="Name"
           onChange={handleChange}
           value={form.production_name}
         />
-        <input
-          type="text"
-          name="limit"
-          placeholder="Constelación"
-          onChange={handleChange}
-          value={form.limit}
-        />
+        <input type="text" name="limit" placeholder="Limit" onChange={handleChange} value={form.limit} />
         <input type="submit" value="Enviar" />
         <input type="reset" value="Limpiar" onClick={handleReset} />
       </form>
