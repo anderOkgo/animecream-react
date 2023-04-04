@@ -1,8 +1,8 @@
 import './App.css';
 import Header from './Header.jsx';
-import CountDownEnd from './CountDownEnd';
-import CrudApi from './Components/CrudApi';
-import YearsSidebar from './Components/YearsSidebar';
+import CountDownEnd from './Components/CountDownEnd';
+import CardInfo from './Components/CardInfo';
+import YearsSidebar from './Components/YearAside';
 
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
@@ -37,7 +37,7 @@ export default function BasicGrid() {
         </Grid>
         <Grid xs={12} md={8}>
           <Item>
-            <CrudApi />
+            <CardInfo />
           </Item>
         </Grid>
         <Grid xs={12} md={4}>

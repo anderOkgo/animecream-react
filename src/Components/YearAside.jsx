@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import { helpHttp } from '../helpers/helpHttp';
 
-const YearsSidebar = ({ da }) => {
+const YearAside = () => {
   const [years, setYears] = useState('');
 
   useEffect(() => {
@@ -13,7 +13,7 @@ const YearsSidebar = ({ da }) => {
     };
 
     fetchData();
-  }, [years]);
+  }, []);
 
   return (
     <div>
@@ -27,4 +27,4 @@ const YearsSidebar = ({ da }) => {
   );
 };
 
-export default YearsSidebar;
+export default YearAside;

@@ -5,7 +5,7 @@ const initailForm = {
   limit: '',
 };
 
-const CrudForm = ({ setOpt }) => {
+const SearchMethod = ({ setOpt }) => {
   const [form, setForm] = useState(initailForm);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const CrudForm = ({ setOpt }) => {
     e.preventDefault();
 
     if (!form.production_name || !form.limit) {
-      alert('Datos incompletos');
+      alert('Missing Data');
       return;
     }
 
@@ -51,11 +51,11 @@ const CrudForm = ({ setOpt }) => {
           value={form.production_name}
         />
         <input type="text" name="limit" placeholder="Limit" onChange={handleChange} value={form.limit} />
-        <input type="submit" value="Enviar" />
-        <input type="reset" value="Limpiar" onClick={handleReset} />
+        <input type="submit" value="Send" />
+        <input type="reset" value="Reset" onClick={handleReset} />
       </form>
     </div>
   );
 };
 
-export default CrudForm;
+export default SearchMethod;

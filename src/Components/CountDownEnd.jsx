@@ -28,8 +28,8 @@ export default function CountDownEnd() {
         <thead>
           <tr>
             <th>Total</th>
-            <th>Transcurridos</th>
-            <th>Restante</th>
+            <th>Elapsed</th>
+            <th>Remaining</th>
           </tr>
         </thead>
         <tbody>

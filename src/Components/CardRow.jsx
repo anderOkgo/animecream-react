@@ -8,12 +8,12 @@ import Typography from '@mui/material/Typography';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import PropTypes from 'prop-types';
-import './CrudTableRow.css';
+import './CardRow.css';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { Height } from '@mui/icons-material';
 
-export default function CrudTableRow({ el }) {
+export default function CardRow({ el }) {
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
