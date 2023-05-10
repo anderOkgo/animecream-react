@@ -7,8 +7,8 @@ const Card = ({ data }) => {
   return (
     <div>
       <h3>{cyfer().cy('anderson', 'clave')}</h3>
-      {data.data.length > 0 ? (
-        data.data.map((el) => <CardRow key={el.production_ranking_number} el={el} />)
+      {data.length > 0 ? (
+        data.map((el) => <CardRow key={el.production_ranking_number} el={el} />)
       ) : (
         <div>No Data</div>
       )}

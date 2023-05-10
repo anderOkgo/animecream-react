@@ -9,7 +9,8 @@ const YearAside = () => {
     const fetchData = async () => {
       let urlProductionyears = 'https://info.animecream.com:/api/productions/years';
       const [artistRes] = await Promise.all([helpHttp().get(urlProductionyears)]);
-      setYears(artistRes.data[0]);
+      console.log(artistRes[0]);
+      setYears(artistRes[0]);
     };
 
     fetchData();
