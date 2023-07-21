@@ -22,7 +22,7 @@
   background: #e5e5e5;
   cursor: pointer;
   font-weight: bold;
-  font-size: 23px;
+  font-size: 20px;
   color: #7f7f7f;
   transition: background 0.3s, color 0.3s;
   border: none;
@@ -56,7 +56,11 @@
   border-left: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
   border-right: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 0px 8px 8px 8px;
+}
+
+.panel:hover {
+  box-shadow: 0px 6px 6px #676767;
 }
 
 .radiotab:checked + .label + .panel {
@@ -95,6 +99,7 @@
 .tags {
   display: flex;
   flex-wrap: wrap;
+  cursor: pointer;
 }
 
 .tag {
@@ -105,6 +110,7 @@
   font-size: 12px;
   border-radius: 4px;
   white-space: nowrap;
+  color: #0f0f0f;
 }
 
 .tab-section p {
@@ -124,7 +130,7 @@
   .label {
     width: 50%;
     border-radius: 10px 10px 0 0;
-    border-bottom: 1px solid #ccc;
+    z-index: 100;
   }
 
   .tabtow {

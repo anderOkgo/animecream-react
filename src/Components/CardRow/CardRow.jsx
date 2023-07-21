@@ -97,7 +97,7 @@ export default function CardRow({ el }) {
           id={`tabtwo-${production_ranking_number}`}
         />
         <label className="label tabtow" htmlFor={`tabtwo-${production_ranking_number}`}>
-          Descrition
+          Description
         </label>
         <div className="panel" tabIndex={production_ranking_number}>
           <div id="section2" className="tab-section">
