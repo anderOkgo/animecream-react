@@ -1,9 +1,8 @@
 import React from 'react';
-import CardRow from './CardRow';
+import CardRow from './CardRow/CardRow';
 import cyfer from '../helpers/cyfer.js';
 
 const Card = ({ data }) => {
-  //console.log(cyfer().dcy('PTE9Mj02PTU8-Dw3PTE8NA==', 'clave'));
   return (
     <div>
       <h3>{cyfer().cy('anderson', 'clave')}</h3>

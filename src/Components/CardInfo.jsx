@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { helpHttp } from '../helpers/helpHttp';
 import SearchMethod from './SearchMethod';
 import Card from './Card';
-import Loader from './Loader';
+import Loader from './Loader/Loader';
 import Message from './Message';
 
 const CardInfo = () => {

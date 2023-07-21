@@ -1,0 +1,138 @@
+* {
+  box-sizing: border-box;
+}
+
+.card {
+  max-width: 900px;
+  padding: 0.5em;
+  margin: auto;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 auto 20px;
+  border-radius: 10px 10px 0 0;
+}
+
+.radiotab {
+  position: absolute;
+  opacity: 0;
+}
+
+.label {
+  width: 50%;
+  padding: 0.1em;
+  background: #e5e5e5;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 23px;
+  color: #7f7f7f;
+  transition: background 0.3s, color 0.3s;
+  border: none;
+  border-radius: 0;
+  text-align: center;
+}
+
+.label:hover {
+  background: #d8d8d8;
+}
+
+.label:active {
+  background: #ccc;
+}
+
+.radiotab:checked + .label {
+  background: #fff;
+  color: #000;
+  border-top: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-bottom: none;
+}
+
+.panel {
+  order: 99;
+  display: none;
+  padding: 10px 15px 15px;
+  background: #fff;
+  width: 100%;
+  border-left: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.radiotab:checked + .label + .panel {
+  display: block;
+}
+
+.section-content {
+  display: flex;
+  align-items: center;
+}
+
+.img-card {
+  min-width: 150px;
+  min-height: 230px;
+  width: 20%;
+  height: auto;
+  margin-right: 20px;
+  padding: 4px;
+  padding: 4px;
+  line-height: 1.42857143;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.section-details {
+  flex-grow: 1;
+  min-width: 200px;
+}
+
+.section-details + p {
+  font-size: 1em;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tag {
+  background-color: #ddd;
+  padding: 2px;
+  margin-right: 10px;
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.tab-section p {
+  text-align: justify;
+}
+
+.status {
+  display: none;
+}
+
+/* Large size */
+@media (min-width: 650px) {
+  .panel {
+    border-top: 1px solid #ccc;
+  }
+
+  .label {
+    width: 50%;
+    border-radius: 10px 10px 0 0;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .tabtow {
+    display: none;
+  }
+  .status {
+    display: block;
+  }
+}
