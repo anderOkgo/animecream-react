@@ -86,7 +86,6 @@
 
 .section-details {
   flex-grow: 1;
-  min-width: 200px;
 }
 
 .section-details + p {
@@ -136,8 +135,12 @@
   }
 }
 
-@media (min-width: 420px) {
+@media (min-width: 320px) {
   .section-content {
     flex-wrap: nowrap;
+  }
+
+  .img-card {
+    margin-right: 10px;
   }
 }
