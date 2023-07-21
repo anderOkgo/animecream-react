@@ -5,7 +5,6 @@ import cyfer from '../helpers/cyfer.js';
 const Card = ({ data }) => {
   return (
     <div>
-      <h3>{cyfer().cy('anderson', 'clave')}</h3>
       {data.length > 0 ? (
         data.map((el) => <CardRow key={el.production_ranking_number} el={el} />)
       ) : (

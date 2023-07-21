@@ -74,8 +74,8 @@ export default function CardRow({ el }) {
             <div className="section-content">
               <img src={`https://www.animecream.com${production_image_path}`} alt="Image" className="img-card" />
               <div className="section-details">
-                <h2>{production_name}</h2>
-                <p className="status">{production_description}</p>
+                <h2>{`#${production_ranking_number}. ${production_name}`}</h2>
+                <p className="production-desc">{production_description}</p>
                 <div className="tags">
                   <span className="tag">{`${production_number_chapters} episodes`}</span>
                   <span className="tag">{demographic_name}</span>
@@ -96,7 +96,7 @@ export default function CardRow({ el }) {
           type="radio"
           id={`tabtwo-${production_ranking_number}`}
         />
-        <label className="label tabtow" htmlFor={`tabtwo-${production_ranking_number}`}>
+        <label className="label tab-desc" htmlFor={`tabtwo-${production_ranking_number}`}>
           Description
         </label>
         <div className="panel" tabIndex={production_ranking_number}>
