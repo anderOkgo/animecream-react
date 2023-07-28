@@ -1,0 +1,39 @@
+/* CSS for the form container */
+.form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2em;
+}
+
+/* CSS for form elements */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.form-group input[type='text'],
+.form-group input[type='submit'],
+.form-group input[type='reset'] {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-group input[type='submit'],
+.form-group input[type='reset'] {
+  background-color: var(--main-color);
+  color: #fff;
+  cursor: pointer;
+}
+
+.form-group input[type='submit']:hover,
+.form-group input[type='reset']:hover {
+  background-color: var(--second-blue);
+}

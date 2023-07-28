@@ -4,6 +4,8 @@ import SearchMethod from './SearchMethod';
 import Card from './Card';
 import Loader from './Loader/Loader';
 import Message from './Message';
+import AuthService from '../services/auth.service';
+import Login from './Login/Login';
 
 const CardInfo = () => {
   const [db, setDb] = useState(null);
@@ -27,6 +29,7 @@ const CardInfo = () => {
     fetchData();
   }, [opt]);
 
+  const currentUser = AuthService.getCurrentUser();
   return (
     <div>
       <h2></h2>
@@ -34,7 +37,7 @@ const CardInfo = () => {
         <SearchMethod setOpt={setOpt} />
         {loading && <Loader />}
         {error && <Message msg={`Error ${error.status}: ${error.statusText}`} bgColor="#dc3545" />}
-        {db && <Card data={db} />}
+        {!currentUser ? <Login /> : db && <Card data={db} />}
       </article>
     </div>
   );
