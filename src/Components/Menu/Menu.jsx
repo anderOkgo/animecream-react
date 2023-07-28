@@ -25,7 +25,10 @@ const Menu = () => {
         </label>
         <div className="menu">
           <li>
-            <a href="https://finan.animecream.com/">Finan2</a>
+            <a href="https://cyfer.animecream.com/">Cyfer</a>
+          </li>
+          <li>
+            <a href="https://finan.animecream.com/">Finan</a>
           </li>
           <li>
             <a href="https://www.animecream.com/">Animecream</a>
