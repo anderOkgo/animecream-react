@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { helpHttp } from "../helpers/helpHttp";
+import { useState } from 'react';
+import helpHttp from '../helpers/helpHttp';
 
 export const useForm = (initialForm, validateForm) => {
   const [form, setForm] = useState(initialForm);
@@ -26,14 +26,14 @@ export const useForm = (initialForm, validateForm) => {
     setErrors(validateForm(form));
 
     if (Object.keys(errors).length === 0) {
-      alert("Enviando Formulario");
+      alert('Enviando Formulario');
       setLoading(true);
-      helpHttp()
-        .post("https://formsubmit.co/ajax/jonmircha@gmail.com", {
+      helpHttp
+        .post('https://formsubmit.co/ajax/jonmircha@gmail.com', {
           body: form,
           headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
           },
         })
         .then((res) => {

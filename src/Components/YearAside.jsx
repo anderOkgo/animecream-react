@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
-import { helpHttp } from '../helpers/helpHttp';
+import helpHttp from '../helpers/helpHttp';
 
 const YearAside = () => {
   const [years, setYears] = useState('');
@@ -8,7 +8,7 @@ const YearAside = () => {
   useEffect(() => {
     const fetchData = async () => {
       let urlProductionyears = 'https://info.animecream.com:/api/productions/years';
-      const [artistRes] = await Promise.all([helpHttp().get(urlProductionyears)]);
+      const [artistRes] = await Promise.all([helpHttp.get(urlProductionyears)]);
       console.log(artistRes[0]);
       setYears(artistRes[0]);
     };

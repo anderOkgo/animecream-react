@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { helpHttp } from '../helpers/helpHttp';
+import helpHttp from '../helpers/helpHttp';
 import SearchMethod from './SearchMethod';
 import Card from './Card';
 import Loader from './Loader/Loader';
@@ -14,13 +14,13 @@ const CardInfo = () => {
   const [loading, setLoading] = useState(false);
   const [opt, setOpt] = useState({});
 
-  let api = helpHttp();
+  let api = helpHttp;
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       let urlProduction = 'https://info.animecream.com:/api/productions';
-      const [productionsInfo] = await Promise.all([helpHttp().post(urlProduction, opt)]);
+      const [productionsInfo] = await Promise.all([helpHttp.post(urlProduction, opt)]);
       setProductions(productionsInfo);
       setDb(productionsInfo);
       setLoading(false);
