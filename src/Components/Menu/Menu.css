@@ -133,21 +133,20 @@ li {
   .menu {
     margin: 1em 0 0 0;
     background-color: var(--main-color);
-    opacity: 0%;
-    display: block;
+    opacity: 0;
     max-height: 0;
     position: absolute;
     right: 0;
     left: 0;
     text-align: center;
     padding: 16px 0;
-    transition: max-height 0.7s ease-out;
+    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
     z-index: -1;
   }
 
   #checkbox_toggle:checked ~ .menu {
     display: block;
-    opacity: 100%;
+    opacity: 1;
     max-height: 100%;
     z-index: 2;
   }
