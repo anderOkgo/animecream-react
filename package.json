@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "up": "call com/db-sync-FTP-both.bat"
+    "up": "call com/db-sync-FTP-both.bat",
+    "bup": "vite build & npm run up"
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",
