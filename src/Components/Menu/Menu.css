@@ -132,6 +132,7 @@ li {
 @media (max-width: 768px) {
   .menu {
     margin: 1em 0 0 0;
+    display: unset;
     background-color: var(--main-color);
     opacity: 0;
     max-height: 0;
@@ -140,8 +141,8 @@ li {
     left: 0;
     text-align: center;
     padding: 16px 0;
-    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
-    z-index: -1;
+    transition: max-height 0.5s ease-in-out, opacity 0.1s ease-in-out;
+    z-index: 0;
     overflow: hidden;
   }
 
@@ -149,6 +150,7 @@ li {
     display: block;
     opacity: 1;
     max-height: 100%;
+    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
     z-index: 2;
   }
 
