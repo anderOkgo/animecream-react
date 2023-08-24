@@ -37,7 +37,8 @@ const CardInfo = () => {
         <SearchMethod setOpt={setOpt} />
         {loading && <Loader />}
         {error && <Message msg={`Error ${error.status}: ${error.statusText}`} bgColor="#dc3545" />}
-        {!currentUser ? <Login /> : db && <Card data={db} />}
+        {/*  {!currentUser ? <Login /> : db && <Card data={db} />} */}
+        {db && <Card data={db} />}
       </article>
     </div>
   );

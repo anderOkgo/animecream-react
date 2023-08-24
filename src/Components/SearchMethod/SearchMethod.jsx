@@ -43,9 +43,10 @@ const SearchMethod = ({ setOpt }) => {
   return (
     <div className="form-container">
       <h3>Search Method</h3>
+      <hr />
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Name</label>
+          <label>Series Name</label>
           <input
             type="text"
             name="production_name"
