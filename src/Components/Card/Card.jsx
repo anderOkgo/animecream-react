@@ -1,6 +1,6 @@
 import React from 'react';
-import CardRow from './CardRow/CardRow';
-import cyfer from '../helpers/cyfer.js';
+import CardRow from '../CardRow/CardRow';
+import cyfer from '../../helpers/cyfer.js';
 
 const Card = ({ data }) => {
   return (

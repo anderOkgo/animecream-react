@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import helpHttp from '../helpers/helpHttp';
-import SearchMethod from './SearchMethod';
-import Card from './Card';
-import Loader from './Loader/Loader';
-import Message from './Message';
-import AuthService from '../services/auth.service';
-import Login from './Login/Login';
+import helpHttp from '../../helpers/helpHttp';
+import SearchMethod from '../SearchMethod/SearchMethod';
+import Card from '../Card/Card';
+import Loader from '../Loader/Loader';
+import Message from '../Message/Message';
+import AuthService from '../../services/auth.service';
+import Login from '../Login/Login';
 
 const CardInfo = () => {
   const [db, setDb] = useState(null);
