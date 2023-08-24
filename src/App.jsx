@@ -1,5 +1,5 @@
 import './App.css';
-import CardInfo from './Components/CardInfo';
+import CardInfo from './components/CardInfo';
 import Menu from './components/Menu/Menu';
 
 const App = () => {

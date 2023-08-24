@@ -19,7 +19,7 @@ const CardInfo = () => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      let urlProduction = 'https://info.animecream.com:/api/productions';
+      let urlProduction = 'https://info.animecream.com/api/series';
       const [productionsInfo] = await Promise.all([helpHttp.post(urlProduction, opt)]);
       setProductions(productionsInfo);
       setDb(productionsInfo);

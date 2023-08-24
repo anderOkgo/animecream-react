@@ -7,7 +7,7 @@ const YearAside = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      let urlProductionyears = 'https://info.animecream.com:/api/productions/years';
+      let urlProductionyears = 'https://info.animecream.com:/api/series/years';
       const [artistRes] = await Promise.all([helpHttp.get(urlProductionyears)]);
       console.log(artistRes[0]);
       setYears(artistRes[0]);
