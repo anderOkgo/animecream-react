@@ -33,6 +33,7 @@ export default function CardRow({ el }) {
               <img src={`https://www.animecream.com${production_image_path}`} alt="Image" className="img-card" />
               <div className="section-details">
                 <h2>{`#${production_ranking_number}. ${production_name}`}</h2>
+                <hr />
                 <p className="production-desc">{production_description}</p>
                 <div className="tags">
                   <span className="tag">{`${production_number_chapters} episodes`}</span>
@@ -60,6 +61,7 @@ export default function CardRow({ el }) {
         <div className="panel" tabIndex={production_ranking_number}>
           <div id="section2" className="tab-section">
             <h2>{production_name}</h2>
+            <br />
             <p>{production_description}</p>
           </div>
         </div>

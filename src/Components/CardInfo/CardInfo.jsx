@@ -10,7 +10,7 @@ import Login from '../Login/Login';
 const CardInfo = () => {
   const [db, setDb] = useState(null);
   const [error, setError] = useState(null);
-  const [productions, setProductions] = useState({});
+  const [productions, setProductions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [opt, setOpt] = useState({});
 

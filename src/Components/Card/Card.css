@@ -1,13 +1,9 @@
-.main-content {
-  padding-bottom: 10px;
-}
-
 .pagination-container {
   display: flex;
-  justify-content: start;
+  justify-content: center;
+  flex-wrap: wrap;
   align-items: center;
   margin-top: 20px;
-  position: fixed; /* or use 'position: absolute;' if you prefer */
   bottom: 0;
   left: 0;
   right: 0;
