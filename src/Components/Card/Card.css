@@ -1,9 +1,20 @@
+.main-content {
+  padding-bottom: 60px;
+}
+
 .pagination-container {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-flow: row wrap;
   margin-top: 20px;
+  /* position: fixed; /* or use 'position: absolute;' if you prefer */
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: transparent;
+  padding: 10px;
+  z-index: 2;
 }
 
 .pagination-button {

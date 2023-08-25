@@ -13,7 +13,7 @@ const Card = ({ data }) => {
   console.log(currentItems);
 
   return (
-    <div>
+    <div className="main-content" id="main-content">
       {currentItems.length > 0 ? (
         currentItems.map((el) => <CardRow key={el.production_ranking_number} el={el} />)
       ) : (
@@ -30,13 +30,14 @@ const Card = ({ data }) => {
         </button>
 
         {Array.from({ length: Math.ceil(data.length / itemsPerPage) }).map((_, index) => (
-          <button
+          <a
+            href="#main-content"
             key={index}
             onClick={() => setCurrentPage(index + 1)}
             className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
           >
             {index + 1}
-          </button>
+          </a>
         ))}
 
         <button
