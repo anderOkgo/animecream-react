@@ -19,34 +19,35 @@ const Card = ({ data }) => {
       ) : (
         <div>No Data</div>
       )}
-
-      <div className="pagination-container">
-        <button
-          onClick={() => setCurrentPage(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="pagination-button"
-        >
-          Previous
-        </button>
-
-        {Array.from({ length: Math.ceil(data.length / itemsPerPage) }).map((_, index) => (
+      <div className="paginatowrap">
+        <div className="pagination-container">
           <a
-            href="#main-content"
-            key={index}
-            onClick={() => setCurrentPage(index + 1)}
-            className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
+            onClick={() => setCurrentPage(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="pagination-button"
           >
-            {index + 1}
+            Previous
           </a>
-        ))}
 
-        <button
-          onClick={() => setCurrentPage(currentPage + 1)}
-          disabled={currentPage === Math.ceil(data.length / itemsPerPage)}
-          className="pagination-button"
-        >
-          Next
-        </button>
+          {Array.from({ length: Math.ceil(data.length / itemsPerPage) }).map((_, index) => (
+            <a
+              href="#main-content"
+              key={index}
+              onClick={() => setCurrentPage(index + 1)}
+              className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
+            >
+              {index + 1}
+            </a>
+          ))}
+
+          <a
+            onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={currentPage === Math.ceil(data.length / itemsPerPage)}
+            className="pagination-button"
+          >
+            Next
+          </a>
+        </div>
       </div>
       <br />
     </div>

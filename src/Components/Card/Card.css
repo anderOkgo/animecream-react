@@ -1,11 +1,10 @@
 .main-content {
-  padding-bottom: 60px;
+  padding-bottom: 10px;
 }
 
 .pagination-container {
-  margin: auto;
   display: flex;
-  justify-content: inherit;
+  justify-content: start;
   align-items: center;
   margin-top: 20px;
   position: fixed; /* or use 'position: absolute;' if you prefer */
@@ -19,6 +18,7 @@
 }
 
 .pagination-button {
+  display: inline;
   padding: 8px 16px;
   margin: 0;
   border: 1px solid #ccc;
