@@ -10,7 +10,7 @@ const Card = ({ data }) => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = data ? data.slice(indexOfFirstItem, indexOfLastItem) : [];
-  console.log(currentItems);
+  console.log(data);
 
   return (
     <div className="main-content" id="main-content">

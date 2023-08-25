@@ -1,7 +1,7 @@
 /* smallest screen first */
 .card {
   max-width: 900px;
-  padding: 0.5em;
+  padding: 1em;
   margin: auto;
 }
 
@@ -10,6 +10,7 @@
   flex-wrap: wrap;
   margin: 0 auto 20px;
   border-radius: 10px 10px 0 0;
+  font-family: ui-monospace;
 }
 
 .radiotab {
@@ -18,18 +19,18 @@
 }
 
 .label {
-  width: 50%;
-  padding: 0.3em;
-  background: #e5e5e5;
+  position: relative;
+  width: 7em;
+  padding: 0.7em;
   cursor: pointer;
   font-weight: bold;
-  font-size: 20px;
-  color: #7f7f7f;
+  font-size: 15px;
   transition: background 0.3s, color 0.3s;
   border: none;
   border-radius: 0;
   text-align: center;
   margin: 0;
+  left: 1em;
 }
 
 .label:hover {
@@ -47,22 +48,29 @@
   border-left: 1px solid #ccc;
   border-right: 1px solid #ccc;
   border-bottom: none;
+  z-index: 2;
 }
 
 .panel {
   order: 99;
   display: none;
-  padding: 10px 15px 15px;
+  padding: 1em;
   background: #fff;
   width: 100%;
   border-left: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
   border-right: 1px solid #ccc;
-  border-radius: 0px 0px 8px 8px;
+  border-radius: 0.5em;
+  margin-top: 0;
+  box-shadow: 1px 1px 15px #888888;
+  background-color: white;
+  transition: box-shadow 0.3s;
+  max-height: 295px;
+  min-height: 265px;
 }
 
 .panel:hover {
-  box-shadow: 0px 5px 5px #676767;
+  box-shadow: 0px 3px 3px var(--second-blue);
 }
 
 .radiotab:checked + .label + .panel {
