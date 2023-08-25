@@ -3,10 +3,10 @@
 }
 
 .pagination-container {
+  margin: auto;
   display: flex;
-  justify-content: center;
+  justify-content: inherit;
   align-items: center;
-  flex-flow: row wrap;
   margin-top: 20px;
   position: fixed; /* or use 'position: absolute;' if you prefer */
   bottom: 0;
@@ -15,6 +15,7 @@
   background-color: #f1f0f7;
   padding: 10px;
   z-index: 2;
+  overflow-x: auto;
 }
 
 .pagination-button {
@@ -23,6 +24,10 @@
   border: 1px solid #ccc;
   background-color: #f7f7f7;
   cursor: pointer;
+}
+
+.pagination-button:hover {
+  color: #007bff;
 }
 
 .pagination-button.active {
