@@ -13,7 +13,7 @@ const customFetch = async (endpoint, options) => {
   if (!options.body) delete options.body;
 
   setTimeout(() => controller.abort(), 5000);
-  console.log(options);
+  //console.log(options);
 
   try {
     const res = await fetch(endpoint, options);
