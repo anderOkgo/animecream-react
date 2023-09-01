@@ -57,7 +57,7 @@ const SearchMethod = ({ setOpt }) => {
         </div>
         <div className="form-group">
           <label>Limit</label>
-          <input type="text" name="limit" placeholder="Limit" onChange={handleChange} value={form.limit} />
+          <input type="number" name="limit" placeholder="Limit" onChange={handleChange} value={form.limit} />
         </div>
         <div className="form-group">
           <input type="submit" value="Send" />
