@@ -3,7 +3,8 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="https://www.animecream.com/img/android-icon-192x192.ico" />
+  <link rel="icon" type="image/svg+xml" href="./icon/android-icon-192x192.ico" />
+  <link rel="manifest" href="./manifest.json">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
   <meta name="theme-color" content="#0a4656">
@@ -13,6 +14,18 @@
 <body>
   <div id="root"></div>
   <script type="module" src="/src/main.jsx"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js', { scope: '/' })
+        .then(function (registration) {
+          console.log('Service Worker Registered');
+        });
+
+      navigator.serviceWorker.ready.then(function (registration) {
+        console.log('Service Worker Ready');
+      });
+    }
+  </script>
 </body>
 
 </html>
