@@ -5,7 +5,8 @@ import Card from '../Card/Card';
 import Loader from '../Loader/Loader';
 import Message from '../Message/Message';
 import AuthService from '../../services/auth.service';
-import './CardInfo.css';
+//import './CardInfo.css';
+
 const CardInfo = () => {
   const [db, setDb] = useState(null);
   const [error, setError] = useState(null);
@@ -30,21 +31,13 @@ const CardInfo = () => {
 
   const currentUser = AuthService.getCurrentUser();
   return (
-    <div>
-      <h2></h2>
-      <article className="grid-1-2">
-        <div className="search-method">
-          <SearchMethod setOpt={setOpt} />
-        </div>
-        {loading && <Loader />}
-        {error && <Message msg={`Error ${error.status}: ${error.statusText}`} bgColor="#dc3545" />}
-        {db && (
-          <div className="card">
-            <Card data={db} />
-          </div>
-        )}
-      </article>
-    </div>
+    <article className="grid-1-2">
+      <SearchMethod setOpt={setOpt} />
+      {loading && <Loader />}
+      {error && <Message msg={`Error ${error.status}: ${error.statusText}`} bgColor="#dc3545" />}
+      {/*  {!currentUser ? <Login /> : db && <Card data={db} />} */}
+      {db && <Card data={db} />}
+    </article>
   );
 };
 
