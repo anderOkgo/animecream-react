@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import CardRow from '../CardRow/CardRow';
-import cyfer from '../../helpers/cyfer.js';
 import './Card.css';
 
 const Card = ({ data }) => {

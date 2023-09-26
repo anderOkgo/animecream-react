@@ -5,8 +5,7 @@ import Card from '../Card/Card';
 import Loader from '../Loader/Loader';
 import Message from '../Message/Message';
 import AuthService from '../../services/auth.service';
-import Login from '../Login/Login';
-
+import './CardInfo.css';
 const CardInfo = () => {
   const [db, setDb] = useState(null);
   const [error, setError] = useState(null);
@@ -34,11 +33,16 @@ const CardInfo = () => {
     <div>
       <h2></h2>
       <article className="grid-1-2">
-        <SearchMethod setOpt={setOpt} />
+        <div className="search-method">
+          <SearchMethod setOpt={setOpt} />
+        </div>
         {loading && <Loader />}
         {error && <Message msg={`Error ${error.status}: ${error.statusText}`} bgColor="#dc3545" />}
-        {/*  {!currentUser ? <Login /> : db && <Card data={db} />} */}
-        {db && <Card data={db} />}
+        {db && (
+          <div className="card">
+            <Card data={db} />
+          </div>
+        )}
       </article>
     </div>
   );
