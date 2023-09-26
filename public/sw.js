@@ -1,14 +1,7 @@
 const VERSION = '1.1.17';
-const CACHE_NAME = `animecream R-${VERSION}`;
-const appfiles = [
-  `./index.html`,
-  `./assets/index-34b155b1.css`,
-  `./assets/index-c81047b8.js`,
-  `./manifest.json`,
-  `./sw.js`,
-  `./android-icon-192x192.ico`,
-];
-const offlinePage = '/offline.html';
+const CACHE_NAME = `animecream-${VERSION}`;
+const appfiles = [`./android-icon-192x192.ico`];
+const offlinePage = './offline.html';
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
@@ -23,25 +16,20 @@ self.addEventListener('install', (e) => {
 
 self.addEventListener('fetch', (e) => {
   e.respondWith(
-    caches.match(e.request).then((res) => {
-      if (res) {
-        // Return cached resource
-        return res;
-      }
-
-      // Try to fetch the resource from the network
-      return fetch(e.request)
+    caches.match(e.request).then(async (res) => {
+      if (res || false) if (res.type !== 'cors' || !res.url.includes(self.location.origin)) return res; // Return cached resource exept cors
+      return fetch(e.request) // Try to fetch the resource from the network
         .then((response) => {
-          // Clone the response to use it and store it in the cache
-          const responseClone = response.clone();
+          const responseClone = response.clone(); // Clone the response to use it and store it in the cache
           caches.open(CACHE_NAME).then((cache) => {
-            cache.put(e.request, responseClone);
+            if (e.request.method == 'GET') {
+              cache.put(e.request, responseClone);
+            }
           });
           return response;
         })
         .catch(() => {
-          // If fetching from network fails, return a fallback response
-          return caches.match(offlinePage);
+          return caches.match(offlinePage); // If fetching from network fails, return a fallback response
         });
     })
   );
