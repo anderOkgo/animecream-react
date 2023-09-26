@@ -18,12 +18,12 @@ const Menu = () => {
   return (
     <nav className="navbar">
       <div className="logo insetshadow">R Animecream</div>
-      <ul className="nav-links">
+      <div className="nav-links">
         <input type="checkbox" id="checkbox_toggle" />
         <label htmlFor="checkbox_toggle" className="hamburger">
           <span className="hamb-line"></span>
         </label>
-        <div className="menu">
+        <ul className="menu">
           <li>
             <a href="https://cyfer.animecream.com/">Cyfer</a>
           </li>
@@ -56,8 +56,8 @@ const Menu = () => {
               )}
             </ul>
           </li>
-        </div>
-      </ul>
+        </ul>
+      </div>
     </nav>
   );
 };

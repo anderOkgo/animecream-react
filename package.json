@@ -11,6 +11,7 @@
     "bup": "vite build & npm run up"
   },
   "dependencies": {
+    "@fontsource/roboto": "^5.0.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
