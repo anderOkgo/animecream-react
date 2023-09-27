@@ -30,6 +30,7 @@ export default function CardRow({ el }) {
           <div id="section1" className="tab-section">
             <div className="section-content">
               <img
+                fetchpriority="high"
                 width="140"
                 height="210"
                 src={`https://www.animecream.com${production_image_path}`}
