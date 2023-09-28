@@ -33,7 +33,7 @@ export default function CardRow({ el }) {
                 fetchpriority="high"
                 width="140"
                 height="210"
-                src={`https://www.animecream.com${production_image_path}`}
+                src={`.${production_image_path}`}
                 alt="Image"
                 className="img-card"
               />
