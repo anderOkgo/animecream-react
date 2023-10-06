@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import AuthService from '../../services/auth.service';
 import './Menu.css';
 
@@ -15,47 +15,64 @@ const Menu = () => {
     AuthService.logout();
   };
 
+  const menuItems = [
+    { label: 'Cyfer', url: 'https://cyfer.animecream.com/' },
+    { label: 'Finan', url: 'https://finan.animecream.com/' },
+    { label: 'Animecream', url: 'https://www.animecream.com/' },
+    { label: 'Nabu', url: 'https://nabu.animecream.com/' },
+    {
+      label: 'session',
+      url: '#',
+      child: [
+        { session: false, label: 'login', url: '/' },
+        { session: false, label: 'logout', url: '/', trigger: handleLogout },
+      ],
+    },
+  ];
+
   return (
     <nav className="navbar">
-      <div className="logo insetshadow">Animecream</div>
+      <div className="logo insetshadow">Finan</div>
       <div className="nav-links">
         <input type="checkbox" id="checkbox_toggle" />
         <label htmlFor="checkbox_toggle" className="hamburger">
           <span className="hamb-line"></span>
         </label>
         <ul className="menu">
-          <li>
-            <a href="https://cyfer.animecream.com/">Cyfer</a>
-          </li>
-          <li>
-            <a href="https://finan.animecream.com/">Finan</a>
-          </li>
-          <li>
-            <a href="https://www.animecream.com/">Animecream</a>
-          </li>
-          <li>
-            <a href="https://nabu.animecream.com/">Nabu</a>
-          </li>
-          <li className="services">
-            <a href="#">Session</a>
-            <ul className="dropdown">
-              {!currentUser ? (
-                <li className="nav-item">
-                  <a href="/" className="nav-link">
-                    Login
-                  </a>
-                </li>
-              ) : (
+          {menuItems.map((menuItem, index) => (
+            <React.Fragment key={index}>
+              {menuItem.child ? (
                 <>
-                  <li className="nav-item">
-                    <a href="/" className="nav-link" onClick={handleLogout}>
-                      Logout
-                    </a>
+                  <li key={menuItem.label} className="services">
+                    <a href={menuItem.url}>{menuItem.label}</a>
+                    <ul className="dropdown">
+                      {menuItem.child.map((subMenu) =>
+                        subMenu.session === true && currentUser ? (
+                          <li key={subMenu.label} className="nav-item">
+                            <a href={subMenu.url} className="nav-link" onClick={subMenu.trigger}>
+                              {subMenu.label}
+                            </a>
+                          </li>
+                        ) : (
+                          !subMenu.session && (
+                            <li key={subMenu.label} className="nav-item">
+                              <a href={subMenu.url} className="nav-link" onClick={subMenu?.trigger}>
+                                {subMenu.label}
+                              </a>
+                            </li>
+                          )
+                        )
+                      )}
+                    </ul>
                   </li>
                 </>
+              ) : (
+                <li key={menuItem.label} className="nav-item">
+                  <a href={menuItem.url}>{menuItem.label}</a>
+                </li>
               )}
-            </ul>
-          </li>
+            </React.Fragment>
+          ))}
         </ul>
       </div>
     </nav>
