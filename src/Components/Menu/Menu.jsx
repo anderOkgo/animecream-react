@@ -32,7 +32,7 @@ const Menu = () => {
 
   return (
     <nav className="navbar">
-      <div className="logo insetshadow">Finan</div>
+      <div className="logo insetshadow">Animecream</div>
       <div className="nav-links">
         <input type="checkbox" id="checkbox_toggle" />
         <label htmlFor="checkbox_toggle" className="hamburger">
