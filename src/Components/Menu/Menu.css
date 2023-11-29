@@ -8,7 +8,7 @@ li {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px;
+  padding: 15px;
   background-color: var(--main-color);
   color: var(--white);
   transition: max-height 0.5s ease-out;
@@ -31,7 +31,7 @@ li {
 }
 
 .menu li:hover {
-  color: var(--second-color);
+  color: var(--tertiary-color);
   border-radius: 5px;
   transition: 0.3s ease;
 }
@@ -76,7 +76,7 @@ li {
 }
 
 .hamburger {
-  color: var(--second-color);
+  color: var(--tertiary-color);
   display: none;
   font-size: 24px;
   user-select: none;
@@ -129,6 +129,10 @@ li {
   top: 0;
 }
 
+.icon-activity {
+  font-size: 18px;
+}
+
 @media (max-width: 768px) {
   .menu {
     margin: 1em 0 0 0;
@@ -142,7 +146,7 @@ li {
     text-align: center;
     padding: 16px 0;
     transition: max-height 0.5s ease-in-out, opacity 0.1s ease-in-out;
-    z-index: 0;
+    z-index: -1;
     overflow: hidden;
   }
 

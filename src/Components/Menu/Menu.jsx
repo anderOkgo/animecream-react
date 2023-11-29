@@ -1,42 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import AuthService from '../../services/auth.service';
+import React, { useEffect, useRef } from 'react';
+//import PropTypes from 'prop-types';
 import './Menu.css';
 
-const Menu = () => {
-  const [currentUser, setCurrentUser] = useState(undefined);
+const Menu = ({ init, proc, menuItems, title, currentUser, Status }) => {
+  const checkboxRef = useRef(null);
+  const spanRef = useRef(null);
   useEffect(() => {
-    const user = AuthService.getCurrentUser();
-    if (user) {
-      setCurrentUser(user);
-    }
+    const handleClick = (e) => {
+      if (checkboxRef.current == e.target || spanRef.current == e.target) {
+        checkboxRef.current.checked ? false : true;
+      } else if (e.target.closest('.navbar') !== null) {
+        //nothig to do
+      } else {
+        checkboxRef.current.checked = false;
+      }
+    };
+
+    document.addEventListener('click', handleClick);
+
+    return () => {
+      document.removeEventListener('click', handleClick);
+    };
   }, []);
-
-  const handleLogout = () => {
-    AuthService.logout();
-  };
-
-  const menuItems = [
-    { label: 'Cyfer', url: 'https://cyfer.animecream.com/' },
-    { label: 'Finan', url: 'https://finan.animecream.com/' },
-    { label: 'Animecream', url: 'https://www.animecream.com/' },
-    { label: 'Nabu', url: 'https://nabu.animecream.com/' },
-    {
-      label: 'session',
-      url: '#',
-      child: [
-        { session: false, label: 'login', url: '/' },
-        { session: false, label: 'logout', url: '/', trigger: handleLogout },
-      ],
-    },
-  ];
 
   return (
     <nav className="navbar">
-      <div className="logo insetshadow">Animecream</div>
       <div className="nav-links">
-        <input type="checkbox" id="checkbox_toggle" />
+        <input type="checkbox" id="checkbox_toggle" ref={checkboxRef} />
         <label htmlFor="checkbox_toggle" className="hamburger">
-          <span className="hamb-line"></span>
+          <span ref={spanRef} className="hamb-line"></span>
         </label>
         <ul className="menu">
           {menuItems.map((menuItem, index) => (
@@ -47,14 +39,15 @@ const Menu = () => {
                     <a href={menuItem.url}>{menuItem.label}</a>
                     <ul className="dropdown">
                       {menuItem.child.map((subMenu) =>
-                        subMenu.session === true && currentUser ? (
+                        subMenu.isSessionNeeded === true && currentUser ? (
                           <li key={subMenu.label} className="nav-item">
                             <a href={subMenu.url} className="nav-link" onClick={subMenu.trigger}>
                               {subMenu.label}
                             </a>
                           </li>
                         ) : (
-                          !subMenu.session && (
+                          !subMenu.isSessionNeeded &&
+                          !currentUser && (
                             <li key={subMenu.label} className="nav-item">
                               <a href={subMenu.url} className="nav-link" onClick={subMenu?.trigger}>
                                 {subMenu.label}
@@ -75,8 +68,23 @@ const Menu = () => {
           ))}
         </ul>
       </div>
+      <div className="logo insetshadow">
+        <span className="icon-activity">
+          <Status {...{ init, proc }} />
+        </span>
+        {title}
+      </div>
     </nav>
   );
 };
+
+/* Menu.propTypes = {
+  init: PropTypes.any.isRequired,
+  proc: PropTypes.any.isRequired,
+  menuItems: PropTypes.array.isRequired,
+  title: PropTypes.any.isRequired,
+  currentUser: PropTypes.any,
+  Status: PropTypes.any.isRequired,
+}; */
 
 export default Menu;

@@ -1,0 +1,6 @@
+{
+  "baseUrl": "https://info.animecream.com/",
+  "baseUrl_": "http://localhost:3001/",
+  "boot_timeout": 30000,
+  "defaul_fetch_request": 17000
+}

@@ -1,35 +1,53 @@
-const customFetch = async (endpoint, options) => {
-  var myHeaders = new Headers();
-  myHeaders.append('Authorization', options.token);
-  myHeaders.append('Content-Type', 'application/json');
+import set from '../helpers/set.json';
+
+const customFetch = async (endpoint, options = {}) => {
+  const defaultHeaders = {
+    Authorization: options.token,
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  };
 
   const controller = new AbortController();
-  options.signal = controller.signal;
+  const timeout = options.timeout || set.defaul_fetch_request;
 
+  options.signal = controller.signal;
   options.method = options.method || 'GET';
-  options.headers = options.headers ? { ...myHeaders, ...options.headers } : myHeaders;
+  options.headers = { ...defaultHeaders, ...options.headers };
 
   options.body = JSON.stringify(options.body) || false;
   if (!options.body) delete options.body;
 
-  setTimeout(() => controller.abort(), 7000);
-  //console.log(options);
+  setTimeout(() => controller.abort(), timeout);
 
-  try {
-    const res = await fetch(endpoint, options);
-    return await (res.ok
-      ? res.json()
-      : Promise.reject({
-          err: true,
-          status: res.status || '00',
-          statusText: res.statusText || 'Ocurrió un error',
-        }));
-  } catch (err) {
-    return err;
+  if (navigator.onLine) {
+    try {
+      const res = await fetch(endpoint, options);
+      return await (res.ok
+        ? res.json()
+        : Promise.reject({
+            err: true,
+            status: res.status || '00',
+            statusText: res.statusText || 'Ocurrió un error',
+          }));
+    } catch (err) {
+      console.log({ err });
+      return { err };
+    }
+  } else {
+    return {
+      err: true,
+      status: '00',
+      statusText: 'offline',
+    };
   }
 };
 
 const get = (url, options = {}) => customFetch(url, options);
+
+const opt = (url, options = {}) => {
+  options.method = 'OPTIONS';
+  return customFetch(url, options);
+};
 
 const post = (url, options = {}) => {
   options.method = 'POST';
@@ -46,6 +64,6 @@ const del = (url, options = {}) => {
   return customFetch(url, options);
 };
 
-const helpHttp = { get, post, put, del };
+const helpHttp = { get, post, put, del, opt };
 
 export default helpHttp;
