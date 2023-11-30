@@ -12,7 +12,7 @@ export const useAlive = () => {
       setInit(resp?.err ? false : true);
     };
 
-    if (online && !init) setProc(true) & boot().finally(() => setProc(false));
+    if (online && !init) setProc(true) & boot() & setProc(false);
 
     const handleOnline = () => setOnline(true);
     const handleOffline = () => setOnline(false) & boot();
