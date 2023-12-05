@@ -11,9 +11,7 @@ const Menu = ({ init, proc }) => {
     user && setCurrentUser(user);
   }, []);
 
-  /*  const handleLogout = () => {
-    AuthService.logout();
-  }; */
+  //const handleLogout = () => AuthService.logout();
 
   const title = '';
   const menuItems = [
@@ -32,6 +30,7 @@ const Menu = ({ init, proc }) => {
   ];
   const checkboxRef = useRef(null);
   const spanRef = useRef(null);
+
   useEffect(() => {
     const handleClick = (e) => {
       if (checkboxRef.current == e.target || spanRef.current == e.target) {
@@ -67,16 +66,16 @@ const Menu = ({ init, proc }) => {
                     <ul className="dropdown">
                       {menuItem.child.map((subMenu) =>
                         subMenu.isSessionNeeded === true && currentUser ? (
-                          <li key={subMenu.label} className="nav-item">
-                            <a href={subMenu.url} className="nav-link" onClick={subMenu.trigger}>
+                          <li key={subMenu.label}>
+                            <a href={subMenu.url} onClick={subMenu.trigger}>
                               {subMenu.label}
                             </a>
                           </li>
                         ) : (
                           !subMenu.isSessionNeeded &&
                           !currentUser && (
-                            <li key={subMenu.label} className="nav-item">
-                              <a href={subMenu.url} className="nav-link" onClick={subMenu?.trigger}>
+                            <li key={subMenu.label}>
+                              <a href={subMenu.url} onClick={subMenu?.trigger}>
                                 {subMenu.label}
                               </a>
                             </li>
@@ -87,7 +86,7 @@ const Menu = ({ init, proc }) => {
                   </li>
                 </>
               ) : (
-                <li key={menuItem.label} className="nav-item">
+                <li key={menuItem.label}>
                   <a href={menuItem.url}>{menuItem.label}</a>
                 </li>
               )}
@@ -108,10 +107,6 @@ const Menu = ({ init, proc }) => {
 /* Menu.propTypes = {
   init: PropTypes.any.isRequired,
   proc: PropTypes.any.isRequired,
-  menuItems: PropTypes.array.isRequired,
-  title: PropTypes.any.isRequired,
-  currentUser: PropTypes.any,
-  Status: PropTypes.any.isRequired,
 }; */
 
 export default Menu;
