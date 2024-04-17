@@ -1,48 +1,38 @@
 import React, { useState } from 'react';
 import CardRow from '../CardRow/CardRow';
 import './Card.css';
+import TablePagination from './TablePagination';
+import TableSearch from './TableSearch';
 
 const Card = ({ data }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 25; // You can adjust this according to your preference.
+  const [itemsPerPage, setItemsPerPage] = useState(25);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = data.length !== undefined ? data.slice(indexOfFirstItem, indexOfLastItem) : [];
+  const [filteredData, setFilteredData] = useState([]);
 
   return (
     <div className="main-content" id="main-content">
+      <TableSearch
+        setCurrentPage={setCurrentPage}
+        setFilteredData={setFilteredData}
+        setItemsPerPage={setItemsPerPage}
+        dataset={data}
+        itemsPerPage={itemsPerPage}
+      />
       {currentItems.length > 0 ? (
         currentItems.map((el) => <CardRow key={el.production_ranking_number} el={el} />)
       ) : (
         <div>No Data</div>
       )}
       <div className="pagination-container">
-        <button
-          onClick={() => setCurrentPage(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="pagination-button"
-        >
-          Previous
-        </button>
-
-        {Array.from({ length: Math.ceil(data.length / itemsPerPage) }).map((_, index) => (
-          <a
-            href="#main-content"
-            key={index}
-            onClick={() => setCurrentPage(index + 1)}
-            className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
-          >
-            {index + 1}
-          </a>
-        ))}
-
-        <button
-          onClick={() => setCurrentPage(currentPage + 1)}
-          disabled={currentPage === Math.ceil(data.length / itemsPerPage)}
-          className="pagination-button"
-        >
-          Next
-        </button>
+        <TablePagination
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          filteredData={data}
+          itemsPerPage={itemsPerPage}
+        />
       </div>
     </div>
   );
