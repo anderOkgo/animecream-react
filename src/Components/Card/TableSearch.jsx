@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import set from '../../helpers/set.json';
 import './TableSearch.css';
 
 function TableSearch({ setCurrentPage, setFilteredData, setItemsPerPage, dataset, itemsPerPage }) {
@@ -26,7 +25,7 @@ function TableSearch({ setCurrentPage, setFilteredData, setItemsPerPage, dataset
           onChange={(e) => setItemsPerPage(parseInt(e.target.value))}
           className="search-box-input"
         >
-          {[5, 10, 20, 50, 100, 500, 1000, 10000].map((value) => (
+          {[1, 5, 10, 20, 50, 100, 500, 1000, 10000].map((value) => (
             <option key={value} value={value}>
               {value}
             </option>
