@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import set from '../../helpers/set.json';
 import './TableSearch.css';
+import { generateUniqueId } from '../../helpers/operations';
 
 function TableSearch({ setCurrentPage, setFilteredData, setItemsPerPage, dataset, itemsPerPage }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -16,11 +18,14 @@ function TableSearch({ setCurrentPage, setFilteredData, setItemsPerPage, dataset
     setFilteredData(filteredResults);
   };
 
+  const uniqueId = generateUniqueId();
+
   return (
     <div className="search-box">
-      <label>
+      <label id={uniqueId}>
         Rows:{' '}
         <select
+          id={uniqueId}
           value={itemsPerPage}
           onChange={(e) => {
             setItemsPerPage(parseInt(e.target.value));
@@ -28,7 +33,7 @@ function TableSearch({ setCurrentPage, setFilteredData, setItemsPerPage, dataset
           }}
           className="search-box-input"
         >
-          {[1, 5, 10, 20, 50, 100, 500, 1000, 10000].map((value) => (
+          {set.table_select_row_numbers.map((value) => (
             <option key={value} value={value}>
               {value}
             </option>
@@ -36,6 +41,7 @@ function TableSearch({ setCurrentPage, setFilteredData, setItemsPerPage, dataset
         </select>
       </label>
       <input
+        id={uniqueId + '1'}
         className="search-box-input"
         type="text"
         value={searchTerm}

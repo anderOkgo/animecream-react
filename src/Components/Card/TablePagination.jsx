@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import './TablePagination.css';
+import set from '../../helpers/set.json';
 
 function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPage }) {
   const [totalPages, setTotalPages] = useState(1);
@@ -18,7 +19,7 @@ function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPa
   }, [filteredData, itemsPerPage, currentPage]);
 
   const renderPaginationButtons = () => {
-    const maxButtons = 5;
+    const maxButtons = set.pagination_max_buttons;
     const buttons = [];
     let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
     let endPage = Math.min(totalPages, startPage + maxButtons - 1);
