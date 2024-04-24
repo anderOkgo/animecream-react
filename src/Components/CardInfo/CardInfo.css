@@ -1,35 +1,36 @@
 /* Base styles for the container */
-.grid-1-2 {
-  display: flex;
+/* .grid-1-2 {
+  display: inline;
   flex-wrap: wrap;
   justify-content: space-between;
   flex-direction: row-reverse;
-}
+} */
 
 /* Styles for the Card component */
-.card {
+/* .card {
   flex: 1;
-  /* Adjust the width as needed for larger screens */
   max-width: 100%;
   min-width: 50%;
-}
+} */
 
 /* Styles for the SearchMethod component */
-.search-method {
-  /* Adjust the width as needed for larger screens */
+/* .search-method {
   width: 35em;
+} */
+
+.main-content {
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 /* Media query for smaller screens (e.g., mobile) */
-@media (max-width: 768px) {
-  /* Change the layout to a single column */
+/* @media (max-width: 768px) {
   .grid-1-2 {
     flex-direction: column;
   }
 
-  /* Reset the max-width for both components */
   .card,
   .search-method {
     max-width: 100%;
   }
-}
+} */

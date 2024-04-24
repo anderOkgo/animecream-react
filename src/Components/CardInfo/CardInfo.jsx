@@ -5,7 +5,7 @@ import Card from '../Card/Card';
 import Loader from '../Loader/Loader';
 import Message from '../Message/Message';
 import AuthService from '../../services/auth.service';
-//import './CardInfo.css';
+import './CardInfo.css';
 
 const CardInfo = () => {
   const [db, setDb] = useState(null);
