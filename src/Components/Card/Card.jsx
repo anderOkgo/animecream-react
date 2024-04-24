@@ -23,6 +23,9 @@ const Card = ({ data }) => {
       <div className="search-container">
         <TableSearch {...{ setCurrentPage, setFilteredData, setItemsPerPage, dataset, itemsPerPage }} />
       </div>
+      <div className="pagination-container">
+        <TablePagination {...{ currentPage, setCurrentPage, filteredData, itemsPerPage }} />
+      </div>
       {currentData.length > 0 ? (
         currentData.map((el) => <CardRow key={el.production_ranking_number} el={el} />)
       ) : (

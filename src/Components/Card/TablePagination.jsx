@@ -32,7 +32,10 @@ function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPa
       buttons.push(
         <button
           key={i}
-          onClick={() => setCurrentPage(i)}
+          onClick={() => {
+            setCurrentPage(i);
+            goTop();
+          }}
           className={`pagination-button ${currentPage === i ? 'active' : ''}`}
         >
           {i}
@@ -43,12 +46,21 @@ function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPa
     return buttons;
   };
 
+  const goTop = () => {
+    window.scrollTo({
+      top: 400,
+      behavior: 'smooth',
+    });
+  };
+
   const nextPage = () => {
     setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+    goTop();
   };
 
   const prevPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+    goTop();
   };
 
   const handleRangeChange = (e) => {
