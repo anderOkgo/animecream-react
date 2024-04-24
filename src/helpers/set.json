@@ -6,7 +6,7 @@
   "defaul_fetch_request": 10000,
   "pagination_max_buttons": 5,
   "pagination_default_items_per_page": 20,
-  "table_select_row_numbers": [5, 10, 20, 50, 100, 500, 1000, 10000],
+  "table_select_row_numbers": [1, 2, 5, 10, 20, 50, 100, 500, 1000, 10000],
   "form_type_options": [
     { "value": "", "label": "---" },
     { "value": "2", "label": "Bill" },
