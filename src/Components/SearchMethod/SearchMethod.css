@@ -17,7 +17,8 @@
 }
 
 .form-group input[type='text'],
-input[type='number'] {
+input[type='number'],
+.form-group select {
   width: 100%;
   padding: 10px;
   font-size: 16px;

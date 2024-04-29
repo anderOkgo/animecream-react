@@ -6,6 +6,7 @@ import Loader from '../Loader/Loader';
 import Message from '../Message/Message';
 import AuthService from '../../services/auth.service';
 import './CardInfo.css';
+import set from '../../helpers/set.json';
 
 const CardInfo = () => {
   const [db, setDb] = useState(null);
@@ -19,7 +20,7 @@ const CardInfo = () => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      let urlProduction = 'https://info.animecream.com/api/series';
+      let urlProduction = set.base_url + set.api_url;
       const [productionsInfo] = await Promise.all([helpHttp.post(urlProduction, opt)]);
       setProductions(productionsInfo);
       setDb(productionsInfo);
