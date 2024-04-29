@@ -1,7 +1,7 @@
 {
   "api_url": "api/series/",
-  "base_url_": "https://info.animecream.com/",
-  "base_url": "http://localhost:3001/",
+  "base_url": "https://info.animecream.com/",
+  "base_url_": "http://localhost:3001/",
   "boot_timeout": 20000,
   "defaul_fetch_request": 10000,
   "pagination_max_buttons": 5,
