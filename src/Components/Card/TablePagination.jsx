@@ -48,7 +48,7 @@ function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPa
 
   const goTop = () => {
     window.scrollTo({
-      top: 400,
+      top: 900,
       behavior: 'smooth',
     });
   };

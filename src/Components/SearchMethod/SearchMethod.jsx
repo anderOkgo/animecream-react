@@ -46,6 +46,15 @@ const SearchMethod = ({ setOpt }) => {
     { id: 43, name: 'Harem', slug: 'harem' },
   ];
 
+  const demographicOptions = [
+    { id: 1, name: 'Kodomo', slug: 'kodomo' },
+    { id: 2, name: 'Shōnen', slug: 'shonen' },
+    { id: 3, name: 'Shōjo', slug: 'shojo' },
+    { id: 4, name: 'Seinen', slug: 'seinen' },
+    { id: 5, name: 'Josei', slug: 'josei' },
+    { id: 6, name: 'Shōnen-Seinen', slug: 'shonen-seinen' },
+  ];
+
   const [form, setForm] = useState({
     production_name: '',
     production_number_chapters: '',
@@ -57,10 +66,18 @@ const SearchMethod = ({ setOpt }) => {
   });
 
   const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    if (name === 'genre_names') {
+      setForm({
+        ...form,
+        genre_names: form.genre_names ? `${form.genre_names},${value}` : value,
+      });
+    } else {
+      setForm({
+        ...form,
+        [name]: value,
+      });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -84,7 +101,7 @@ const SearchMethod = ({ setOpt }) => {
       });
 
       // Reset the form after submitting
-      //handleReset();
+      // handleReset();
     } catch (error) {
       console.error('Error:', error.message);
     }
@@ -166,7 +183,19 @@ const SearchMethod = ({ setOpt }) => {
             placeholder="Genre Names"
             value={form.genre_names}
             onChange={handleChange}
+            readOnly
           />
+        </div>
+        <div className="form-group">
+          <label>Demographic Names</label>
+          <select name="demographic_name" value={form.demographic_name} onChange={handleChange}>
+            <option value="">Select Demographic</option>
+            {demographicOptions.map((option) => (
+              <option key={option.id} value={option.slug}>
+                {option.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="form-group">
           <label>Limit</label>

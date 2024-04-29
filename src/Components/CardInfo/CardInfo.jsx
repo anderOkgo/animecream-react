@@ -11,19 +11,15 @@ import set from '../../helpers/set.json';
 const CardInfo = () => {
   const [db, setDb] = useState(null);
   const [error, setError] = useState(null);
-  const [productions, setProductions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [opt, setOpt] = useState({});
-
-  let api = helpHttp;
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       let urlProduction = set.base_url + set.api_url;
       const [productionsInfo] = await Promise.all([helpHttp.post(urlProduction, opt)]);
-      setProductions(productionsInfo);
-      setDb(productionsInfo);
+      setDb(productionsInfo.length == 0 ? [] : productionsInfo);
       setLoading(false);
     };
 

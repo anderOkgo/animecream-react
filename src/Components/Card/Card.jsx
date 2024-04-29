@@ -12,7 +12,8 @@ const Card = ({ data }) => {
   const currentData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   useEffect(() => {
-    if (data && data.length > 0) {
+    if (data) {
+      setCurrentPage(1);
       setFilteredData(data);
       setDataset(data);
     }
