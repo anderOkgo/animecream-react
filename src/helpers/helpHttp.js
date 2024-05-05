@@ -28,6 +28,7 @@ const customFetch = async (endpoint, options = {}) => {
             err: true,
             status: res.status || '00',
             statusText: res.statusText || 'Ocurrió un error',
+            response: await res.json(),
           }));
     } catch (err) {
       console.log({ err });

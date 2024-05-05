@@ -42,6 +42,7 @@ export default function CardRow({ el }) {
                 <hr />
                 <p className="production-desc">{production_description}</p>
                 <div className="tags">
+                  <span className="tag">{`Year: ${production_year}`}</span>
                   <span className="tag">{`${production_number_chapters} episodes`}</span>
                   <span className="tag">{demographic_name}</span>
                   {genre_names.split(',').map((genre) => (

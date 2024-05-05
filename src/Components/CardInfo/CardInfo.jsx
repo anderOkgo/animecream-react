@@ -19,7 +19,9 @@ const CardInfo = () => {
       setLoading(true);
       let urlProduction = set.base_url + set.api_url;
       const [productionsInfo] = await Promise.all([helpHttp.post(urlProduction, opt)]);
-      setDb(productionsInfo.length == 0 ? [] : productionsInfo);
+      const error = productionsInfo?.err?.response.error;
+      setError(error);
+      setDb(productionsInfo?.err ? [] : productionsInfo);
       setLoading(false);
     };
 
@@ -31,8 +33,7 @@ const CardInfo = () => {
     <article className="grid-1-2">
       <SearchMethod setOpt={setOpt} />
       {loading && <Loader />}
-      {error && <Message msg={`Error ${error.status}: ${error.statusText}`} bgColor="#dc3545" />}
-      {/*  {!currentUser ? <Login /> : db && <Card data={db} />} */}
+      {error && <Message msg={`Error: ${Object.values(error)[0]}`} bgColor="#dc3545" />}
       {db && <Card data={db} />}
     </article>
   );

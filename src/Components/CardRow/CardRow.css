@@ -70,7 +70,7 @@
 }
 
 .panel:hover {
-  box-shadow: 0px 3px 3px var(--second-blue);
+  box-shadow: 0px 3px 3px var(--soft-gray);
 }
 
 .radiotab:checked + .label + .panel {
@@ -111,14 +111,14 @@
 }
 
 .tag {
-  background-color: #ddd;
-  padding: 2px;
-  margin-right: 10px;
+  background-color: var(--second-blue);
+  padding: 4px;
+  margin-right: 5px;
   margin-top: 3px;
   font-size: 12px;
   border-radius: 4px;
   white-space: nowrap;
-  color: #0f0f0f;
+  color: var(--white);
   cursor: pointer;
 }
 
