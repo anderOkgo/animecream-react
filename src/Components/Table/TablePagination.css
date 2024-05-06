@@ -15,10 +15,10 @@
 .pagination-button {
   display: inline;
   padding: 7px 14px;
-  color: var(--text);
+  color: var(--black);
   margin: 0;
   border: 1px solid var(--soft-gray);
-  background-color: var(--background);
+  background-color: var(--white);
   cursor: pointer;
 }
 
@@ -28,7 +28,7 @@
 
 .pagination-button.active {
   background-color: var(--main-color);
-  color: var(--text-alt);
+  color: var(--white);
 }
 
 .pagination-button:disabled {

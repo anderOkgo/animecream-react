@@ -1,7 +1,6 @@
 /* smallest screen first */
 .card {
   max-width: 900px;
-  padding: 1em;
   margin: auto;
 }
 

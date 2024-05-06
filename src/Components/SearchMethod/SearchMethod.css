@@ -2,7 +2,6 @@
 .form-container {
   max-width: 930px;
   margin: 0 auto;
-  padding: 2em;
 }
 
 /* CSS for form elements */
@@ -20,7 +19,7 @@
 input[type='number'],
 .form-group select {
   width: 100%;
-  padding: 10px;
+  padding: 7px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;

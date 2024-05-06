@@ -10,6 +10,7 @@ const Card = ({ data }) => {
   const [filteredData, setFilteredData] = useState(data);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const currentData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const elemet = 'main-content';
 
   useEffect(() => {
     if (data) {
@@ -25,7 +26,7 @@ const Card = ({ data }) => {
         <TableSearch {...{ setCurrentPage, setFilteredData, setItemsPerPage, dataset, itemsPerPage }} />
       </div>
       <div className="pagination-container">
-        <TablePagination {...{ currentPage, setCurrentPage, filteredData, itemsPerPage }} />
+        <TablePagination {...{ currentPage, setCurrentPage, filteredData, itemsPerPage, elemet }} />
       </div>
       {currentData.length > 0 ? (
         currentData.map((el) => <CardRow key={el.production_ranking_number} el={el} />)
@@ -33,7 +34,7 @@ const Card = ({ data }) => {
         <div>No Data</div>
       )}
       <div className="pagination-container">
-        <TablePagination {...{ currentPage, setCurrentPage, filteredData, itemsPerPage }} />
+        <TablePagination {...{ currentPage, setCurrentPage, filteredData, itemsPerPage, elemet }} />
       </div>
       <br />
     </div>

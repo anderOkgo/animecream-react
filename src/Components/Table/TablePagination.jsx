@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
-import set from '../../helpers/set.json';
 import { useEffect, useState } from 'react';
 import './TablePagination.css';
+import set from '../../helpers/set.json';
 
-function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPage }) {
+function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPage, elemet = '' }) {
   const [totalPages, setTotalPages] = useState(1);
   const [startIndex, setStartIndex] = useState(0);
   const [endIndex, setEndIndex] = useState(0);
@@ -32,7 +32,10 @@ function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPa
       buttons.push(
         <button
           key={i}
-          onClick={() => setCurrentPage(i)}
+          onClick={() => {
+            setCurrentPage(i);
+            goToElement();
+          }}
           className={`pagination-button ${currentPage === i ? 'active' : ''}`}
         >
           {i}
@@ -43,12 +46,21 @@ function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPa
     return buttons;
   };
 
+  const goToElement = () => {
+    const element = document.getElementById(elemet);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const nextPage = () => {
     setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+    goToElement();
   };
 
   const prevPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+    goToElement();
   };
 
   const handleRangeChange = (e) => {
@@ -86,6 +98,7 @@ TablePagination.propTypes = {
   setCurrentPage: PropTypes.func.isRequired,
   filteredData: PropTypes.any.isRequired,
   itemsPerPage: PropTypes.number.isRequired,
+  elemet: PropTypes.string,
 };
 
 export default TablePagination;

@@ -14,7 +14,7 @@
   padding: 5px;
   border: 1px solid var(--soft-gray);
   border-radius: 4px;
-  background-color: inherit;
+  background-color: var(--white);
   color: var(--text);
 }
 
