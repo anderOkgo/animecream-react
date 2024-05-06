@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
+import set from '../../helpers/set.json';
 import { useEffect, useState } from 'react';
 import './TablePagination.css';
-import set from '../../helpers/set.json';
 
 function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPage }) {
   const [totalPages, setTotalPages] = useState(1);
@@ -32,10 +32,7 @@ function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPa
       buttons.push(
         <button
           key={i}
-          onClick={() => {
-            setCurrentPage(i);
-            goTop();
-          }}
+          onClick={() => setCurrentPage(i)}
           className={`pagination-button ${currentPage === i ? 'active' : ''}`}
         >
           {i}
@@ -46,21 +43,12 @@ function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPa
     return buttons;
   };
 
-  const goTop = () => {
-    window.scrollTo({
-      top: 900,
-      behavior: 'smooth',
-    });
-  };
-
   const nextPage = () => {
     setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
-    goTop();
   };
 
   const prevPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-    goTop();
   };
 
   const handleRangeChange = (e) => {

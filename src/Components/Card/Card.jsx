@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import CardRow from '../CardRow/CardRow';
 import './Card.css';
-import TablePagination from './TablePagination';
-import TableSearch from './TableSearch';
+import TablePagination from '../Table/TablePagination';
+import TableSearch from '../Table/TableSearch';
 
 const Card = ({ data }) => {
   const [currentPage, setCurrentPage] = useState(1);

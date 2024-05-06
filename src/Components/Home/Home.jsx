@@ -5,10 +5,10 @@ import Card from '../Card/Card';
 import Loader from '../Loader/Loader';
 import Message from '../Message/Message';
 import AuthService from '../../services/auth.service';
-import './CardInfo.css';
+import './Home.css';
 import set from '../../helpers/set.json';
 
-const CardInfo = () => {
+const Home = () => {
   const [db, setDb] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -39,4 +39,4 @@ const CardInfo = () => {
   );
 };
 
-export default CardInfo;
+export default Home;
