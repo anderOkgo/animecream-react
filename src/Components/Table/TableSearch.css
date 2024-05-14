@@ -11,6 +11,7 @@
 }
 
 .search-box-input {
+  width: 50%;
   padding: 5px;
   border: 1px solid var(--soft-gray);
   border-radius: 4px;

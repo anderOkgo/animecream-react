@@ -121,6 +121,11 @@
   cursor: pointer;
 }
 
+.year,
+.ep {
+  background-color: rgb(24, 70, 170) !important;
+}
+
 .tab-section p {
   text-align: justify;
 }
@@ -129,10 +134,23 @@
   display: none;
 }
 
+h2 {
+  font-size: large;
+}
+
+.tags {
+  display: none;
+}
+
 /* from 320px onwards --small screen*/
 @media (min-width: 320px) {
   .section-content {
     flex-wrap: nowrap;
+  }
+
+  .tags {
+    display: flex;
+    font-size: xx-small;
   }
 }
 
@@ -152,5 +170,8 @@
   }
   .production-desc {
     display: block;
+  }
+  h2 {
+    font-size: x-large;
   }
 }

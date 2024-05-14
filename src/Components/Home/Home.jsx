@@ -34,6 +34,7 @@ const Home = () => {
       <SearchMethod setOpt={setOpt} />
       {loading && <Loader />}
       {error && <Message msg={`Error: ${Object.values(error)[0]}`} bgColor="#dc3545" />}
+
       {db && <Card data={db} />}
     </article>
   );
