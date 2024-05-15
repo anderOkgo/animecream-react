@@ -169,7 +169,7 @@ const SearchMethod = ({ setOpt }) => {
           <select name="genre_names" value={form.genre_names} onChange={handleChange}>
             <option value="">Select Genre</option>
             {genreOptions.map((option) => (
-              <option key={option.id} value={option.slug}>
+              <option key={option.id} value={option.name}>
                 {option.name}
               </option>
             ))}
