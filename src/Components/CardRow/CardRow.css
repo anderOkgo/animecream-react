@@ -138,6 +138,10 @@ h2 {
   font-size: large;
 }
 
+hr{
+  display:none;
+}
+
 .tags {
   display: none;
 }
