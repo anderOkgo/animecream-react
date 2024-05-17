@@ -89,10 +89,9 @@ const SearchMethod = ({ setOpt }) => {
       if (form.production_number_chapters) conditions.production_number_chapters = form.production_number_chapters;
       if (form.production_description) conditions.production_description = form.production_description;
       if (form.production_year) conditions.production_year = form.production_year;
-
       if (form.demographic_name) conditions.demographic_name = form.demographic_name;
       if (form.genre_names) conditions.genre_names = form.genre_names;
-      if (form.limit) conditions.limit = form.limit.toString();
+      if (form.limit) conditions.limit = parseInt(form.limit, 10);
 
       // Send the search conditions to the parent component
       setOpt({
@@ -122,7 +121,7 @@ const SearchMethod = ({ setOpt }) => {
   return (
     <div className="form-container">
       <h2>Search Method</h2>
-      <hr />
+      <br />
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Series Name</label>
