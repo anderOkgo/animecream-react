@@ -93,14 +93,10 @@ const SearchMethod = ({ setOpt }) => {
       if (form.genre_names) conditions.genre_names = form.genre_names;
       if (form.limit) conditions.limit = parseInt(form.limit, 10);
 
-      // Send the search conditions to the parent component
       setOpt({
         method: 'POST',
         body: conditions,
       });
-
-      // Reset the form after submitting
-      // handleReset();
     } catch (error) {
       console.error('Error:', error.message);
     }
