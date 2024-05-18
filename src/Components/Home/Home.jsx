@@ -39,9 +39,8 @@ const Home = () => {
       } else {
         const error = productionsInfo?.err?.response?.error;
         setError(error);
-
-        setLoading(false);
       }
+      setLoading(false);
     };
 
     fetchData();
