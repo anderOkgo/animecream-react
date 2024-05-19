@@ -27,7 +27,7 @@ const customFetch = async (endpoint, options = {}) => {
         : Promise.reject({
             err: true,
             status: res.status || '00',
-            statusText: res.statusText || 'Ocurrió un error',
+            statusText: res.statusText || 'An error has occurred',
             response: await res.json(),
           }));
     } catch (err) {
@@ -38,7 +38,7 @@ const customFetch = async (endpoint, options = {}) => {
     return {
       err: true,
       status: '00',
-      statusText: 'offline',
+      statusText: 'Offline',
     };
   }
 };
