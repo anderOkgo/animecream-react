@@ -18,11 +18,7 @@ const Home = () => {
     try {
       var localResp = localStorage.getItem('storage');
       localResp && (localResp = JSON.parse(localResp));
-      setDb((prevDB) => ({
-        ...prevDB,
-        ...localResp,
-      }));
-      console.log(localResp);
+      setDb(localResp);
       if (Object.keys(localResp || {}).length !== 0) {
         setDb(localResp);
       }

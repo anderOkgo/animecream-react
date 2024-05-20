@@ -10,7 +10,7 @@ const Card = ({ data }) => {
   const [filteredData, setFilteredData] = useState(data);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const currentData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-  const elemet = 'main-content';
+  const element = 'main-content';
 
   useEffect(() => {
     if (data) {
@@ -22,22 +22,25 @@ const Card = ({ data }) => {
 
   return (
     <div className="main-content" id="main-content">
-      <div className="search-container">
-        <TableSearch {...{ setCurrentPage, setFilteredData, setItemsPerPage, dataset, itemsPerPage }} />
-      </div>
-      <div className="pagination-container">
-        <TablePagination {...{ currentPage, setCurrentPage, filteredData, itemsPerPage, elemet }} />
-      </div>
-      <br />
       {currentData.length > 0 ? (
-        currentData.map((el) => <CardRow key={el.production_ranking_number} el={el} />)
+        <>
+          <div className="search-container">
+            <TableSearch {...{ setCurrentPage, setFilteredData, setItemsPerPage, dataset, itemsPerPage }} />
+          </div>
+          <div className="pagination-container">
+            <TablePagination {...{ currentPage, setCurrentPage, filteredData, itemsPerPage, element }} />
+          </div>
+          <br />
+          {currentData.map((el) => (
+            <CardRow key={el.production_ranking_number} el={el} />
+          ))}
+          <div className="pagination-container">
+            <TablePagination {...{ currentPage, setCurrentPage, filteredData, itemsPerPage, element }} />
+          </div>
+        </>
       ) : (
-        <div>No Data</div>
+        <div style={{ textAlign: 'center' }}>No Data Found</div>
       )}
-      <div className="pagination-container">
-        <TablePagination {...{ currentPage, setCurrentPage, filteredData, itemsPerPage, elemet }} />
-      </div>
-      <br />
     </div>
   );
 };
