@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import './TablePagination.css';
 import set from '../../helpers/set.json';
 
-function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPage, elemet = '' }) {
+function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPage, element = '' }) {
   const [totalPages, setTotalPages] = useState(1);
   const [startIndex, setStartIndex] = useState(0);
   const [endIndex, setEndIndex] = useState(0);
@@ -47,9 +47,9 @@ function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPa
   };
 
   const goToElement = () => {
-    const element = document.getElementById(elemet);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    const gelement = document.getElementById(element);
+    if (gelement) {
+      gelement.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -98,7 +98,7 @@ TablePagination.propTypes = {
   setCurrentPage: PropTypes.func.isRequired,
   filteredData: PropTypes.any.isRequired,
   itemsPerPage: PropTypes.number.isRequired,
-  elemet: PropTypes.string,
+  element: PropTypes.string,
 };
 
 export default TablePagination;
