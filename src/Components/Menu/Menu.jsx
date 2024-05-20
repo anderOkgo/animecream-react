@@ -15,9 +15,9 @@ const Menu = ({ init, proc }) => {
 
   const title = '';
   const menuItems = [
-    { label: 'Cyfer', url: 'https://cyfer.animecream.com/' },
     { label: 'Finanz', url: 'https://finan.animecream.com/' },
     { label: 'Animecream', url: 'https://www.animecream.com/' },
+    { label: 'Cyfer', url: 'https://cyfer.animecream.com/' },
     { label: 'Nabu', url: 'https://nabu.animecream.com/' },
     /*  {
       label: 'session',
