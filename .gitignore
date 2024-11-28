@@ -21,3 +21,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# settings and release folders
+com
+keys
+0.symbolics.bat
