@@ -23,5 +23,5 @@ dist-ssr
 *.sw?
 
 # settings and release folders
-
+keys
 0.symbolics.bat
