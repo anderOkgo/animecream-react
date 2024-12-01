@@ -1,15 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
-//import PropTypes from 'prop-types';
 import './Menu.css';
 import Status from '../Status/Status';
 import AuthService from '../../services/auth.service';
 
-const Menu = ({ init, proc }) => {
+const Menu = ({ init, proc, boot, toggleDarkMode }) => {
   const [currentUser, setCurrentUser] = useState(undefined);
   useEffect(() => {
     const user = AuthService.getCurrentUser();
     user && setCurrentUser(user);
   }, []);
+
+  const handleStatusClick = () => {
+    boot();
+    toggleDarkMode();
+  };
 
   //const handleLogout = () => AuthService.logout();
 
@@ -95,7 +99,7 @@ const Menu = ({ init, proc }) => {
         </ul>
       </div>
       <div className="logo insetshadow">
-        <span className="icon-activity">
+        <span className="icon-activity" onClick={handleStatusClick}>
           <Status {...{ init, proc }} />
         </span>
         {title}

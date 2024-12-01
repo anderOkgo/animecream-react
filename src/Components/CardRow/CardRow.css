@@ -54,7 +54,6 @@
   order: 99;
   display: none;
   padding: 1em;
-  background: #fff;
   width: 100%;
   border-left: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
@@ -62,7 +61,7 @@
   border-radius: 0.5em;
   margin-top: 0;
   box-shadow: 1px 1px 15px #888888;
-  background-color: white;
+  background-color: var(--white);
   transition: box-shadow 0.3s;
   max-height: 295px;
   min-height: 265px;
@@ -104,6 +103,10 @@
   font-size: 1em;
 }
 
+.section-details h2 {
+  color: var(--black);
+}
+
 .tags {
   display: flex;
   flex-wrap: wrap;
@@ -138,8 +141,8 @@ h2 {
   font-size: large;
 }
 
-hr{
-  display:none;
+hr {
+  display: none;
 }
 
 .tags {
