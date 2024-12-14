@@ -1,5 +1,6 @@
 /* CSS for the form container */
 .form-container {
+  padding-top: 1em;
   max-width: 930px;
   margin: 0 auto;
 }
@@ -13,6 +14,7 @@
   display: block;
   font-size: 16px;
   margin-bottom: 5px;
+  color: var(--text);
 }
 
 .form-group input[type='text'],
@@ -21,23 +23,27 @@ input[type='number'],
   width: 100%;
   padding: 7px;
   font-size: 16px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--soft-gray);
   border-radius: 4px;
+  background-color: var(--background);
+  color: var(--text);
 }
 
 .form-group input[type='submit'],
 .form-group input[type='reset'] {
-  display: inline;
+  display: inline-block;
   background-color: var(--main-color);
-  color: #fff;
+  color: var(--white);
   cursor: pointer;
   padding: 10px;
   width: 50%;
-  border: 1px solid #ccc;
+  border: 1px solid var(--soft-gray);
   border-radius: 4px;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 .form-group input[type='submit']:hover,
 .form-group input[type='reset']:hover {
   background-color: var(--second-blue);
+  color: var(--white);
 }
