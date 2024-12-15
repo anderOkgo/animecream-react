@@ -22,11 +22,11 @@ const Card = ({ data }) => {
 
   return (
     <div className="main-content" id="main-content">
+      <div className="search-container">
+        <TableSearch {...{ setCurrentPage, setFilteredData, setItemsPerPage, dataset, itemsPerPage }} />
+      </div>
       {currentData.length > 0 ? (
         <>
-          <div className="search-container">
-            <TableSearch {...{ setCurrentPage, setFilteredData, setItemsPerPage, dataset, itemsPerPage }} />
-          </div>
           <div className="pagination-container">
             <TablePagination {...{ currentPage, setCurrentPage, filteredData, itemsPerPage, element }} />
           </div>

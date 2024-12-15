@@ -121,9 +121,9 @@ const SearchMethod = ({ setOpt }) => {
   };
 
   return (
-    <div>
-      <span variant="text" onClick={toggleFormVisibility} className=" tag" style={{ cursor: 'pointer' }}>
-        {isFormVisible ? 'Close Advance Search' : 'Open Advance Search'}
+    <div className="toggle-search">
+      <span variant="text" onClick={toggleFormVisibility} className="">
+        {isFormVisible ? '🔍 Close Advance Search' : '🔍 Open Advance Search'}
       </span>
 
       {isFormVisible && (

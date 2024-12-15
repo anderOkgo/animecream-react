@@ -54,3 +54,8 @@ input[type='number'],
   background-color: var(--third-color);
   color: var(--white);
 }
+
+.toggle-search {
+  margin-bottom: 1em !important;
+  cursor: pointer;
+}
