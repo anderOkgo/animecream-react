@@ -183,6 +183,17 @@ const SearchMethod = ({ setOpt }) => {
               </select>
             </div>
             <div className="form-group">
+              <label>Genre Names (comma-separated)</label>
+              <input
+                type="text"
+                name="genre_names"
+                placeholder="Genre Names"
+                value={form.genre_names}
+                onChange={handleChange}
+                readOnly
+              />
+            </div>
+            <div className="form-group">
               <label>Demographic Names</label>
               <select name="demographic_name" value={form.demographic_name} onChange={handleChange}>
                 <option value="">Select Demographic</option>
