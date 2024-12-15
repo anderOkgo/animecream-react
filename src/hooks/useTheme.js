@@ -33,7 +33,7 @@ export const useTheme = () => {
     const lightModeColors = {
       '--main-color': '#0a4656',
       '--second-color': '#d4f1f7',
-      '--second-blue': '#0e6179',
+      '--third-color': '#0e6179',
       '--white': '#fff',
       '--black': '#000',
       '--soft-gray': '#ccc',
@@ -47,7 +47,7 @@ export const useTheme = () => {
     const darkModeColors = {
       '--main-color': '#0a4656',
       '--second-color': '#367bb9', // Slightly darker secondary color
-      '--second-blue': '#0e6179',
+      '--third-color': '#0e6179',
       '--white': '#fff', // Change white to dark gray
       '--black': '#000', // Reverse black and white
       '--soft-gray': '#444',
@@ -55,7 +55,7 @@ export const useTheme = () => {
       '--light-gray': '#555',
       '--background': '#121212', // Dark mode background
       '--text': '#fff', // Light text on dark background
-      '--text-alt': '#000',
+      '--text-alt': '#00000045',
     };
 
     const colors = isDarkMode ? darkModeColors : lightModeColors;

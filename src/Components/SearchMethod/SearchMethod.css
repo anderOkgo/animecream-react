@@ -44,6 +44,6 @@ input[type='number'],
 
 .form-group input[type='submit']:hover,
 .form-group input[type='reset']:hover {
-  background-color: var(--second-blue);
+  background-color: var(--third-color);
   color: var(--white);
 }
