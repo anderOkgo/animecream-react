@@ -25,7 +25,6 @@ body {
   font-family: Roboto, Arial, sans-serif;
   background-color: var(--background);
   color: var(--text);
-  overflow-y: hidden;
 }
 
 /* Primary color styles */
