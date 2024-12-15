@@ -12,8 +12,10 @@ const App = () => {
   return (
     <div className="app">
       <Menu {...{ init, proc, boot, toggleDarkMode }} />
-      <Jumbotron title="AnimeCream APP" description="The best recommendations about anime" />
-      <Home />
+      <div className="card-area">
+        <Jumbotron title="AnimeCream APP" description="The best recommendations about anime" />
+        <Home />
+      </div>
     </div>
   );
 };

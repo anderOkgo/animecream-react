@@ -1,5 +1,5 @@
 // Define the version of the cache
-const VERSION = '1.1.50';
+const VERSION = '1.1.51';
 // Create a unique cache name using the version
 const CACHE_NAME = `animecream-${VERSION}`;
 const appfiles = [`./android-icon-192x192.ico`];

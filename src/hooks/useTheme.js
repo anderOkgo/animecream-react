@@ -34,6 +34,7 @@ export const useTheme = () => {
       '--main-color': '#0a4656',
       '--second-color': '#d4f1f7',
       '--third-color': '#0e6179',
+      '--soft-green': ' #337ab7',
       '--white': '#fff',
       '--black': '#000',
       '--soft-gray': '#ccc',
@@ -48,6 +49,7 @@ export const useTheme = () => {
       '--main-color': '#0a4656',
       '--second-color': '#367bb9', // Slightly darker secondary color
       '--third-color': '#0e6179',
+      '--soft-green': ' #337ab7',
       '--white': '#fff', // Change white to dark gray
       '--black': '#000', // Reverse black and white
       '--soft-gray': '#444',
