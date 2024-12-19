@@ -22,15 +22,6 @@ const Menu = ({ init, proc, boot, toggleDarkMode }) => {
     { label: 'Finanz', url: 'https://finan.animecream.com/' },
     { label: 'Animecream', url: 'https://www.animecream.com/' },
     { label: 'Cyfer', url: 'https://cyfer.animecream.com/' },
-    { label: 'Nabu', url: 'https://nabu.animecream.com/' },
-    /*  {
-      label: 'session',
-      url: '#',
-      child: [
-        { isSessionNeeded: false, label: 'login', url: '/' },
-        { isSessionNeeded: true, label: 'logout', url: '/', trigger: handleLogout },
-      ],
-    }, */
   ];
   const checkboxRef = useRef(null);
   const spanRef = useRef(null);
