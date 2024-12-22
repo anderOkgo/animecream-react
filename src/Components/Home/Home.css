@@ -1,33 +1,10 @@
 /* Base styles for the container */
 .grid-1-2 {
   padding: 1em;
+  position: sticky;
 }
-
-/* Styles for the Card component */
-/* .card {
-  flex: 1;
-  max-width: 100%;
-  min-width: 50%;
-} */
-
-/* Styles for the SearchMethod component */
-/* .search-method {
-  width: 35em;
-} */
 
 .main-content {
   max-width: 900px;
   margin: 0 auto;
 }
-
-/* Media query for smaller screens (e.g., mobile) */
-/* @media (max-width: 768px) {
-  .grid-1-2 {
-    flex-direction: column;
-  }
-
-  .card,
-  .search-method {
-    max-width: 100%;
-  }
-} */

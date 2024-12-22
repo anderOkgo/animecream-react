@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import './searchMethod.css';
 
 const SearchMethod = ({ setOpt }) => {
+  const [isFormVisible, setIsFormVisible] = useState(false);
+
   const genreOptions = [
     { id: 1, name: 'Acción', slug: 'accion' },
     { id: 2, name: 'Psicologico', slug: 'psicologico' },
@@ -114,93 +116,105 @@ const SearchMethod = ({ setOpt }) => {
     });
   };
 
+  const toggleFormVisibility = () => {
+    setIsFormVisible(!isFormVisible);
+  };
+
   return (
-    <div className="form-container">
-      <h2>Search Method</h2>
-      <br />
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Series Name</label>
-          <input
-            type="text"
-            name="production_name"
-            placeholder="Name"
-            value={form.production_name}
-            onChange={handleChange}
-          />
+    <div className="toggle-search">
+      <span variant="text" onClick={toggleFormVisibility} className="">
+        {isFormVisible ? '🔍 Close Advance Search' : '🔍 Open Advance Search'}
+      </span>
+
+      {isFormVisible && (
+        <div className="form-container">
+          <h2>Search Method</h2>
+          <br />
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label>Series Name</label>
+              <input
+                type="text"
+                name="production_name"
+                placeholder="Name"
+                value={form.production_name}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label>Number of Chapters</label>
+              <input
+                type="text"
+                name="production_number_chapters"
+                placeholder="e.g. 1,10"
+                value={form.production_number_chapters}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label>Description</label>
+              <input
+                type="text"
+                name="production_description"
+                placeholder="Description"
+                value={form.production_description}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label>Production Year (comma-separated)</label>
+              <input
+                type="text"
+                name="production_year"
+                placeholder="e.g. 1994,1995"
+                value={form.production_year}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label>Genre Names</label>
+              <select name="genre_names" value={form.genre_names} onChange={handleChange}>
+                <option value="">Select Genre</option>
+                {genreOptions.map((option) => (
+                  <option key={option.id} value={option.name}>
+                    {option.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Genre Names (comma-separated)</label>
+              <input
+                type="text"
+                name="genre_names"
+                placeholder="Genre Names"
+                value={form.genre_names}
+                onChange={handleChange}
+                readOnly
+              />
+            </div>
+            <div className="form-group">
+              <label>Demographic Names</label>
+              <select name="demographic_name" value={form.demographic_name} onChange={handleChange}>
+                <option value="">Select Demographic</option>
+                {demographicOptions.map((option) => (
+                  <option key={option.id} value={option.slug}>
+                    {option.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Limit</label>
+              <input type="number" name="limit" placeholder="Limit" value={form.limit} onChange={handleChange} />
+            </div>
+            <div className="form-group">
+              <input type="submit" value="Search" />
+              <input type="reset" value="Reset" onClick={handleReset} />
+            </div>
+          </form>
         </div>
-        <div className="form-group">
-          <label>Number of Chapters</label>
-          <input
-            type="text"
-            name="production_number_chapters"
-            placeholder="e.g. 1,10"
-            value={form.production_number_chapters}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <label>Description</label>
-          <input
-            type="text"
-            name="production_description"
-            placeholder="Description"
-            value={form.production_description}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <label>Production Year (comma-separated)</label>
-          <input
-            type="text"
-            name="production_year"
-            placeholder="e.g. 1994,1995"
-            value={form.production_year}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <label>Genre Names</label>
-          <select name="genre_names" value={form.genre_names} onChange={handleChange}>
-            <option value="">Select Genre</option>
-            {genreOptions.map((option) => (
-              <option key={option.id} value={option.name}>
-                {option.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="form-group">
-          <label>Genre Names (comma-separated)</label>
-          <input
-            type="text"
-            name="genre_names"
-            placeholder="Genre Names"
-            value={form.genre_names}
-            onChange={handleChange}
-            readOnly
-          />
-        </div>
-        <div className="form-group">
-          <label>Demographic Names</label>
-          <select name="demographic_name" value={form.demographic_name} onChange={handleChange}>
-            <option value="">Select Demographic</option>
-            {demographicOptions.map((option) => (
-              <option key={option.id} value={option.slug}>
-                {option.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="form-group">
-          <label>Limit</label>
-          <input type="number" name="limit" placeholder="Limit" value={form.limit} onChange={handleChange} />
-        </div>
-        <div className="form-group">
-          <input type="submit" value="Search" />
-          <input type="reset" value="Reset" onClick={handleReset} />
-        </div>
-      </form>
+      )}
     </div>
   );
 };

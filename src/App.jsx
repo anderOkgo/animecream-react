@@ -3,15 +3,19 @@ import Home from './components/Home/Home';
 import Menu from './components/Menu/Menu';
 import Jumbotron from './components/Jumbotron/Jumbotron';
 import { useAlive } from '../src/hooks/useAlive';
+import { useTheme } from '../src/hooks/useTheme';
 
 const App = () => {
-  const { init, setInit, proc, setProc } = useAlive();
+  const { init, setInit, proc, setProc, boot } = useAlive();
+  const { toggleDarkMode } = useTheme();
 
   return (
     <div className="app">
-      <Menu {...{ init, proc }} />
-      <Jumbotron title="AnimeCream APP" description="The best recommendations about anime" />
-      <Home />
+      <Menu {...{ init, proc, boot, toggleDarkMode }} />
+      <div className="card-area">
+        <Jumbotron title="AnimeCream APP" description="The best recommendations about anime" />
+        <Home />
+      </div>
     </div>
   );
 };

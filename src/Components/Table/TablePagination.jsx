@@ -48,9 +48,8 @@ function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPa
 
   const goToElement = () => {
     const gelement = document.getElementById(element);
-    if (gelement) {
-      gelement.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (gelement) gelement.scrollIntoView();
+    document.documentElement.scrollTo({ top: 0 });
   };
 
   const nextPage = () => {
