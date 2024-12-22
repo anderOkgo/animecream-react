@@ -1,1 +1,0 @@
-G:/Mi unidad/Documents/Variant/FTPSync/animecream-react/0.symbolics.bat
