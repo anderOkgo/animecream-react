@@ -20,8 +20,9 @@ li {
 }
 
 .navbar {
+  max-height: 5em;
   height: 10vh;
-  min-height: 2.8em;
+  min-height: 3em;
   display: flex;
   align-items: center;
   justify-content: space-between;
