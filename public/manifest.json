@@ -1,7 +1,7 @@
 {
   "name": "La crema del anime",
   "short_name": "Animecream",
-  "description": "Lo mejor del anime",
+  "description": "Explora y encuentra tus animes favoritos con recomendaciones y un buscador avanzado.",
   "start_url": "./?utm_source=homescreen",
   "id": "./",
   "background_color": "#105969",
