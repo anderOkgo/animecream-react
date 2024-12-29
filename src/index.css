@@ -2,7 +2,6 @@
   box-sizing: border-box;
 }
 
-/* Apply a CSS reset to remove default margins and paddings */
 body,
 h1,
 h2,
@@ -13,12 +12,6 @@ td,
 th {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-}
-
-.insetshadow {
-  letter-spacing: 0.05em;
-  text-shadow: -1px -1px 1px var(--second-color), 2px 2px 1px var(--black);
 }
 
 body {
@@ -27,7 +20,11 @@ body {
   color: var(--text);
 }
 
-/* Primary color styles */
+.insetshadow {
+  letter-spacing: 0.05em;
+  text-shadow: -1px -1px 1px var(--second-color), 2px 2px 1px var(--black);
+}
+
 a {
   color: var(--main-color);
   text-decoration: none;

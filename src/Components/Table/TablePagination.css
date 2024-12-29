@@ -18,7 +18,7 @@
   color: var(--text);
   margin: 0;
   border: 1px solid var(--soft-gray);
-  background-color: var(--background);
+  background-color: var(--text-alt);
   cursor: pointer;
 }
 

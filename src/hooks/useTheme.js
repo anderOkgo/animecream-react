@@ -55,8 +55,8 @@ export const useTheme = () => {
       '--soft-gray': '#444',
       '--dark-gray': '#222',
       '--light-gray': '#555',
-      '--background': '#121212', // Dark mode background
-      '--text': '#fff', // Light text on dark background
+      '--background': '#121212',
+      '--text': '#fff',
       '--text-alt': '#00000045',
     };
 
