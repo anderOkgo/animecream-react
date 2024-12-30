@@ -1,11 +1,14 @@
 import React from 'react';
-import './Jumbotron.css'; // You can create a separate CSS file for styling
+import './Jumbotron.css';
+import { useLanguage } from '../../contexts/LanguageContext';
 
-const Jumbotron = ({ title, description }) => {
+const Jumbotron = () => {
+  const { t } = useLanguage();
+
   return (
     <div className="jumbotron">
-      <h1 className="jumbotron-title">{title}</h1>
-      <p className="jumbotron-description">{description}</p>
+      <h1 className="jumbotron-title">{t('welcome')}</h1>
+      <p className="jumbotron-description">{t('jumdescription')}</p>
     </div>
   );
 };

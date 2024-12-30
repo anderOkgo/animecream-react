@@ -1,17 +1,20 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import './TablePagination.css';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { translations } from '../../helpers/translations/translations';
 import set from '../../helpers/set.json';
+import './TablePagination.css';
 
 function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPage, element = '' }) {
+  const { language } = useLanguage();
+  const t = translations[language]; // Get translations based on current language
+
   const [totalPages, setTotalPages] = useState(1);
   const [startIndex, setStartIndex] = useState(0);
   const [endIndex, setEndIndex] = useState(0);
 
   useEffect(() => {
-    // Calculate total pages whenever filtered data changes
     setTotalPages(Math.ceil(filteredData.length / itemsPerPage));
-    // Calculate startIndex and endIndex whenever currentPage or itemsPerPage changes
     const newStartIndex = (currentPage - 1) * itemsPerPage + 1;
     const newEndIndex = Math.min(currentPage * itemsPerPage, filteredData.length);
     setStartIndex(newStartIndex);
@@ -77,15 +80,15 @@ function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPa
         className="pagination-range"
       />
       <small className="pagination-label">
-        Showing {startIndex}-{endIndex} of {filteredData.length} records
+        {t.showing} {startIndex}-{endIndex} {t.of} {filteredData.length} {t.records}
       </small>
       <div className="pagination">
         <button onClick={prevPage} disabled={currentPage === 1} className="pagination-button">
-          Prev
+          {t.prev}
         </button>
         {renderPaginationButtons()}
         <button onClick={nextPage} disabled={currentPage === totalPages} className="pagination-button">
-          Next
+          {t.next}
         </button>
       </div>
     </>

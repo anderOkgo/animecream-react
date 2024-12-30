@@ -2,21 +2,24 @@ import './App.css';
 import Home from './components/Home/Home';
 import Menu from './components/Menu/Menu';
 import Jumbotron from './components/Jumbotron/Jumbotron';
-import { useAlive } from '../src/hooks/useAlive';
-import { useTheme } from '../src/hooks/useTheme';
+import { useAlive } from './hooks/useAlive';
+import { useTheme } from './hooks/useTheme';
+import { LanguageProvider } from './contexts/LanguageContext';
 
 const App = () => {
-  const { init, setInit, proc, setProc, boot } = useAlive();
+  const { init, proc, boot } = useAlive();
   const { toggleDarkMode } = useTheme();
 
   return (
-    <div className="app">
-      <Menu {...{ init, proc, boot, toggleDarkMode }} />
-      <div className="card-area">
-        <Jumbotron title="AnimeCream APP" description="The best recommendations about anime" />
-        <Home />
+    <LanguageProvider>
+      <div className="app">
+        <Menu {...{ init, proc, boot, toggleDarkMode }} />
+        <div className="card-area">
+          <Jumbotron />
+          <Home />
+        </div>
       </div>
-    </div>
+    </LanguageProvider>
   );
 };
 

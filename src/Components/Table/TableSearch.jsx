@@ -1,17 +1,21 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { translations } from '../../helpers/translations/translations';
 import set from '../../helpers/set.json';
 import './TableSearch.css';
 import { generateUniqueId } from '../../helpers/operations';
 
 function TableSearch({ setCurrentPage, setFilteredData, setItemsPerPage, dataset, itemsPerPage }) {
+  const { language } = useLanguage();
+  const t = translations[language]; // Get translations based on current language
+
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Search functionality
   const handleSearch = (newSearchTerm) => {
     setCurrentPage(1);
     setSearchTerm(newSearchTerm);
-    // Filter data based on search term
+
     const filteredResults = dataset.filter((item) =>
       Object.values(item).some((value) => value.toString().toLowerCase().includes(newSearchTerm.toLowerCase()))
     );
@@ -22,8 +26,8 @@ function TableSearch({ setCurrentPage, setFilteredData, setItemsPerPage, dataset
 
   return (
     <div className="search-box">
-      <label id={uniqueId}>
-        Rows:{' '}
+      <label htmlFor={uniqueId}>
+        {t.rows}:{' '}
         <select
           id={uniqueId}
           value={itemsPerPage}
@@ -46,7 +50,7 @@ function TableSearch({ setCurrentPage, setFilteredData, setItemsPerPage, dataset
         type="search"
         value={searchTerm}
         onChange={(e) => handleSearch(e.target.value)}
-        placeholder="Search..."
+        placeholder={t.search}
       />
     </div>
   );

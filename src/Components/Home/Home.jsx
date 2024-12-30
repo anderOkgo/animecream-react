@@ -4,15 +4,16 @@ import SearchMethod from '../SearchMethod/SearchMethod';
 import Card from '../Card/Card';
 import Loader from '../Loader/Loader';
 import Message from '../Message/Message';
-import AuthService from '../../services/auth.service';
 import './Home.css';
 import set from '../../helpers/set.json';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 const Home = () => {
   const [db, setDb] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [opt, setOpt] = useState({});
+  const { language, toggleLanguage, t } = useLanguage();
 
   useEffect(() => {
     try {
@@ -25,6 +26,7 @@ const Home = () => {
     } catch (error) {
       console.log(error);
     }
+
     const fetchData = async () => {
       setLoading(true);
       let urlProduction = set.base_url + set.api_url;
@@ -42,9 +44,11 @@ const Home = () => {
     fetchData();
   }, [opt]);
 
-  const currentUser = AuthService.getCurrentUser();
   return (
     <article className="grid-1-2">
+      <div className="language-toggle">
+        <button onClick={toggleLanguage}>{language === 'en' ? 'Switch to Spanish' : 'Switch to English'}</button>
+      </div>
       <SearchMethod setOpt={setOpt} />
       {loading && <Loader />}
       {error && <Message msg={`Error: ${Object.values(error)[0]}`} bgColor="#dc3545" />}

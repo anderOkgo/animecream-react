@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import './searchMethod.css';
+import { translations } from '../../helpers/translations/translations';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 const SearchMethod = ({ setOpt }) => {
+  const { language } = useLanguage();
   const [isFormVisible, setIsFormVisible] = useState(false);
+
+  const t = translations[language];
 
   const genreOptions = [
     { id: 1, name: 'Acción', slug: 'accion' },
@@ -82,26 +87,20 @@ const SearchMethod = ({ setOpt }) => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    try {
-      const conditions = {};
-      if (form.production_name) conditions.production_name = form.production_name;
-      if (form.production_number_chapters) conditions.production_number_chapters = form.production_number_chapters;
-      if (form.production_description) conditions.production_description = form.production_description;
-      if (form.production_year) conditions.production_year = form.production_year;
-      if (form.demographic_name) conditions.demographic_name = form.demographic_name;
-      if (form.genre_names) conditions.genre_names = form.genre_names;
-      if (form.limit) conditions.limit = parseInt(form.limit, 10);
+    const conditions = {};
+    Object.keys(form).forEach((key) => {
+      if (form[key]) {
+        conditions[key] = key === 'limit' ? parseInt(form[key], 10) : form[key];
+      }
+    });
 
-      setOpt({
-        method: 'POST',
-        body: conditions,
-      });
-    } catch (error) {
-      console.error('Error:', error.message);
-    }
+    setOpt({
+      method: 'POST',
+      body: conditions,
+    });
   };
 
   const handleReset = () => {
@@ -121,28 +120,25 @@ const SearchMethod = ({ setOpt }) => {
   };
 
   return (
-    <div className="toggle-search">
-      <span variant="text" onClick={toggleFormVisibility} className="">
-        {isFormVisible ? '🔍 Close Advance Search' : '🔍 Open Advance Search'}
-      </span>
+    <div className="toggle-search form-container">
+      <span onClick={toggleFormVisibility}>{isFormVisible ? t.closeAdvancedSearch : t.openAdvancedSearch}</span>
 
       {isFormVisible && (
         <div className="form-container">
-          <h2>Search Method</h2>
-          <br />
+          <h2>{t.searchMethod}</h2>
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label>Series Name</label>
+              <label>{t.seriesName}</label>
               <input
                 type="text"
                 name="production_name"
-                placeholder="Name"
+                placeholder={t.seriesName}
                 value={form.production_name}
                 onChange={handleChange}
               />
             </div>
             <div className="form-group">
-              <label>Number of Chapters</label>
+              <label>{t.numberOfChapters}</label>
               <input
                 type="text"
                 name="production_number_chapters"
@@ -152,17 +148,17 @@ const SearchMethod = ({ setOpt }) => {
               />
             </div>
             <div className="form-group">
-              <label>Description</label>
+              <label>{t.description}</label>
               <input
                 type="text"
                 name="production_description"
-                placeholder="Description"
+                placeholder={t.description}
                 value={form.production_description}
                 onChange={handleChange}
               />
             </div>
             <div className="form-group">
-              <label>Production Year (comma-separated)</label>
+              <label>{t.productionYear}</label>
               <input
                 type="text"
                 name="production_year"
@@ -172,9 +168,9 @@ const SearchMethod = ({ setOpt }) => {
               />
             </div>
             <div className="form-group">
-              <label>Genre Names</label>
+              <label>{t.genreNames}</label>
               <select name="genre_names" value={form.genre_names} onChange={handleChange}>
-                <option value="">Select Genre</option>
+                <option value="">{t.selectGenre}</option>
                 {genreOptions.map((option) => (
                   <option key={option.id} value={option.name}>
                     {option.name}
@@ -183,20 +179,20 @@ const SearchMethod = ({ setOpt }) => {
               </select>
             </div>
             <div className="form-group">
-              <label>Genre Names (comma-separated)</label>
+              <label>{t.genreNames}</label>
               <input
                 type="text"
                 name="genre_names"
-                placeholder="Genre Names"
+                placeholder={t.genreNames}
                 value={form.genre_names}
                 onChange={handleChange}
                 readOnly
               />
             </div>
             <div className="form-group">
-              <label>Demographic Names</label>
+              <label>{t.demographicNames}</label>
               <select name="demographic_name" value={form.demographic_name} onChange={handleChange}>
-                <option value="">Select Demographic</option>
+                <option value="">{t.selectDemographic}</option>
                 {demographicOptions.map((option) => (
                   <option key={option.id} value={option.slug}>
                     {option.name}
@@ -205,12 +201,12 @@ const SearchMethod = ({ setOpt }) => {
               </select>
             </div>
             <div className="form-group">
-              <label>Limit</label>
-              <input type="number" name="limit" placeholder="Limit" value={form.limit} onChange={handleChange} />
+              <label>{t.limit}</label>
+              <input type="number" name="limit" placeholder={t.limit} value={form.limit} onChange={handleChange} />
             </div>
             <div className="form-group">
-              <input type="submit" value="Search" />
-              <input type="reset" value="Reset" onClick={handleReset} />
+              <input type="submit" value={t.search} />
+              <input type="reset" value={t.reset} onClick={handleReset} />
             </div>
           </form>
         </div>
