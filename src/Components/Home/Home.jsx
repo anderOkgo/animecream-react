@@ -6,14 +6,12 @@ import Loader from '../Loader/Loader';
 import Message from '../Message/Message';
 import './Home.css';
 import set from '../../helpers/set.json';
-import { useLanguage } from '../../contexts/LanguageContext';
 
-const Home = () => {
+const Home = ({ t, toggleLanguage, language }) => {
   const [db, setDb] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [opt, setOpt] = useState({});
-  const { language, toggleLanguage, t } = useLanguage();
 
   useEffect(() => {
     try {
@@ -51,10 +49,10 @@ const Home = () => {
           {language === 'en' ? 'Switch to Spanish' : 'Switch to English'}
         </span>
       </div>
-      <SearchMethod setOpt={setOpt} />
+      <SearchMethod setOpt={setOpt} t={t} />
       {loading && <Loader />}
       {error && <Message msg={`Error: ${Object.values(error)[0]}`} bgColor="#dc3545" />}
-      {db && <Card data={db} />}
+      {db && <Card data={db} t={t} />}
     </article>
   );
 };

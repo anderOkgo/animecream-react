@@ -4,7 +4,7 @@ import './Card.css';
 import TablePagination from '../Table/TablePagination';
 import TableSearch from '../Table/TableSearch';
 
-const Card = ({ data }) => {
+const Card = ({ data, t }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [dataset, setDataset] = useState([]);
   const [filteredData, setFilteredData] = useState(data);
@@ -23,19 +23,19 @@ const Card = ({ data }) => {
   return (
     <div className="main-content" id="main-content">
       <div className="search-container">
-        <TableSearch {...{ setCurrentPage, setFilteredData, setItemsPerPage, dataset, itemsPerPage }} />
+        <TableSearch {...{ setCurrentPage, setFilteredData, setItemsPerPage, dataset, itemsPerPage, t }} />
       </div>
       {currentData.length > 0 ? (
         <>
           <div className="pagination-container">
-            <TablePagination {...{ currentPage, setCurrentPage, filteredData, itemsPerPage, element }} />
+            <TablePagination {...{ currentPage, setCurrentPage, filteredData, itemsPerPage, element, t }} />
           </div>
           <br />
           {currentData.map((el) => (
-            <CardRow key={el.production_ranking_number} el={el} />
+            <CardRow key={el.production_ranking_number} el={el} t={t} />
           ))}
           <div className="pagination-container">
-            <TablePagination {...{ currentPage, setCurrentPage, filteredData, itemsPerPage, element }} />
+            <TablePagination {...{ currentPage, setCurrentPage, filteredData, itemsPerPage, element, t }} />
           </div>
         </>
       ) : (

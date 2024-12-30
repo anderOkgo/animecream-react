@@ -1,13 +1,10 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useLanguage } from '../../contexts/LanguageContext';
 import set from '../../helpers/set.json';
 import './TableSearch.css';
 import { generateUniqueId } from '../../helpers/operations';
 
-function TableSearch({ setCurrentPage, setFilteredData, setItemsPerPage, dataset, itemsPerPage }) {
-  const { t } = useLanguage();
-
+function TableSearch({ setCurrentPage, setFilteredData, setItemsPerPage, dataset, itemsPerPage, t }) {
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearch = (newSearchTerm) => {

@@ -1,9 +1,7 @@
 import * as React from 'react';
 import './CardRow.css';
-import { useLanguage } from '../../contexts/LanguageContext';
 
-export default function CardRow({ el }) {
-  const { t } = useLanguage();
+export default function CardRow({ el, t }) {
   let {
     production_name,
     production_year,

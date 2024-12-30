@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import './searchMethod.css';
-import { useLanguage } from '../../contexts/LanguageContext';
 
-const SearchMethod = ({ setOpt }) => {
-  const { t } = useLanguage();
+const SearchMethod = ({ setOpt, t }) => {
   const [isFormVisible, setIsFormVisible] = useState(false);
 
   const genreOptions = [

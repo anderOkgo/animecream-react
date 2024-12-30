@@ -1,12 +1,9 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { useLanguage } from '../../contexts/LanguageContext';
 import set from '../../helpers/set.json';
 import './TablePagination.css';
 
-function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPage, element = '' }) {
-  const { t } = useLanguage();
-
+function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPage, element = '', t }) {
   const [totalPages, setTotalPages] = useState(1);
   const [startIndex, setStartIndex] = useState(0);
   const [endIndex, setEndIndex] = useState(0);

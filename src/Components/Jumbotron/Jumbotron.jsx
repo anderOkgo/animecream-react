@@ -1,10 +1,7 @@
 import React from 'react';
 import './Jumbotron.css';
-import { useLanguage } from '../../contexts/LanguageContext';
 
-const Jumbotron = () => {
-  const { t } = useLanguage();
-
+const Jumbotron = ({ t }) => {
   return (
     <div className="jumbotron">
       <h1 className="jumbotron-title">{t('welcome')}</h1>
