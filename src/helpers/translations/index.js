@@ -23,6 +23,7 @@ export const translations = {
     records: 'records',
     rows: 'Rows',
     search: 'Search...',
+    cardDescription: 'Description',
   },
   es: {
     welcome: 'AnimeCream APP',
@@ -48,5 +49,6 @@ export const translations = {
     records: 'registros',
     rows: 'Filas',
     search: 'Buscar...',
+    cardDescription: 'Descripción',
   },
 };

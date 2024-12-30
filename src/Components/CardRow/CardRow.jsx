@@ -1,7 +1,9 @@
 import * as React from 'react';
 import './CardRow.css';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 export default function CardRow({ el }) {
+  const { t } = useLanguage();
   let {
     production_name,
     production_year,
@@ -62,7 +64,7 @@ export default function CardRow({ el }) {
           id={`tabtwo-${production_ranking_number}`}
         />
         <label className="label tab-desc" htmlFor={`tabtwo-${production_ranking_number}`}>
-          Description
+          {t('cardDescription')}
         </label>
         <div className="panel">
           <div id="section2" className="tab-section">
