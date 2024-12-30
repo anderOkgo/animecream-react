@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { getLanguage, setLanguage } from '../helpers/translations/languageUtils';
-import { translations } from '../helpers/translations/translations';
+import { getLanguage, setLanguageLocal } from '../helpers/translations/languageUtils';
+import { translations } from '../helpers/translations/';
 
 const LanguageContext = createContext();
 
@@ -8,9 +8,8 @@ export const LanguageProvider = ({ children }) => {
   const [language, setLanguage] = useState(getLanguage());
 
   useEffect(() => {
-    // If language is updated, refresh content
     setLanguage(language);
-    document.documentElement.lang = lang;
+    document.documentElement.lang = language;
   }, [language]);
 
   const toggleLanguage = () => {

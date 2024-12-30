@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import './searchMethod.css';
-import { translations } from '../../helpers/translations/translations';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 const SearchMethod = ({ setOpt }) => {
-  const { language } = useLanguage();
+  const { t } = useLanguage();
   const [isFormVisible, setIsFormVisible] = useState(false);
-
-  const t = translations[language];
 
   const genreOptions = [
     { id: 1, name: 'Acción', slug: 'accion' },
@@ -121,24 +118,25 @@ const SearchMethod = ({ setOpt }) => {
 
   return (
     <div className="toggle-search form-container">
-      <span onClick={toggleFormVisibility}>{isFormVisible ? t.closeAdvancedSearch : t.openAdvancedSearch}</span>
+      <span onClick={toggleFormVisibility}>
+        {isFormVisible ? t('closeAdvancedSearch') : t('openAdvancedSearch')}
+      </span>
 
       {isFormVisible && (
         <div className="form-container">
-          <h2>{t.searchMethod}</h2>
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label>{t.seriesName}</label>
+              <label>{t('seriesName')}</label>
               <input
                 type="text"
                 name="production_name"
-                placeholder={t.seriesName}
+                placeholder={t('seriesName')}
                 value={form.production_name}
                 onChange={handleChange}
               />
             </div>
             <div className="form-group">
-              <label>{t.numberOfChapters}</label>
+              <label>{t('numberOfChapters')}</label>
               <input
                 type="text"
                 name="production_number_chapters"
@@ -148,17 +146,17 @@ const SearchMethod = ({ setOpt }) => {
               />
             </div>
             <div className="form-group">
-              <label>{t.description}</label>
+              <label>{t('description')}</label>
               <input
                 type="text"
                 name="production_description"
-                placeholder={t.description}
+                placeholder={t('description')}
                 value={form.production_description}
                 onChange={handleChange}
               />
             </div>
             <div className="form-group">
-              <label>{t.productionYear}</label>
+              <label>{t('productionYear')}</label>
               <input
                 type="text"
                 name="production_year"
@@ -168,9 +166,9 @@ const SearchMethod = ({ setOpt }) => {
               />
             </div>
             <div className="form-group">
-              <label>{t.genreNames}</label>
+              <label>{t('genreNames')}</label>
               <select name="genre_names" value={form.genre_names} onChange={handleChange}>
-                <option value="">{t.selectGenre}</option>
+                <option value="">{t('selectGenre')}</option>
                 {genreOptions.map((option) => (
                   <option key={option.id} value={option.name}>
                     {option.name}
@@ -179,20 +177,20 @@ const SearchMethod = ({ setOpt }) => {
               </select>
             </div>
             <div className="form-group">
-              <label>{t.genreNames}</label>
+              <label>{t('genreNames')}</label>
               <input
                 type="text"
                 name="genre_names"
-                placeholder={t.genreNames}
+                placeholder={t('genreNames')}
                 value={form.genre_names}
                 onChange={handleChange}
                 readOnly
               />
             </div>
             <div className="form-group">
-              <label>{t.demographicNames}</label>
+              <label>{t('demographicNames')}</label>
               <select name="demographic_name" value={form.demographic_name} onChange={handleChange}>
-                <option value="">{t.selectDemographic}</option>
+                <option value="">{t('selectDemographic')}</option>
                 {demographicOptions.map((option) => (
                   <option key={option.id} value={option.slug}>
                     {option.name}
@@ -201,12 +199,18 @@ const SearchMethod = ({ setOpt }) => {
               </select>
             </div>
             <div className="form-group">
-              <label>{t.limit}</label>
-              <input type="number" name="limit" placeholder={t.limit} value={form.limit} onChange={handleChange} />
+              <label>{t('limit')}</label>
+              <input
+                type="number"
+                name="limit"
+                placeholder={t('limit')}
+                value={form.limit}
+                onChange={handleChange}
+              />
             </div>
             <div className="form-group">
-              <input type="submit" value={t.search} />
-              <input type="reset" value={t.reset} onClick={handleReset} />
+              <input type="submit" value={t('search')} />
+              <input type="reset" value={t('reset')} onClick={handleReset} />
             </div>
           </form>
         </div>

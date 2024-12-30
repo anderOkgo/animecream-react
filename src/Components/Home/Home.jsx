@@ -47,7 +47,9 @@ const Home = () => {
   return (
     <article className="grid-1-2">
       <div className="language-toggle">
-        <button onClick={toggleLanguage}>{language === 'en' ? 'Switch to Spanish' : 'Switch to English'}</button>
+        <span className="tag ep" onClick={toggleLanguage}>
+          {language === 'en' ? 'Switch to Spanish' : 'Switch to English'}
+        </span>
       </div>
       <SearchMethod setOpt={setOpt} />
       {loading && <Loader />}

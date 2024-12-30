@@ -1,13 +1,11 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { translations } from '../../helpers/translations/translations';
 import set from '../../helpers/set.json';
 import './TablePagination.css';
 
 function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPage, element = '' }) {
-  const { language } = useLanguage();
-  const t = translations[language]; // Get translations based on current language
+  const { t } = useLanguage();
 
   const [totalPages, setTotalPages] = useState(1);
   const [startIndex, setStartIndex] = useState(0);
@@ -80,15 +78,15 @@ function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPa
         className="pagination-range"
       />
       <small className="pagination-label">
-        {t.showing} {startIndex}-{endIndex} {t.of} {filteredData.length} {t.records}
+        {t('showing')} {startIndex}-{endIndex} {t('of')} {filteredData.length} {t('records')}
       </small>
       <div className="pagination">
         <button onClick={prevPage} disabled={currentPage === 1} className="pagination-button">
-          {t.prev}
+          {t('prev')}
         </button>
         {renderPaginationButtons()}
         <button onClick={nextPage} disabled={currentPage === totalPages} className="pagination-button">
-          {t.next}
+          {t('next')}
         </button>
       </div>
     </>

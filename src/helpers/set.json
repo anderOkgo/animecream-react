@@ -4,7 +4,7 @@
   "base_url_": "http://localhost:3001/",
   "boot_timeout": 20000,
   "defaul_fetch_request": 10000,
-  "pagination_max_buttons": 5,
+  "pagination_max_buttons": 3,
   "pagination_default_items_per_page": 20,
   "table_select_row_numbers": [1, 2, 5, 10, 20, 50, 100, 500, 1000, 10000],
   "form_type_options": [
