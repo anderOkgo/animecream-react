@@ -6,3 +6,16 @@
   overflow-y: scroll;
   height: 90%;
 }
+
+.lang-container {
+  margin-bottom: 0.3em;
+}
+
+.lang {
+  font-size: 0.8em;
+  background-color: var(--main-color);
+  color: var(--white);
+  padding: 6px;
+  cursor: pointer;
+  border-radius: 0px 8px 8px 8px;
+}

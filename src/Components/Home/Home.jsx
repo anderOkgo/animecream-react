@@ -44,9 +44,9 @@ const Home = ({ t, toggleLanguage, language }) => {
 
   return (
     <article className="grid-1-2">
-      <div className="language-toggle">
-        <span className="tag ep" onClick={toggleLanguage}>
-          {language === 'en' ? 'Switch to Spanish' : 'Switch to English'}
+      <div className="lang-container">
+        <span className="lang" onClick={toggleLanguage}>
+          {language === 'en' ? t('switchToSpanish') : t('switchToEnglish')}
         </span>
       </div>
       <SearchMethod setOpt={setOpt} t={t} />

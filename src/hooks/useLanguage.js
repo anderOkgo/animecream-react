@@ -27,6 +27,8 @@ const translations = {
     search: 'Search...',
     cardDescription: 'Description',
     info: 'Information',
+    switchToSpanish: 'ENG',
+    switchToEnglish: 'ESP',
   },
   es: {
     welcome: 'AnimeCream APP',
@@ -54,6 +56,8 @@ const translations = {
     search: 'Buscar...',
     cardDescription: 'Descripción',
     info: 'Información',
+    switchToSpanish: 'ENG',
+    switchToEnglish: 'ESP',
   },
 };
 
