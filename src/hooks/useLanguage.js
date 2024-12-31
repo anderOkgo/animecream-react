@@ -26,6 +26,7 @@ const translations = {
     rows: 'Rows',
     search: 'Search...',
     cardDescription: 'Description',
+    info: 'Information',
   },
   es: {
     welcome: 'AnimeCream APP',
@@ -52,6 +53,7 @@ const translations = {
     rows: 'Filas',
     search: 'Buscar...',
     cardDescription: 'Descripción',
+    info: 'Información',
   },
 };
 

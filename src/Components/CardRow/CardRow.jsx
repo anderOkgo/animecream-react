@@ -24,7 +24,7 @@ export default function CardRow({ el, t }) {
           defaultChecked="checked"
         />
         <label className="label" htmlFor={`tabone-${production_ranking_number}`}>
-          Info
+          {t('info')}
         </label>
         <div className="panel">
           <div id="section1" className="tab-section">
