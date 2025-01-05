@@ -8,7 +8,7 @@ export const useAlive = () => {
   const [online, setOnline] = useState(true); // Indicates if application is online
 
   useEffect(() => {
-    boot();
+    //boot();
 
     // If online and not initialized, trigger the boot process
     if (online && !init) setProc(true) & boot() & setProc(false);
