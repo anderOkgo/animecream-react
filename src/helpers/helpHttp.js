@@ -22,13 +22,13 @@ const customFetch = async (endpoint, options = {}) => {
   if (navigator.onLine) {
     try {
       const res = await fetch(endpoint, options);
+      const responseBody = await res.json();
       return await (res.ok
-        ? res.json()
+        ? responseBody
         : Promise.reject({
-            err: true,
             status: res.status || '00',
             statusText: res.statusText || 'An error has occurred',
-            response: await res.json(),
+            message: (Array.isArray(responseBody) ? responseBody.join(', ') : responseBody) || 'Unknown error',
           }));
     } catch (err) {
       console.log({ err });
@@ -36,9 +36,7 @@ const customFetch = async (endpoint, options = {}) => {
     }
   } else {
     return {
-      err: true,
-      status: '00',
-      statusText: 'Offline',
+      err: { status: '00', statusText: 'Offline', message: 'Offline' },
     };
   }
 };

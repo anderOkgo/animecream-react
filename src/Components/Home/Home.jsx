@@ -33,7 +33,7 @@ const Home = ({ t, toggleLanguage, language }) => {
         localStorage.setItem('storage', JSON.stringify(productionsInfo));
         setDb(productionsInfo?.err ? [] : productionsInfo);
       } else {
-        const error = productionsInfo?.err?.response?.error;
+        const error = productionsInfo?.err?.message || 'Error';
         setError(error);
       }
       setLoading(false);
