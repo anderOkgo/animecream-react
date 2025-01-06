@@ -47,7 +47,7 @@ export default function CardRow({ el, t }) {
                   <span className="tag">{demographic_name}</span>
                   {genre_names.split(',').map((genre) => (
                     <span className="tag" key={genre} variant="text">
-                      {genre}
+                      {t(genre)}
                     </span>
                   ))}
                 </div>

@@ -36,9 +36,11 @@ const Home = ({ t, toggleLanguage, language }) => {
       } else {
         let error = '';
         if (typeof productionsInfo?.err?.message === 'object') {
-          error = Object.values(productionsInfo.err.message).join(', ');
+          error = Object.values(productionsInfo.err.message)
+            .map((err) => t(err))
+            .join(', ');
         } else {
-          error = productionsInfo?.err?.message || 'Error';
+          error = t(productionsInfo?.err?.message || 'Error');
         }
         setError(error);
       }
