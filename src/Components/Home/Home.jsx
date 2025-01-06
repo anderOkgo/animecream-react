@@ -34,7 +34,12 @@ const Home = ({ t, toggleLanguage, language }) => {
         setDb(productionsInfo?.err ? [] : productionsInfo);
         setError(false);
       } else {
-        const error = productionsInfo?.err?.message || 'Error';
+        let error = '';
+        if (typeof productionsInfo?.err?.message === 'object') {
+          error = Object.values(productionsInfo.err.message).join(', ');
+        } else {
+          error = productionsInfo?.err?.message || 'Error';
+        }
         setError(error);
       }
       setLoading(false);
