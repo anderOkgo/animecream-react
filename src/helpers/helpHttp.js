@@ -28,7 +28,11 @@ const customFetch = async (endpoint, options = {}) => {
         : Promise.reject({
             status: res.status || '00',
             statusText: res.statusText || 'An error has occurred',
-            message: (Array.isArray(responseBody) ? responseBody.join(', ') : responseBody) || 'Unknown error',
+            message: Array.isArray(responseBody)
+              ? responseBody.join(', ')
+              : typeof responseBody === 'object'
+              ? Object.values(responseBody).join(', ')
+              : responseBody || 'Unknown error',
           }));
     } catch (err) {
       console.log({ err });

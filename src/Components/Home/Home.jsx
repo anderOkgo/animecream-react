@@ -32,6 +32,7 @@ const Home = ({ t, toggleLanguage, language }) => {
       if (!productionsInfo?.err) {
         localStorage.setItem('storage', JSON.stringify(productionsInfo));
         setDb(productionsInfo?.err ? [] : productionsInfo);
+        setError(false);
       } else {
         const error = productionsInfo?.err?.message || 'Error';
         setError(error);
@@ -51,7 +52,7 @@ const Home = ({ t, toggleLanguage, language }) => {
       </div>
       <SearchMethod setOpt={setOpt} t={t} />
       {loading && <Loader />}
-      {error && <Message msg={`Error: ${Object.values(error)[0]}`} bgColor="#dc3545" />}
+      {error && <Message msg={`Error: ${error}`} bgColor="#dc3545" />}
       {db && <Card data={db} t={t} />}
     </article>
   );
