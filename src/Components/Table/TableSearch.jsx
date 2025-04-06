@@ -11,9 +11,45 @@ function TableSearch({ setCurrentPage, setFilteredData, setItemsPerPage, dataset
     setCurrentPage(1);
     setSearchTerm(newSearchTerm);
 
-    const filteredResults = dataset.filter((item) =>
-      Object.values(item).some((value) => value.toString().toLowerCase().includes(newSearchTerm.toLowerCase()))
-    );
+    const trimmedTerm = newSearchTerm.trim().toLowerCase();
+
+    if (!trimmedTerm) {
+      setFilteredData(dataset);
+      return;
+    }
+
+    let filteredResults = [];
+
+    if (trimmedTerm.includes('+')) {
+      // OR search
+      const terms = trimmedTerm
+        .split('+')
+        .map((term) => term.trim())
+        .filter((term) => term.length > 0);
+
+      filteredResults = dataset.filter((item) => {
+        const itemString = Object.values(item)
+          .filter((val) => val !== null && val !== undefined)
+          .map((val) => val.toString().toLowerCase())
+          .join(' ');
+        return terms.some((term) => itemString.includes(term));
+      });
+    } else {
+      // AND search
+      const terms = trimmedTerm
+        .split(',')
+        .map((term) => term.trim())
+        .filter((term) => term.length > 0);
+
+      filteredResults = dataset.filter((item) => {
+        const itemString = Object.values(item)
+          .filter((val) => val !== null && val !== undefined)
+          .map((val) => val.toString().toLowerCase())
+          .join(' ');
+        return terms.every((term) => itemString.includes(term));
+      });
+    }
+
     setFilteredData(filteredResults);
   };
 
@@ -57,6 +93,7 @@ TableSearch.propTypes = {
   setItemsPerPage: PropTypes.func.isRequired,
   dataset: PropTypes.array.isRequired,
   itemsPerPage: PropTypes.number.isRequired,
+  t: PropTypes.func.isRequired,
 };
 
 export default TableSearch;
