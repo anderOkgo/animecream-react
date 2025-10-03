@@ -60,7 +60,7 @@ const Home = ({ t, toggleLanguage, language }) => {
       <SearchMethod setOpt={setOpt} t={t} />
       {loading && <Loader />}
       {error && <Message msg={`Error: ${error}`} bgColor="#dc3545" />}
-      {db && <Card data={db} t={t} />}
+      {db && <Card data={db} t={t} language={language} />}
     </article>
   );
 };

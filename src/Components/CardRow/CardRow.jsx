@@ -1,17 +1,22 @@
 import * as React from 'react';
 import './CardRow.css';
 
-export default function CardRow({ el, t }) {
+export default function CardRow({ el, t, language }) {
   let {
     production_name,
     production_year,
     production_description,
+    production_description_en,
     production_ranking_number,
     production_image_path,
     genre_names,
     demographic_name,
     production_number_chapters,
   } = el;
+
+  // Seleccionar la descripción según el idioma
+  const description =
+    language === 'en' && production_description_en ? production_description_en : production_description;
 
   return (
     <div className="card">
@@ -40,7 +45,7 @@ export default function CardRow({ el, t }) {
               <div className="section-details">
                 <h2>{`#${production_ranking_number}. ${production_name}`}</h2>
                 <hr />
-                <p className="production-desc">{production_description}</p>
+                <p className="production-desc">{description}</p>
                 <div className="tags">
                   <span className="tag year">{`${production_year}`}</span>
                   <span className="tag ep">{`${production_number_chapters} Ep`}</span>
@@ -68,7 +73,7 @@ export default function CardRow({ el, t }) {
           <div id="section2" className="tab-section">
             <h2>{production_name}</h2>
             <br />
-            <p>{production_description}</p>
+            <p>{description}</p>
           </div>
         </div>
       </div>
