@@ -27,9 +27,6 @@ const Card = ({ data, t, language }) => {
       </div>
       {currentData.length > 0 ? (
         <>
-          <div className="pagination-container">
-            <TablePagination {...{ currentPage, setCurrentPage, filteredData, itemsPerPage, element, t }} />
-          </div>
           <br />
           {currentData.map((el) => (
             <CardRow key={el.production_ranking_number} el={el} t={t} language={language} />

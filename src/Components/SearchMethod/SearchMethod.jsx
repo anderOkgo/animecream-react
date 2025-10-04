@@ -64,7 +64,7 @@ const SearchMethod = ({ setOpt, t }) => {
     production_year: '',
     demographic_name: '',
     genre_names: '',
-    production_ranking_number: 'DESC',
+    production_ranking_number: 'ASC',
     limit: '',
   });
 
@@ -107,7 +107,7 @@ const SearchMethod = ({ setOpt, t }) => {
       production_year: '',
       demographic_name: '',
       genre_names: '',
-      production_ranking_number: 'DESC',
+      production_ranking_number: 'ASC',
       limit: '',
     });
   };
