@@ -64,6 +64,7 @@ const SearchMethod = ({ setOpt, t }) => {
     production_year: '',
     demographic_name: '',
     genre_names: '',
+    production_ranking_number: 'DESC',
     limit: '',
   });
 
@@ -106,6 +107,7 @@ const SearchMethod = ({ setOpt, t }) => {
       production_year: '',
       demographic_name: '',
       genre_names: '',
+      production_ranking_number: 'DESC',
       limit: '',
     });
   };
@@ -194,6 +196,17 @@ const SearchMethod = ({ setOpt, t }) => {
                     {option.name}
                   </option>
                 ))}
+              </select>
+            </div>
+            <div className="form-group">
+              <label>{t('rankingOrder')}</label>
+              <select
+                name="production_ranking_number"
+                value={form.production_ranking_number}
+                onChange={handleChange}
+              >
+                <option value="ASC">{t('ascending')}</option>
+                <option value="DESC">{t('descending')}</option>
               </select>
             </div>
             <div className="form-group">
