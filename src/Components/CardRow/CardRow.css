@@ -44,7 +44,7 @@
 
 .radiotab:checked + .label {
   background: var(--text-alt);
-  color: var(--text);
+  color: var(--fourth-color);
   border-top: 1px solid var(--soft-gray);
   border-left: 1px solid var(--soft-gray);
   border-right: 1px solid var(--soft-gray);
@@ -104,7 +104,7 @@
 }
 
 .section-details h2 {
-  color: var(--text);
+  color: var(--highlight);
 }
 
 .tags {

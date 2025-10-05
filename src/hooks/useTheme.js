@@ -34,6 +34,7 @@ export const useTheme = () => {
       '--main-color': '#0a4656',
       '--second-color': '#d4f1f7',
       '--third-color': '#0e6179',
+      '--fourth-color': '#0a4656',
       '--soft-green': ' #337ab7',
       '--white': '#fff',
       '--black': '#000',
@@ -48,7 +49,8 @@ export const useTheme = () => {
     const darkModeColors = {
       '--main-color': '#0a4656',
       '--second-color': '#367bb9', // Slightly darker secondary color
-      '--third-color': '#0e6179',
+      '--third-color': '#296b7f',
+      '--fourth-color': '#c7f2ff',
       '--soft-green': ' #337ab7',
       '--white': '#fff', // Change white to dark gray
       '--black': '#000', // Reverse black and white

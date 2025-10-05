@@ -15,9 +15,11 @@ th {
 }
 
 body {
-  font-family: Roboto, Arial, sans-serif;
+  font-family: Helvetica, Roboto, Arial, sans-serif;
   background-color: var(--background);
-  color: var(--text);
+  color: var(--fourth-color);
+  font-size: 15px;
+  line-height: 1.32857143;
 }
 
 .insetshadow {

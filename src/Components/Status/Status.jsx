@@ -7,7 +7,8 @@ function Status({ init, proc }) {
   };
   return (
     <>
-      {proc && <span> &#9201;</span>} {init ? <span> &#128293;&nbsp;</span> : <span> &#10060;</span>}
+      {proc && <span className="status-box">&#9201;</span>}
+      {init ? <span className="status-box">&#128293;</span> : <span className="status-box">&#10060;</span>}
     </>
   );
 }

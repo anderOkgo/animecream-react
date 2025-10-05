@@ -7,7 +7,7 @@ import Message from '../Message/Message';
 import './Home.css';
 import set from '../../helpers/set.json';
 
-const Home = ({ t, toggleLanguage, language }) => {
+const Home = ({ t, toggleLanguage, language, setProc }) => {
   const [db, setDb] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -27,6 +27,7 @@ const Home = ({ t, toggleLanguage, language }) => {
 
     const fetchData = async () => {
       setLoading(true);
+      setProc(true);
       let urlProduction = set.base_url + set.api_url;
       const [productionsInfo] = await Promise.all([helpHttp.post(urlProduction, opt)]);
       if (!productionsInfo?.err) {
@@ -45,6 +46,7 @@ const Home = ({ t, toggleLanguage, language }) => {
         setError(error);
       }
       setLoading(false);
+      setProc(false);
     };
 
     fetchData();
@@ -58,7 +60,7 @@ const Home = ({ t, toggleLanguage, language }) => {
         </span>
       </div>
       <SearchMethod setOpt={setOpt} t={t} />
-      {loading && <Loader />}
+      {false && <Loader />}
       {error && <Message msg={`Error: ${error}`} bgColor="#dc3545" />}
       {db && <Card data={db} t={t} language={language} />}
     </article>

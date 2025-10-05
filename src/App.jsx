@@ -7,7 +7,7 @@ import { useTheme } from './hooks/useTheme';
 import { useLanguage } from './hooks/useLanguage';
 
 const App = () => {
-  const { init, proc, boot } = useAlive();
+  const { init, proc, setProc, boot } = useAlive();
   const { toggleDarkMode } = useTheme();
   const { language, toggleLanguage, t } = useLanguage();
 
@@ -16,7 +16,7 @@ const App = () => {
       <Menu {...{ init, proc, boot, toggleDarkMode }} />
       <div className="card-area">
         <Jumbotron {...{ t }} />
-        <Home {...{ t, toggleLanguage, language }} />
+        <Home {...{ t, toggleLanguage, language, setProc }} />
       </div>
     </div>
   );
