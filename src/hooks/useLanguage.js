@@ -90,6 +90,8 @@ const translations = {
     Apocalíptico: 'Apocalyptic',
     'Triller Psicológico': 'Psychological Thriller',
     Harem: 'Harem',
+    readAloud: 'Read Aloud',
+    stopReading: 'Stop Reading',
   },
   es: {
     welcome: 'AnimeCream APP',
@@ -181,6 +183,8 @@ const translations = {
     Apocalíptico: 'Apocalíptico',
     'Triller Psicológico': 'Triller Psicológico',
     Harem: 'Harem',
+    readAloud: 'Leer en voz alta',
+    stopReading: 'Detener lectura',
   },
 };
 

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import './CardRow.css';
+import { useTextToSpeech } from '../../hooks/useTextToSpeech';
 
 export default function CardRow({ el, t, language }) {
   let {
@@ -17,6 +18,12 @@ export default function CardRow({ el, t, language }) {
   // Seleccionar la descripción según el idioma
   const description =
     language === 'en' && production_description_en ? production_description_en : production_description;
+
+  // Text-to-speech functionality
+  const { isSpeaking, toggle } = useTextToSpeech();
+
+  // Determine the language for speech synthesis
+  const speechLanguage = language === 'en' ? 'en-US' : 'es-ES';
 
   return (
     <div className="card">
@@ -56,6 +63,13 @@ export default function CardRow({ el, t, language }) {
                     </span>
                   ))}
                 </div>
+                <button
+                  className={`read-aloud-btn ${isSpeaking ? 'speaking' : ''}`}
+                  onClick={() => toggle(description, speechLanguage)}
+                  title={isSpeaking ? t('stopReading') : t('readAloud')}
+                >
+                  {isSpeaking ? '🔊' : '🔈'} {isSpeaking ? t('stopReading') : t('readAloud')}
+                </button>
               </div>
             </div>
           </div>
