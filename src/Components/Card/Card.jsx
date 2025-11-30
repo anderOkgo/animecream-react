@@ -34,6 +34,7 @@ const Card = ({ data, t, language, showRealNumbers = false, onFilterChange }) =>
           <div className="pagination-container">
             <TablePagination {...{ currentPage, setCurrentPage, filteredData, itemsPerPage, element, t }} />
           </div>
+          <span> &nbsp; </span>
           {currentData.map((el, index) => {
             const realNumber = showRealNumbers ? startNumber + index : null;
             return (

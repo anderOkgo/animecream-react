@@ -60,7 +60,7 @@ const Home = ({ t, toggleLanguage, language, setProc }) => {
           {language === 'en' ? t('switchToSpanish') : t('switchToEnglish')}
         </span>
         <span className="lang lang-numbers" onClick={() => setShowRealNumbers(!showRealNumbers)}>
-          {showRealNumbers ? t('Order') : t('Order')}
+          {showRealNumbers ? t('index') : t('index')}
         </span>
       </div>
       <SearchMethod setOpt={setOpt} t={t} />

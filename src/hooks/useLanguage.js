@@ -92,6 +92,7 @@ const translations = {
     Harem: 'Harem',
     readAloud: 'Read Aloud',
     stopReading: 'Stop Reading',
+    index: 'Index',
   },
   es: {
     welcome: 'AnimeCream APP',
@@ -185,6 +186,7 @@ const translations = {
     Harem: 'Harem',
     readAloud: 'Leer en voz alta',
     stopReading: 'Detener lectura',
+    index: 'Índice',
   },
 };
 
