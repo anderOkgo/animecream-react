@@ -4,13 +4,16 @@ import './Card.css';
 import TablePagination from '../Table/TablePagination';
 import TableSearch from '../Table/TableSearch';
 
-const Card = ({ data, t, language }) => {
+const Card = ({ data, t, language, showRealNumbers = false, onFilterChange }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [dataset, setDataset] = useState([]);
   const [filteredData, setFilteredData] = useState(data);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const currentData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
   const element = 'main-content';
+
+  // Calculate start number for real numbering
+  const startNumber = showRealNumbers ? (currentPage - 1) * itemsPerPage + 1 : null;
 
   useEffect(() => {
     if (data) {
@@ -28,9 +31,22 @@ const Card = ({ data, t, language }) => {
       {currentData.length > 0 ? (
         <>
           <br />
-          {currentData.map((el) => (
-            <CardRow key={el.production_ranking_number} el={el} t={t} language={language} />
-          ))}
+          <div className="pagination-container">
+            <TablePagination {...{ currentPage, setCurrentPage, filteredData, itemsPerPage, element, t }} />
+          </div>
+          {currentData.map((el, index) => {
+            const realNumber = showRealNumbers ? startNumber + index : null;
+            return (
+              <CardRow
+                key={el.production_ranking_number}
+                el={el}
+                t={t}
+                language={language}
+                realNumber={realNumber}
+                onFilterChange={onFilterChange}
+              />
+            );
+          })}
           <div className="pagination-container">
             <TablePagination {...{ currentPage, setCurrentPage, filteredData, itemsPerPage, element, t }} />
           </div>

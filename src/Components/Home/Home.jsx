@@ -12,6 +12,7 @@ const Home = ({ t, toggleLanguage, language, setProc }) => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [opt, setOpt] = useState({});
+  const [showRealNumbers, setShowRealNumbers] = useState(false);
 
   useEffect(() => {
     try {
@@ -58,11 +59,16 @@ const Home = ({ t, toggleLanguage, language, setProc }) => {
         <span className="lang" onClick={toggleLanguage}>
           {language === 'en' ? t('switchToSpanish') : t('switchToEnglish')}
         </span>
+        <span className="lang lang-numbers" onClick={() => setShowRealNumbers(!showRealNumbers)}>
+          {showRealNumbers ? t('Order') : t('Order')}
+        </span>
       </div>
       <SearchMethod setOpt={setOpt} t={t} />
       {false && <Loader />}
       {error && <Message msg={`Error: ${error}`} bgColor="#dc3545" />}
-      {db && <Card data={db} t={t} language={language} />}
+      {db && (
+        <Card data={db} t={t} language={language} showRealNumbers={showRealNumbers} onFilterChange={setOpt} />
+      )}
     </article>
   );
 };

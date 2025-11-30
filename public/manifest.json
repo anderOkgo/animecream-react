@@ -7,7 +7,7 @@
   "background_color": "#105969",
   "display": "standalone",
   "scope": "./",
-  "orientation": "portrait",
+  "orientation": "any",
   "theme_color": "#105969",
   "lang": "es",
   "dir": "ltr",

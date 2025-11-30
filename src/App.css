@@ -9,6 +9,8 @@
 
 .lang-container {
   margin-bottom: 0.3em;
+  display: flex;
+  gap: 0.5em;
 }
 
 .lang {
@@ -18,4 +20,8 @@
   padding: 6px;
   cursor: pointer;
   border-radius: 0px 8px 8px 8px;
+}
+
+.lang-numbers {
+  background-color: var(--soft-green);
 }
