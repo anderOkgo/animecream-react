@@ -23,6 +23,20 @@ const Card = ({ data, t, language, showRealNumbers = false, onFilterChange }) =>
     }
   }, [data]);
 
+  // Handle card deletion
+  const handleDeleteCard = (rankingNumber) => {
+    setFilteredData((prev) => {
+      const newData = prev.filter((item) => item.production_ranking_number !== rankingNumber);
+      // If current page becomes empty after deletion, go to previous page
+      const itemsOnCurrentPage = newData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+      if (itemsOnCurrentPage.length === 0 && currentPage > 1) {
+        setCurrentPage((prevPage) => Math.max(1, prevPage - 1));
+      }
+      return newData;
+    });
+    setDataset((prev) => prev.filter((item) => item.production_ranking_number !== rankingNumber));
+  };
+
   return (
     <div className="main-content" id="main-content">
       <div className="search-container">
@@ -45,6 +59,7 @@ const Card = ({ data, t, language, showRealNumbers = false, onFilterChange }) =>
                 language={language}
                 realNumber={realNumber}
                 onFilterChange={onFilterChange}
+                onDelete={() => handleDeleteCard(el.production_ranking_number)}
               />
             );
           })}

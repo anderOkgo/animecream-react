@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import set from '../../helpers/set.json';
 import './TablePagination.css';
 
@@ -7,6 +7,9 @@ function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPa
   const [totalPages, setTotalPages] = useState(1);
   const [startIndex, setStartIndex] = useState(0);
   const [endIndex, setEndIndex] = useState(0);
+  const [isRangeEnabled, setIsRangeEnabled] = useState(false);
+  const lastTouchTimeRef = useRef(0);
+  const touchTimeoutRef = useRef(null);
 
   useEffect(() => {
     setTotalPages(Math.ceil(filteredData.length / itemsPerPage));
@@ -15,6 +18,15 @@ function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPa
     setStartIndex(newStartIndex);
     setEndIndex(newEndIndex);
   }, [filteredData, itemsPerPage, currentPage]);
+
+  useEffect(() => {
+    // Limpiar timeout al desmontar
+    return () => {
+      if (touchTimeoutRef.current) {
+        clearTimeout(touchTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const renderPaginationButtons = () => {
     const maxButtons = set.pagination_max_buttons;
@@ -64,16 +76,67 @@ function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPa
     setCurrentPage(parseInt(e.target.value));
   };
 
+  const toggleRangeEnabled = () => {
+    setIsRangeEnabled((prev) => {
+      const newValue = !prev;
+      console.log('Range enabled:', newValue); // Debug
+      return newValue;
+    });
+  };
+
+  const handleDoubleClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleRangeEnabled();
+  };
+
+  const handleTouchStart = (e) => {
+    const currentTime = new Date().getTime();
+    const timeDiff = currentTime - lastTouchTimeRef.current;
+
+    // Detectar doble toque (menos de 400ms entre toques)
+    if (timeDiff < 400 && timeDiff > 0) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (touchTimeoutRef.current) {
+        clearTimeout(touchTimeoutRef.current);
+        touchTimeoutRef.current = null;
+      }
+      toggleRangeEnabled();
+      lastTouchTimeRef.current = 0; // Reset para evitar toques múltiples
+    } else {
+      lastTouchTimeRef.current = currentTime;
+      // Reset después de 500ms si no hay segundo toque
+      if (touchTimeoutRef.current) {
+        clearTimeout(touchTimeoutRef.current);
+      }
+      touchTimeoutRef.current = setTimeout(() => {
+        lastTouchTimeRef.current = 0;
+      }, 500);
+    }
+  };
+
   return (
     <>
-      <input
-        type="range"
-        min="1"
-        max={totalPages}
-        value={currentPage}
-        onChange={handleRangeChange}
-        className="pagination-range"
-      />
+      <div
+        onDoubleClick={handleDoubleClick}
+        onTouchStart={handleTouchStart}
+        className={`pagination-range-wrapper ${!isRangeEnabled ? 'disabled' : ''}`}
+        title={!isRangeEnabled ? 'Double click/tap to enable' : 'Double click/tap to disable'}
+      >
+        <input
+          type="range"
+          min="1"
+          max={totalPages}
+          value={currentPage}
+          onChange={handleRangeChange}
+          disabled={!isRangeEnabled}
+          className="pagination-range"
+          style={{ pointerEvents: !isRangeEnabled ? 'none' : 'auto' }}
+        />
+        {!isRangeEnabled && <span className="range-status-indicator"></span>}
+        {isRangeEnabled && <span className="range-status-indicator enabled"></span>}
+      </div>
       <small className="pagination-label">
         {t('showing')} {startIndex}-{endIndex} {t('of')} {filteredData.length} {t('records')}
       </small>

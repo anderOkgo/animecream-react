@@ -69,10 +69,13 @@ export const useSearchSuggestions = (dataset, searchTerm, minChars = 2, maxSugge
     const hasEnoughChars = searchTerm.trim().length >= minChars;
     const hasSuggestions = suggestions.length > 0;
 
-    if (hasEnoughChars && hasSuggestions) {
+    // Only auto-show if input is focused (user is actively typing)
+    const isInputFocused = inputRef.current === document.activeElement;
+
+    if (hasEnoughChars && hasSuggestions && isInputFocused) {
       // Automatically show suggestions when user types and there are suggestions
       setShowSuggestions(true);
-    } else {
+    } else if (!hasEnoughChars || !hasSuggestions) {
       setShowSuggestions(false);
     }
   }, [searchTerm, suggestions, minChars]);
@@ -80,6 +83,15 @@ export const useSearchSuggestions = (dataset, searchTerm, minChars = 2, maxSugge
   // Close suggestions when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
+      // Handle clicks on card close buttons - close suggestions and blur input
+      if (event.target.closest('.card-close-btn')) {
+        setShowSuggestions(false);
+        if (inputRef.current && document.activeElement === inputRef.current) {
+          inputRef.current.blur();
+        }
+        return;
+      }
+
       if (
         suggestionsRef.current &&
         !suggestionsRef.current.contains(event.target) &&

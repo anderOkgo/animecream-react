@@ -2,7 +2,7 @@ import * as React from 'react';
 import './CardRow.css';
 import { useTextToSpeech } from '../../hooks/useTextToSpeech';
 
-export default function CardRow({ el, t, language, realNumber = null, onFilterChange }) {
+export default function CardRow({ el, t, language, realNumber = null, onFilterChange, onDelete }) {
   let {
     production_name,
     production_year,
@@ -98,6 +98,25 @@ export default function CardRow({ el, t, language, realNumber = null, onFilterCh
 
   return (
     <div className="card">
+      <button
+        type="button"
+        className="card-close-btn"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (onDelete) {
+            onDelete();
+          }
+        }}
+        onMouseDown={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        title={t('close') || 'Cerrar'}
+        aria-label={t('close') || 'Cerrar tarjeta'}
+      >
+        ×
+      </button>
       <div className="tabs">
         <input
           className="radiotab"
