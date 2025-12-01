@@ -13,6 +13,7 @@ const Home = ({ t, toggleLanguage, language, setProc }) => {
   const [loading, setLoading] = useState(false);
   const [opt, setOpt] = useState({});
   const [showRealNumbers, setShowRealNumbers] = useState(false);
+  const [sortOrder, setSortOrder] = useState('asc'); // 'asc' or 'desc'
 
   useEffect(() => {
     try {
@@ -62,12 +63,22 @@ const Home = ({ t, toggleLanguage, language, setProc }) => {
         <span className="lang lang-numbers" onClick={() => setShowRealNumbers(!showRealNumbers)}>
           {showRealNumbers ? t('index') : t('index')}
         </span>
+        <span className="lang lang-sort" onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}>
+          {sortOrder === 'asc' ? '↑' : '↓'}
+        </span>
       </div>
       <SearchMethod setOpt={setOpt} t={t} />
       {false && <Loader />}
       {error && <Message msg={`Error: ${error}`} bgColor="#dc3545" />}
       {db && (
-        <Card data={db} t={t} language={language} showRealNumbers={showRealNumbers} onFilterChange={setOpt} />
+        <Card
+          data={db}
+          t={t}
+          language={language}
+          showRealNumbers={showRealNumbers}
+          onFilterChange={setOpt}
+          sortOrder={sortOrder}
+        />
       )}
     </article>
   );

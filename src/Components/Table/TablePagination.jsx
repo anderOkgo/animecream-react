@@ -84,7 +84,7 @@ function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPa
     });
   };
 
-  const handleDoubleClick = (e) => {
+  const handleClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
     toggleRangeEnabled();
@@ -119,7 +119,7 @@ function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPa
   return (
     <>
       <div
-        onDoubleClick={handleDoubleClick}
+        onDoubleClick={handleClick}
         onTouchStart={handleTouchStart}
         className={`pagination-range-wrapper ${!isRangeEnabled ? 'disabled' : ''}`}
         title={!isRangeEnabled ? 'Double click/tap to enable' : 'Double click/tap to disable'}

@@ -1,19 +1,31 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import CardRow from '../CardRow/CardRow';
 import './Card.css';
 import TablePagination from '../Table/TablePagination';
 import TableSearch from '../Table/TableSearch';
 
-const Card = ({ data, t, language, showRealNumbers = false, onFilterChange }) => {
+const Card = ({ data, t, language, showRealNumbers = false, onFilterChange, sortOrder = 'asc' }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [dataset, setDataset] = useState([]);
   const [filteredData, setFilteredData] = useState(data);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const currentData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
   const element = 'main-content';
 
   // Calculate start number for real numbering
   const startNumber = showRealNumbers ? (currentPage - 1) * itemsPerPage + 1 : null;
+
+  // Sort filtered data based on sortOrder
+  const sortedData = useMemo(() => {
+    if (!filteredData || filteredData.length === 0) return filteredData;
+    const sorted = [...filteredData].sort((a, b) => {
+      const aRank = a.production_ranking_number ?? 0;
+      const bRank = b.production_ranking_number ?? 0;
+      return sortOrder === 'asc' ? aRank - bRank : bRank - aRank;
+    });
+    return sorted;
+  }, [filteredData, sortOrder]);
+
+  const currentData = sortedData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   useEffect(() => {
     if (data) {

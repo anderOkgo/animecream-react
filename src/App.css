@@ -25,3 +25,7 @@
 .lang-numbers {
   background-color: var(--soft-green);
 }
+
+.lang-sort {
+  background-color: var(--third-color);
+}
