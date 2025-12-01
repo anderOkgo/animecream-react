@@ -8,8 +8,8 @@ function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPa
   const [startIndex, setStartIndex] = useState(0);
   const [endIndex, setEndIndex] = useState(0);
   const [isRangeEnabled, setIsRangeEnabled] = useState(false);
-  const lastTouchTimeRef = useRef(0);
-  const touchTimeoutRef = useRef(null);
+  const touchStartPosRef = useRef({ x: 0, y: 0 });
+  const hasMovedRef = useRef(false);
 
   useEffect(() => {
     setTotalPages(Math.ceil(filteredData.length / itemsPerPage));
@@ -20,12 +20,7 @@ function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPa
   }, [filteredData, itemsPerPage, currentPage]);
 
   useEffect(() => {
-    // Limpiar timeout al desmontar
-    return () => {
-      if (touchTimeoutRef.current) {
-        clearTimeout(touchTimeoutRef.current);
-      }
-    };
+    // No hay limpieza necesaria
   }, []);
 
   const renderPaginationButtons = () => {
@@ -90,30 +85,57 @@ function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPa
     toggleRangeEnabled();
   };
 
+  // Touch: guardar posición inicial
   const handleTouchStart = (e) => {
-    const currentTime = new Date().getTime();
-    const timeDiff = currentTime - lastTouchTimeRef.current;
+    const touch = e.touches[0];
+    touchStartPosRef.current = { x: touch.clientX, y: touch.clientY };
+    hasMovedRef.current = false;
+  };
 
-    // Detectar doble toque (menos de 400ms entre toques)
-    if (timeDiff < 400 && timeDiff > 0) {
+  // Touch: detectar si hay movimiento
+  const handleTouchMove = () => {
+    hasMovedRef.current = true;
+  };
+
+  // Touch: si no hubo movimiento, toggle enabled/disabled
+  const handleTouchEnd = (e) => {
+    if (!hasMovedRef.current) {
       e.preventDefault();
       e.stopPropagation();
-      if (touchTimeoutRef.current) {
-        clearTimeout(touchTimeoutRef.current);
-        touchTimeoutRef.current = null;
-      }
       toggleRangeEnabled();
-      lastTouchTimeRef.current = 0; // Reset para evitar toques múltiples
-    } else {
-      lastTouchTimeRef.current = currentTime;
-      // Reset después de 500ms si no hay segundo toque
-      if (touchTimeoutRef.current) {
-        clearTimeout(touchTimeoutRef.current);
-      }
-      touchTimeoutRef.current = setTimeout(() => {
-        lastTouchTimeRef.current = 0;
-      }, 500);
     }
+    hasMovedRef.current = false;
+  };
+
+  const handleTouchCancel = () => {
+    hasMovedRef.current = false;
+  };
+
+  // Desktop: click simple
+  const handleMouseDown = (e) => {
+    if (e.button === 0) {
+      touchStartPosRef.current = { x: e.clientX, y: e.clientY };
+      hasMovedRef.current = false;
+    }
+  };
+
+  const handleMouseMove = (e) => {
+    if (e.buttons === 1) {
+      const deltaX = Math.abs(e.clientX - touchStartPosRef.current.x);
+      const deltaY = Math.abs(e.clientY - touchStartPosRef.current.y);
+      if (deltaX > 5 || deltaY > 5) {
+        hasMovedRef.current = true;
+      }
+    }
+  };
+
+  const handleMouseUp = (e) => {
+    if (e.button === 0 && !hasMovedRef.current) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleRangeEnabled();
+    }
+    hasMovedRef.current = false;
   };
 
   return (
@@ -121,8 +143,14 @@ function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPa
       <div
         onDoubleClick={handleClick}
         onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchCancel}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
         className={`pagination-range-wrapper ${!isRangeEnabled ? 'disabled' : ''}`}
-        title={!isRangeEnabled ? 'Double click/tap to enable' : 'Double click/tap to disable'}
+        title={!isRangeEnabled ? 'Tap or click to enable' : 'Tap or click to disable'}
       >
         <input
           type="range"
