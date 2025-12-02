@@ -13,9 +13,12 @@ const Home = ({ t, toggleLanguage, language, setProc }) => {
   const [loading, setLoading] = useState(false);
   const [opt, setOpt] = useState({});
   const [showRealNumbers, setShowRealNumbers] = useState(false);
-  const [sortOrder, setSortOrder] = useState('asc'); // 'asc' or 'desc'
+  const [sortOrder, setSortOrder] = useState(null); // null = default (API order), 'asc' or 'desc'
 
   useEffect(() => {
+    // Resetear orden a default cuando cambia la consulta
+    setSortOrder(null);
+
     try {
       var localResp = localStorage.getItem('storage');
       localResp && (localResp = JSON.parse(localResp));
@@ -63,8 +66,19 @@ const Home = ({ t, toggleLanguage, language, setProc }) => {
         <span className="lang lang-numbers" onClick={() => setShowRealNumbers(!showRealNumbers)}>
           {showRealNumbers ? t('index') : t('index')}
         </span>
-        <span className="lang lang-sort" onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}>
-          {sortOrder === 'asc' ? '↑' : '↓'}
+        <span
+          className="lang lang-sort"
+          onClick={() => {
+            if (sortOrder === null) {
+              setSortOrder('asc');
+            } else if (sortOrder === 'asc') {
+              setSortOrder('desc');
+            } else {
+              setSortOrder(null);
+            }
+          }}
+        >
+          {sortOrder === null ? '↔' : sortOrder === 'asc' ? '↑' : '↓'}
         </span>
       </div>
       <SearchMethod setOpt={setOpt} t={t} />

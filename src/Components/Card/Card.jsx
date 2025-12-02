@@ -4,7 +4,7 @@ import './Card.css';
 import TablePagination from '../Table/TablePagination';
 import TableSearch from '../Table/TableSearch';
 
-const Card = ({ data, t, language, showRealNumbers = false, onFilterChange, sortOrder = 'asc' }) => {
+const Card = ({ data, t, language, showRealNumbers = false, onFilterChange, sortOrder = null }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [dataset, setDataset] = useState([]);
   const [filteredData, setFilteredData] = useState(data);
@@ -14,9 +14,14 @@ const Card = ({ data, t, language, showRealNumbers = false, onFilterChange, sort
   // Calculate start number for real numbering
   const startNumber = showRealNumbers ? (currentPage - 1) * itemsPerPage + 1 : null;
 
-  // Sort filtered data based on sortOrder
+  // Sort filtered data based on sortOrder (only if sortOrder is not null)
   const sortedData = useMemo(() => {
     if (!filteredData || filteredData.length === 0) return filteredData;
+    // Si sortOrder es null, mantener el orden original (orden de la API)
+    if (sortOrder === null) {
+      return filteredData;
+    }
+    // Solo ordenar si el usuario activó el botón de ordenar
     const sorted = [...filteredData].sort((a, b) => {
       const aRank = a.production_ranking_number ?? 0;
       const bRank = b.production_ranking_number ?? 0;
