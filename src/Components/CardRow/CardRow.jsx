@@ -2,7 +2,7 @@ import * as React from 'react';
 import './CardRow.css';
 import { useTextToSpeech } from '../../hooks/useTextToSpeech';
 
-export default function CardRow({ el, t, language, realNumber = null, onFilterChange, onDelete }) {
+export default function CardRow({ el, t, language, realNumber = null, onFilterChange, onDelete, role, onEdit }) {
   let {
     production_name,
     production_year,
@@ -96,8 +96,31 @@ export default function CardRow({ el, t, language, realNumber = null, onFilterCh
     }
   };
 
+  const handleEditClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (onEdit) {
+      onEdit(el);
+    }
+  };
+
   return (
     <div className="card">
+      {role === 'admin' && (
+        <button
+          type="button"
+          className="card-edit-btn"
+          onClick={handleEditClick}
+          onMouseDown={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+          title={t('edit') || 'Editar'}
+          aria-label={t('edit') || 'Editar serie'}
+        >
+          ✏️
+        </button>
+      )}
       <button
         type="button"
         className="card-close-btn"

@@ -7,18 +7,32 @@ import Message from '../Message/Message';
 import './Home.css';
 import set from '../../helpers/set.json';
 
-const Home = ({ t, toggleLanguage, language, setProc }) => {
+const Home = ({
+  t,
+  toggleLanguage,
+  language,
+  setProc,
+  showRealNumbers,
+  setShowRealNumbers,
+  sortOrder,
+  setSortOrder,
+  role,
+  onEditSeries,
+  refreshTrigger,
+}) => {
   const [db, setDb] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [opt, setOpt] = useState({});
-  const [showRealNumbers, setShowRealNumbers] = useState(false);
-  const [sortOrder, setSortOrder] = useState(null); // null = default (API order), 'asc' or 'desc'
 
   useEffect(() => {
     // Resetear orden a default cuando cambia la consulta
-    setSortOrder(null);
+    if (setSortOrder) {
+      setSortOrder(null);
+    }
+  }, [opt, setSortOrder]);
 
+  useEffect(() => {
     try {
       var localResp = localStorage.getItem('storage');
       localResp && (localResp = JSON.parse(localResp));
@@ -38,7 +52,7 @@ const Home = ({ t, toggleLanguage, language, setProc }) => {
       if (!productionsInfo?.err) {
         localStorage.setItem('storage', JSON.stringify(productionsInfo));
         setDb(productionsInfo?.err ? [] : productionsInfo);
-        setError(false);
+        setError(null);
       } else {
         let error = '';
         if (typeof productionsInfo?.err?.message === 'object') {
@@ -55,35 +69,18 @@ const Home = ({ t, toggleLanguage, language, setProc }) => {
     };
 
     fetchData();
-  }, [opt]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [opt, refreshTrigger]);
+
+  const handleErrorDoubleClick = () => {
+    setError(null);
+  };
 
   return (
     <article className="grid-1-2">
-      <div className="lang-container">
-        <span className="lang" onClick={toggleLanguage}>
-          {language === 'en' ? t('switchToSpanish') : t('switchToEnglish')}
-        </span>
-        <span className="lang lang-numbers" onClick={() => setShowRealNumbers(!showRealNumbers)}>
-          {showRealNumbers ? t('index') : t('index')}
-        </span>
-        <span
-          className="lang lang-sort"
-          onClick={() => {
-            if (sortOrder === null) {
-              setSortOrder('asc');
-            } else if (sortOrder === 'asc') {
-              setSortOrder('desc');
-            } else {
-              setSortOrder(null);
-            }
-          }}
-        >
-          {sortOrder === null ? '↔' : sortOrder === 'asc' ? '↑' : '↓'}
-        </span>
-      </div>
       <SearchMethod setOpt={setOpt} t={t} />
       {false && <Loader />}
-      {error && <Message msg={`Error: ${error}`} bgColor="#dc3545" />}
+      {error && <Message msg={`Error: ${error}`} bgColor="#dc3545" onDoubleClick={handleErrorDoubleClick} />}
       {db && (
         <Card
           data={db}
@@ -92,6 +89,8 @@ const Home = ({ t, toggleLanguage, language, setProc }) => {
           showRealNumbers={showRealNumbers}
           onFilterChange={setOpt}
           sortOrder={sortOrder}
+          role={role}
+          onEditSeries={onEditSeries}
         />
       )}
     </article>

@@ -4,7 +4,7 @@ import './Card.css';
 import TablePagination from '../Table/TablePagination';
 import TableSearch from '../Table/TableSearch';
 
-const Card = ({ data, t, language, showRealNumbers = false, onFilterChange, sortOrder = null }) => {
+const Card = ({ data, t, language, showRealNumbers = false, onFilterChange, sortOrder = null, role, onEditSeries }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [dataset, setDataset] = useState([]);
   const [filteredData, setFilteredData] = useState(data);
@@ -77,6 +77,8 @@ const Card = ({ data, t, language, showRealNumbers = false, onFilterChange, sort
                 realNumber={realNumber}
                 onFilterChange={onFilterChange}
                 onDelete={() => handleDeleteCard(el.production_ranking_number)}
+                role={role}
+                onEdit={onEditSeries}
               />
             );
           })}

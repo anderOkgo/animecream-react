@@ -5,6 +5,41 @@
   position: relative;
 }
 
+/* Edit Button */
+.card-edit-btn {
+  position: absolute;
+  top: 5px;
+  right: 40px;
+  background-color: var(--main-color);
+  color: var(--white);
+  border: 2px solid var(--white);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.card-edit-btn:hover {
+  background-color: var(--third-color);
+  color: var(--white);
+  transform: scale(1.1);
+  border-color: var(--white);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), 0 6px 12px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(10, 70, 86, 0.3);
+}
+
+.card-edit-btn:active {
+  transform: scale(0.95);
+}
+
 /* Close Button */
 .card-close-btn {
   position: absolute;

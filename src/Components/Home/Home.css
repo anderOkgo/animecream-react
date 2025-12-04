@@ -1,6 +1,6 @@
 /* Base styles for the container */
 .grid-1-2 {
-  padding: 1em;
+  /*  padding: 1em; */
   position: sticky;
 }
 

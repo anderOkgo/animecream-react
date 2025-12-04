@@ -3,20 +3,29 @@ import helpHttp from '../helpers/helpHttp';
 import cyfer from '../helpers/cyfer';
 import { formattedDate } from '../helpers/operations';
 
-const BASE_URL = set.baseUrl;
+const BASE_URL = set.base_url;
 const API_URL = BASE_URL + 'api/users/';
 
-const register = (username, email, password) => {
-  return helpHttp.post(API_URL, {
+const register = async (username, email, password, verificationCode) => {
+  const loginPayload = {
     username,
     email,
     password,
-  });
+    verificationCode,
+  };
+
+  let options = {
+    body: loginPayload,
+  };
+
+  const response = await helpHttp.post(API_URL + 'add', options);
+  if (response.message === 'User created successfully') await login(username, password);
+  return response.message;
 };
 
 const login = async (username, password) => {
   const loginPayload = {
-    first_name: username,
+    username: username,
     password,
   };
 
@@ -25,20 +34,45 @@ const login = async (username, password) => {
   };
 
   const response = await helpHttp.post(API_URL + 'login', options);
-  if (response.data.token === undefined) {
-    return false;
+  if (response.token === undefined) {
+    return { err: { message: response.err?.message || 'Login failed' } };
   } else {
-    localStorage.setItem(cyfer().cy('user', formattedDate()), JSON.stringify(response.data));
-    return true;
+    localStorage.setItem(cyfer().cy('user-in', formattedDate()), cyfer().cy(JSON.stringify(response), set.salt));
+    return { message: response.message };
   }
 };
 
 const logout = () => {
-  localStorage.removeItem(cyfer().cy('user', formattedDate()));
+  localStorage.clear();
 };
 
 const getCurrentUser = () => {
-  return JSON.parse(localStorage.getItem(cyfer().cy('user', formattedDate())));
+  const storage = localStorage.getItem(cyfer().cy('user-in', formattedDate()));
+
+  if (storage !== null) {
+    try {
+      return JSON.parse(cyfer().dcy(storage, set.salt));
+    } catch (error) {
+      console.error('Failed to parse decrypted data:', error);
+      return null;
+    }
+  } else {
+    return null;
+  }
+};
+
+const getUserName = (token) => {
+  if (!token) return null;
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace('-', '+').replace(/_/g, '/');
+    const decodedPayload = atob(base64);
+    const decodedJson = JSON.parse(decodedPayload);
+    return { role: decodedJson.role, username: decodedJson.username };
+  } catch (error) {
+    console.error('Error decoding JWT token:', error);
+    return null;
+  }
 };
 
 const AuthService = {
@@ -46,6 +80,7 @@ const AuthService = {
   login,
   logout,
   getCurrentUser,
+  getUserName,
 };
 
 export default AuthService;

@@ -1,0 +1,79 @@
+/* smallest screen first */
+.area-tab {
+  display: flex;
+  flex-wrap: wrap-reverse;
+  margin: 0 auto 20px;
+  border-radius: 0;
+  background-color: var(--soft-gray);
+  place-content: flex-start;
+}
+
+.label-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  width: 20%;
+  height: 9vh;
+  padding: 0.3em;
+  background: var(--background);
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 20px;
+  transition: border-bottom 0.1s, color 0.5s;
+  text-align: center;
+}
+
+.radio-tab {
+  position: absolute;
+  opacity: 0;
+  left: -20px;
+}
+
+.radio-tab:checked + .label-tab {
+  color: var(--second-color);
+  border-top: 1px solid var(--second-color);
+}
+
+.radio-tab:checked + .label-tab + .panel-tab {
+  display: block;
+}
+
+/* Ensure first tab is visible by default */
+.radio-tab:first-of-type:checked + .label-tab + .panel-tab {
+  display: block;
+}
+
+.panel-tab {
+  order: 99;
+  display: none;
+  padding: 15px 15px 15px;
+  background: var(--background);
+  width: 100%;
+  border-bottom: 1px solid var(--soft-gray);
+  height: 81vh;
+  overflow-y: scroll;
+}
+
+.section-tab > p {
+  text-align: justify;
+}
+
+.section-tab > h2 {
+  text-align: center;
+  margin: 1em 0em 0.5em 0em;
+}
+
+.container-tab {
+  max-width: 900px;
+  margin: auto;
+}
+
+.small-text {
+  font-size: small;
+}
+
+.admin-panel {
+  padding: 20px;
+  text-align: center;
+}

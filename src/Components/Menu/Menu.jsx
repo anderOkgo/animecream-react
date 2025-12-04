@@ -3,35 +3,62 @@ import './Menu.css';
 import Status from '../Status/Status';
 import AuthService from '../../services/auth.service';
 
-const Menu = ({ init, proc, boot, toggleDarkMode }) => {
+const Menu = ({ init, proc, boot, toggleDarkMode, setInit, onLoginClick }) => {
   const [currentUser, setCurrentUser] = useState(undefined);
   useEffect(() => {
     const user = AuthService.getCurrentUser();
-    user && setCurrentUser(user);
-  }, []);
+    if (user) {
+      setCurrentUser(user);
+    }
+  }, [init]);
+
+  // Update currentUser whenever init changes (login/logout)
+  useEffect(() => {
+    const user = AuthService.getCurrentUser();
+    setCurrentUser(user);
+  }, [init]);
 
   const handleStatusClick = () => {
     boot();
     toggleDarkMode();
   };
 
-  //const handleLogout = () => AuthService.logout();
+  const handleLogout = () => {
+    AuthService.logout();
+    setInit(Date.now());
+    setCurrentUser(undefined);
+  };
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (onLoginClick) {
+      onLoginClick();
+    }
+  };
 
   const title = '';
   const menuItems = [
     { label: 'Finanz', url: 'https://finan.animecream.com/' },
     { label: 'Animecream', url: 'https://www.animecream.com/' },
     { label: 'Cyfer', url: 'https://cyfer.animecream.com/' },
+    {
+      label: 'Sesión',
+      url: '#',
+      child: [
+        { isSessionNeeded: false, label: 'Login', url: '#', trigger: handleLogin },
+        { isSessionNeeded: true, label: 'Logout', url: '#', trigger: handleLogout },
+      ],
+    },
   ];
   const checkboxRef = useRef(null);
   const spanRef = useRef(null);
 
   useEffect(() => {
     const handleClick = (e) => {
-      if (checkboxRef.current == e.target || spanRef.current == e.target) {
-        checkboxRef.current.checked ? false : true;
+      if (checkboxRef.current === e.target || spanRef.current === e.target) {
+        checkboxRef.current.checked = !checkboxRef.current.checked;
       } else if (e.target.closest('.navbar') !== null) {
-        //nothig to do
+        // Do nothing if clicked inside the navbar
       } else {
         checkboxRef.current.checked = false;
       }
@@ -42,7 +69,7 @@ const Menu = ({ init, proc, boot, toggleDarkMode }) => {
     return () => {
       document.removeEventListener('click', handleClick);
     };
-  }, []);
+  }, [init]);
 
   return (
     <nav className="navbar">
@@ -70,7 +97,7 @@ const Menu = ({ init, proc, boot, toggleDarkMode }) => {
                           !subMenu.isSessionNeeded &&
                           !currentUser && (
                             <li key={subMenu.label}>
-                              <a href={subMenu.url} onClick={subMenu?.trigger}>
+                              <a href={subMenu.url} onClick={(e) => { e.preventDefault(); subMenu.trigger && subMenu.trigger(e); }}>
                                 {subMenu.label}
                               </a>
                             </li>
