@@ -35,7 +35,7 @@ function Tab({ t, toggleLanguage, language, setProc, init, role }) {
   const tabsData = [
     {
       id: 1,
-      icon: '📚',
+      icon: '',
       label: t('series') || 'Series',
       component: true && (
         <Home
@@ -60,7 +60,7 @@ function Tab({ t, toggleLanguage, language, setProc, init, role }) {
   if (role === 'admin') {
     tabsData.push({
       id: 2,
-      icon: '⚙️',
+      icon: '',
       label: t('admin') || 'Admin',
       component: true && (
         <AdminPanel

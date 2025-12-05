@@ -603,12 +603,12 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete }) => {
         {/* Toggle between Form and JSON */}
         <div className="form-toggle">
           <label>
-            <input type="radio" name="inputMode" checked={useForm} onChange={() => setUseForm(true)} />
-            {t('useForm') || 'Use Form'}
-          </label>
-          <label>
             <input type="radio" name="inputMode" checked={!useForm} onChange={() => setUseForm(false)} />
             {t('useJSON') || 'Use JSON'}
+          </label>
+          <label>
+            <input type="radio" name="inputMode" checked={useForm} onChange={() => setUseForm(true)} />
+            {t('useForm') || 'Use Form'}
           </label>
         </div>
 

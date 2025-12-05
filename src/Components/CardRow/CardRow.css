@@ -12,7 +12,7 @@
   right: 40px;
   background-color: var(--main-color);
   color: var(--white);
-  border: 2px solid var(--white);
+  border: 1px solid var(--white);
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -25,7 +25,7 @@
   justify-content: center;
   z-index: 1001;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px var(--main-color);
 }
 
 .card-edit-btn:hover {
@@ -45,9 +45,9 @@
   position: absolute;
   top: 5px;
   right: 5px;
-  background-color: var(--third-color);
+  background-color: var(--main-color);
   color: var(--white);
-  border: 2px solid var(--white);
+  border: 1px solid var(--white);
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -60,12 +60,11 @@
   justify-content: center;
   z-index: 1001;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 4px 8px rgba(0, 0, 0, 0.2);
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 4px var(--third-color);
 }
 
 .card-close-btn:hover {
-  background-color: #d32f2f;
+  background-color: var(--third-color);
   color: var(--white);
   transform: scale(1.1);
   border-color: var(--white);

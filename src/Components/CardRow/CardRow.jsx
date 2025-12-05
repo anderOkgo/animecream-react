@@ -118,7 +118,7 @@ export default function CardRow({ el, t, language, realNumber = null, onFilterCh
           title={t('edit') || 'Editar'}
           aria-label={t('edit') || 'Editar serie'}
         >
-          ✏️
+          ✎
         </button>
       )}
       <button

@@ -7,7 +7,7 @@
 .admin-panel h2 {
   color: var(--fourth-color);
   margin-bottom: 1em;
-  text-align: center;
+  text-align: left;
 }
 
 .admin-message {
@@ -52,7 +52,7 @@
   font-weight: normal;
 }
 
-.admin-form .form-group label input[type="checkbox"] {
+.admin-form .form-group label input[type='checkbox'] {
   margin-right: 8px;
 }
 
@@ -60,9 +60,9 @@
   color: #dc3545;
 }
 
-.admin-form .form-group input[type="text"],
-.admin-form .form-group input[type="number"],
-.admin-form .form-group input[type="file"],
+.admin-form .form-group input[type='text'],
+.admin-form .form-group input[type='number'],
+.admin-form .form-group input[type='file'],
 .admin-form .form-group textarea {
   width: 100%;
   padding: 7px;
@@ -177,7 +177,7 @@
   font-size: 14px;
 }
 
-.form-toggle input[type="radio"] {
+.form-toggle input[type='radio'] {
   width: auto;
   margin: 0;
 }
@@ -215,7 +215,7 @@
   background-color: var(--soft-gray);
 }
 
-.checkbox-label input[type="checkbox"] {
+.checkbox-label input[type='checkbox'] {
   width: auto;
   margin: 0;
   cursor: pointer;
@@ -284,4 +284,3 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
-
