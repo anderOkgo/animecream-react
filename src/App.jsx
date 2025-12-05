@@ -41,7 +41,7 @@ const App = () => {
     <div className="app">
       <Menu {...{ init, proc, boot, toggleDarkMode, setInit, onLoginClick: handleLoginClick }} />
       <div className="card-area">
-        {/* <Jumbotron {...{ t }} /> */}
+        <Jumbotron {...{ t }} />
         <Tab {...{ t, toggleLanguage, language, setProc, init, role }} />
         {showLogin && (
           <div

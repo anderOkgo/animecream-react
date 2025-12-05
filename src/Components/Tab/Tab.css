@@ -51,7 +51,7 @@
   background: var(--background);
   width: 100%;
   border-bottom: 1px solid var(--soft-gray);
-  height: 82vh;
+  height: 72vh;
   overflow-y: scroll;
 }
 
