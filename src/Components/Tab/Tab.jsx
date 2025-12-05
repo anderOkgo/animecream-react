@@ -6,7 +6,7 @@ import './Tab.css';
 
 function Tab({ t, toggleLanguage, language, setProc, init, role }) {
   const [nTab, setnTab] = useState(2);
-  const { selectedOption, setSelectedOption, handleTouchStart, handleTouchEnd } = useSwipeableTabs(nTab, 170);
+  const { selectedOption, setSelectedOption, handleTouchStart, handleTouchEnd } = useSwipeableTabs(1, nTab, 170);
   const [width, setWidth] = useState('20%');
   const [showRealNumbers, setShowRealNumbers] = useState(false);
   const [sortOrder, setSortOrder] = useState(null);
