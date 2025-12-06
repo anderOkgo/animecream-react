@@ -14,7 +14,7 @@
   justify-content: center;
   max-width: 100%;
   width: 20%;
-  height: 8vh;
+  height: 6vh;
   padding: 0.3em;
   background: var(--background);
   cursor: pointer;
@@ -47,12 +47,18 @@
 .panel-tab {
   order: 99;
   display: none;
-  padding: 15px 15px 15px;
+  padding: 0;
   background: var(--background);
   width: 100%;
   border-bottom: 1px solid var(--soft-gray);
-  height: 82vh;
-  overflow-y: scroll;
+  height: 84vh;
+  overflow: hidden;
+}
+
+.section-tab {
+  height: 100%;
+  overflow-y: auto;
+  padding: 0px 15px 15px;
 }
 
 .section-tab > p {
@@ -67,6 +73,7 @@
 .container-tab {
   max-width: 900px;
   margin: auto;
+  position: relative;
 }
 
 .small-text {

@@ -12,6 +12,7 @@ function Tab({ t, toggleLanguage, language, setProc, init, role }) {
   const [sortOrder, setSortOrder] = useState(null);
   const [seriesToEdit, setSeriesToEdit] = useState(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [isAdvancedSearchVisible, setIsAdvancedSearchVisible] = useState(false);
 
   const handleTabClick = (tabId) => {
     setSelectedOption(tabId);
@@ -51,6 +52,8 @@ function Tab({ t, toggleLanguage, language, setProc, init, role }) {
             role,
             onEditSeries: handleEditSeries,
             refreshTrigger,
+            isAdvancedSearchVisible,
+            setIsAdvancedSearchVisible,
           }}
         />
       ),
@@ -111,11 +114,11 @@ function Tab({ t, toggleLanguage, language, setProc, init, role }) {
             <div className="section-tab">
               <div className="container-tab">
                 <div className="lang-container">
-                  <span className="lang" onClick={toggleLanguage}>
-                    {language === 'en' ? t('switchToSpanish') : t('switchToEnglish')}
+                  <span className="lang" onClick={toggleLanguage} title={language === 'en' ? t('switchToSpanish') : t('switchToEnglish')}>
+                    {language === 'en' ? 'EN' : 'ES'}
                   </span>
-                  <span className="lang lang-numbers" onClick={() => setShowRealNumbers(!showRealNumbers)}>
-                    {showRealNumbers ? t('index') : t('index')}
+                  <span className="lang lang-numbers" onClick={() => setShowRealNumbers(!showRealNumbers)} title={t('index')}>
+                    #
                   </span>
                   <span
                     className="lang lang-sort"
@@ -128,9 +131,19 @@ function Tab({ t, toggleLanguage, language, setProc, init, role }) {
                         setSortOrder(null);
                       }
                     }}
+                    title={t('rankingOrder')}
                   >
                     {sortOrder === null ? '↔' : sortOrder === 'asc' ? '↑' : '↓'}
                   </span>
+                  {selectedOption === 1 && (
+                    <span
+                      className="lang lang-advanced-search"
+                      onClick={() => setIsAdvancedSearchVisible(!isAdvancedSearchVisible)}
+                      title={isAdvancedSearchVisible ? t('closeAdvancedSearch') : t('openAdvancedSearch')}
+                    >
+                      {isAdvancedSearchVisible ? '✕' : '🔍'}
+                    </span>
+                  )}
                 </div>
                 {tab.component}
               </div>

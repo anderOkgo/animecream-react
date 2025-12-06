@@ -10,23 +10,47 @@
   margin-bottom: 0.3em;
   display: flex;
   gap: 0.5em;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: var(--background);
+  padding: 0.5em 0;
+  margin-left: -15px;
+  margin-right: -15px;
+  padding-left: 15px;
+  padding-right: 15px;
+  border-bottom: 1px solid var(--soft-gray);
 }
 
 .lang {
   font-size: 0.8em;
   background-color: var(--main-color);
   color: var(--white);
-  padding: 6px;
+  padding: 6px 12px;
   cursor: pointer;
   border-radius: 0px 8px 8px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  transition: all 0.3s ease;
+}
+
+.lang:hover {
+  background-color: var(--third-color);
+  transform: scale(1.05);
 }
 
 .lang-numbers {
-  background-color: var(--soft-green);
+  background-color: var(--main-color);
 }
 
 .lang-sort {
-  background-color: var(--third-color);
+  background-color: var(--main-color);
+}
+
+.lang-advanced-search {
+  background-color: var(--main-color);
 }
 
 .login-overlay {

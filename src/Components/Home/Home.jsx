@@ -19,6 +19,8 @@ const Home = ({
   role,
   onEditSeries,
   refreshTrigger,
+  isAdvancedSearchVisible,
+  setIsAdvancedSearchVisible,
 }) => {
   const [db, setDb] = useState(null);
   const [error, setError] = useState(null);
@@ -78,7 +80,12 @@ const Home = ({
 
   return (
     <article className="grid-1-2">
-      <SearchMethod setOpt={setOpt} t={t} />
+      <SearchMethod
+        setOpt={setOpt}
+        t={t}
+        isFormVisible={isAdvancedSearchVisible}
+        setIsFormVisible={setIsAdvancedSearchVisible}
+      />
       {false && <Loader />}
       {error && <Message msg={`Error: ${error}`} bgColor="#dc3545" onDoubleClick={handleErrorDoubleClick} />}
       {db && (

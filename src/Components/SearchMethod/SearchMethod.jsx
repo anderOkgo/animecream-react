@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import './searchMethod.css';
 
-const SearchMethod = ({ setOpt, t }) => {
-  const [isFormVisible, setIsFormVisible] = useState(false);
+const SearchMethod = ({ setOpt, t, isFormVisible, setIsFormVisible }) => {
 
   const genreOptions = [
     { id: 1, name: 'Acción', slug: 'accion' },
@@ -97,6 +96,11 @@ const SearchMethod = ({ setOpt, t }) => {
       method: 'POST',
       body: conditions,
     });
+
+    // Ocultar el formulario después de enviar la búsqueda
+    if (setIsFormVisible) {
+      setIsFormVisible(false);
+    }
   };
 
   const handleReset = () => {
@@ -112,16 +116,8 @@ const SearchMethod = ({ setOpt, t }) => {
     });
   };
 
-  const toggleFormVisibility = () => {
-    setIsFormVisible(!isFormVisible);
-  };
-
   return (
     <div className="toggle-search form-container">
-      <span onClick={toggleFormVisibility}>
-        {isFormVisible ? t('closeAdvancedSearch') : t('openAdvancedSearch')}
-      </span>
-
       {isFormVisible && (
         <div className="form-container">
           <form onSubmit={handleSubmit}>

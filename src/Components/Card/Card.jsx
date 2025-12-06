@@ -4,7 +4,16 @@ import './Card.css';
 import TablePagination from '../Table/TablePagination';
 import TableSearch from '../Table/TableSearch';
 
-const Card = ({ data, t, language, showRealNumbers = false, onFilterChange, sortOrder = null, role, onEditSeries }) => {
+const Card = ({
+  data,
+  t,
+  language,
+  showRealNumbers = false,
+  onFilterChange,
+  sortOrder = null,
+  role,
+  onEditSeries,
+}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [dataset, setDataset] = useState([]);
   const [filteredData, setFilteredData] = useState(data);
@@ -62,10 +71,10 @@ const Card = ({ data, t, language, showRealNumbers = false, onFilterChange, sort
       {currentData.length > 0 ? (
         <>
           <br />
-          <div className="pagination-container">
+          {/* <div className="pagination-container">
             <TablePagination {...{ currentPage, setCurrentPage, filteredData, itemsPerPage, element, t }} />
-          </div>
-          <span> &nbsp; </span>
+          </div> */}
+
           {currentData.map((el, index) => {
             const realNumber = showRealNumbers ? startNumber + index : null;
             return (
@@ -84,6 +93,7 @@ const Card = ({ data, t, language, showRealNumbers = false, onFilterChange, sort
           })}
           <div className="pagination-container">
             <TablePagination {...{ currentPage, setCurrentPage, filteredData, itemsPerPage, element, t }} />
+            <br />
           </div>
         </>
       ) : (
