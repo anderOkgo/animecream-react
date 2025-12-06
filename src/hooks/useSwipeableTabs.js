@@ -15,6 +15,13 @@ function useSwipeableTabs(initialOption = MIN, numOptions = NUM_OPTIONS, swipeTh
   const handleTouchEnd = (e) => {
     if (startX === null) return;
 
+    // Verificar si el swipe viene de un input range
+    const target = e.target;
+    if (target.type === 'range' || target.closest('input[type="range"]')) {
+      startX = null;
+      return;
+    }
+
     const endX = e.changedTouches[0].clientX;
     const deltaX = endX - startX;
 
