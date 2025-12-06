@@ -40,6 +40,50 @@
   transform: scale(0.95);
 }
 
+/* Add to List Button */
+.card-add-to-list-btn {
+  position: absolute;
+  top: 5px;
+  background-color: var(--soft-green);
+  color: var(--white);
+  border: 1px solid var(--white);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px var(--soft-green);
+}
+
+/* Cuando hay botón de editar (admin), el botón de agregar está más a la izquierda */
+.card-add-to-list-btn.with-edit {
+  right: 75px;
+}
+
+/* Cuando NO hay botón de editar (no admin), el botón de agregar está en la posición del editar */
+.card-add-to-list-btn.no-edit {
+  right: 40px;
+}
+
+.card-add-to-list-btn:hover {
+  background-color: var(--third-color);
+  color: var(--white);
+  transform: scale(1.1);
+  border-color: var(--white);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), 0 6px 12px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(10, 70, 86, 0.3);
+}
+
+.card-add-to-list-btn:active {
+  transform: scale(0.95);
+}
+
 /* Close Button */
 .card-close-btn {
   position: absolute;

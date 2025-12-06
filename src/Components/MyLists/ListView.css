@@ -1,0 +1,147 @@
+.list-view-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--background);
+  border: 1px solid var(--soft-gray);
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 2000;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.list-view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--soft-gray);
+  gap: 10px;
+}
+
+.list-view-header h3 {
+  margin: 0;
+  color: var(--fourth-color);
+  flex: 1;
+  text-align: center;
+}
+
+.back-btn,
+.load-series-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.back-btn {
+  background-color: var(--soft-gray);
+  color: var(--fourth-color);
+}
+
+.back-btn:hover {
+  background-color: var(--main-color);
+  color: var(--white);
+}
+
+.load-series-btn {
+  background-color: var(--main-color);
+  color: var(--white);
+}
+
+.load-series-btn:hover:not(:disabled) {
+  background-color: var(--third-color);
+}
+
+.load-series-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.list-view-content {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.loading,
+.empty-list {
+  text-align: center;
+  color: var(--soft-gray);
+  padding: 40px 20px;
+}
+
+.series-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.series-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--soft-gray);
+  border-radius: 4px;
+  background-color: var(--background);
+  cursor: move;
+  transition: all 0.3s ease;
+}
+
+.series-item:hover {
+  background-color: var(--soft-gray);
+  border-color: var(--main-color);
+}
+
+.series-item.dragging {
+  opacity: 0.5;
+}
+
+.drag-handle {
+  font-size: 18px;
+  color: var(--soft-gray);
+  cursor: grab;
+  user-select: none;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.series-name {
+  flex: 1;
+  color: var(--fourth-color);
+  font-size: 14px;
+}
+
+.remove-item-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--fourth-color);
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.remove-item-btn:hover {
+  background-color: var(--third-color);
+  color: var(--white);
+}
+

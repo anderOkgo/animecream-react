@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import useSwipeableTabs from '../../hooks/useSwipeableTabs';
 import Home from '../Home/Home';
 import AdminPanel from '../Admin/AdminPanel';
+import ListManager from '../MyLists/ListManager';
 import './Tab.css';
 
 function Tab({ t, toggleLanguage, language, setProc, init, role }) {
@@ -13,6 +14,9 @@ function Tab({ t, toggleLanguage, language, setProc, init, role }) {
   const [seriesToEdit, setSeriesToEdit] = useState(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [isAdvancedSearchVisible, setIsAdvancedSearchVisible] = useState(false);
+  const [showListManager, setShowListManager] = useState(false);
+  const [loadByIds, setLoadByIds] = useState(null);
+  const [selectedListId, setSelectedListId] = useState(null);
 
   const handleTabClick = (tabId) => {
     setSelectedOption(tabId);
@@ -33,12 +37,67 @@ function Tab({ t, toggleLanguage, language, setProc, init, role }) {
     setRefreshTrigger((prev) => prev + 1);
   };
 
+  const handleAddToList = (series) => {
+    // Si hay una lista seleccionada, agregar directamente
+    if (selectedListId) {
+      addSeriesToSelectedList(series);
+    } else {
+      // Si no hay lista seleccionada, abrir modal para crear/seleccionar
+      setShowListManager(true);
+    }
+  };
+
+  const addSeriesToSelectedList = (series) => {
+    if (!selectedListId) return;
+
+    try {
+      const stored = localStorage.getItem(selectedListId);
+      if (stored) {
+        const listData = JSON.parse(stored);
+        const items = listData.items || [];
+        
+        // Verificar si ya existe
+        const exists = items.some((item) => item.id === series.id);
+        if (!exists) {
+          items.push({ id: series.id, name: series.name });
+          listData.items = items;
+          localStorage.setItem(selectedListId, JSON.stringify(listData));
+          // Mostrar mensaje de confirmación breve
+          const listName = listData.name || 'list';
+          // Usar un toast o mensaje discreto (por ahora alert simple)
+          // En el futuro se puede mejorar con un componente de notificación
+        } else {
+          alert(t('alreadyInList') || 'This series is already in the list');
+        }
+      }
+    } catch (error) {
+      console.error('Error adding to list:', error);
+    }
+  };
+
+  const handleListSelected = (listId) => {
+    setSelectedListId(listId);
+    if (listId) {
+      localStorage.setItem('selectedListId', listId);
+    } else {
+      localStorage.removeItem('selectedListId');
+    }
+  };
+
+  const handleLoadSeriesFromList = (ids) => {
+    if (ids && ids.length > 0) {
+      setShowListManager(false);
+      // Actualizar loadByIds directamente, el useEffect en Home se encargará de la carga
+      setLoadByIds(ids);
+    }
+  };
+
   const tabsData = [
     {
       id: 1,
       icon: '',
       label: t('series') || 'Series',
-      component: true && (
+          component: true && (
         <Home
           {...{
             t,
@@ -54,6 +113,8 @@ function Tab({ t, toggleLanguage, language, setProc, init, role }) {
             refreshTrigger,
             isAdvancedSearchVisible,
             setIsAdvancedSearchVisible,
+            onAddToList: handleAddToList,
+            loadByIds: loadByIds,
           }}
         />
       ),
@@ -89,6 +150,20 @@ function Tab({ t, toggleLanguage, language, setProc, init, role }) {
       setSelectedOption(1);
     }
   }, [tabsData.length, role, selectedOption, setSelectedOption]);
+
+  // Cargar lista seleccionada al montar
+  useEffect(() => {
+    const savedListId = localStorage.getItem('selectedListId');
+    if (savedListId) {
+      // Verificar que la lista aún existe
+      const listData = localStorage.getItem(savedListId);
+      if (listData) {
+        setSelectedListId(savedListId);
+      } else {
+        localStorage.removeItem('selectedListId');
+      }
+    }
+  }, []);
 
   return (
     <div className="area-tab" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
@@ -136,13 +211,22 @@ function Tab({ t, toggleLanguage, language, setProc, init, role }) {
                     {sortOrder === null ? '↔' : sortOrder === 'asc' ? '↑' : '↓'}
                   </span>
                   {selectedOption === 1 && (
-                    <span
-                      className="lang lang-advanced-search"
-                      onClick={() => setIsAdvancedSearchVisible(!isAdvancedSearchVisible)}
-                      title={isAdvancedSearchVisible ? t('closeAdvancedSearch') : t('openAdvancedSearch')}
-                    >
-                      {isAdvancedSearchVisible ? '✕' : '🔍'}
-                    </span>
+                    <>
+                      <span
+                        className="lang lang-advanced-search"
+                        onClick={() => setIsAdvancedSearchVisible(!isAdvancedSearchVisible)}
+                        title={isAdvancedSearchVisible ? t('closeAdvancedSearch') : t('openAdvancedSearch')}
+                      >
+                        {isAdvancedSearchVisible ? '✕' : '🔍'}
+                      </span>
+                      <span
+                        className="lang lang-my-lists"
+                        onClick={() => setShowListManager(true)}
+                        title={t('myLists') || 'My Lists'}
+                      >
+                        📋
+                      </span>
+                    </>
                   )}
                 </div>
                 {tab.component}
@@ -151,6 +235,14 @@ function Tab({ t, toggleLanguage, language, setProc, init, role }) {
           </div>
         </React.Fragment>
       ))}
+      {showListManager && (
+        <ListManager
+          onClose={() => setShowListManager(false)}
+          onLoadSeries={handleLoadSeriesFromList}
+          selectedListId={selectedListId}
+          onListSelected={handleListSelected}
+        />
+      )}
     </div>
   );
 }

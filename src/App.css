@@ -53,6 +53,10 @@
   background-color: var(--main-color);
 }
 
+.lang-my-lists {
+  background-color: var(--main-color);
+}
+
 .login-overlay {
   position: fixed;
   top: 0;

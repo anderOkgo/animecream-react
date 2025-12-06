@@ -43,10 +43,22 @@ const login = async (username, password) => {
 };
 
 const logout = () => {
-  // Solo limpiar datos de autenticación, mantener otros datos como 'storage'
+  // Solo limpiar datos de autenticación, mantener otros datos como 'storage', listas, etc.
   const storageData = localStorage.getItem('storage');
   const langData = localStorage.getItem('lang');
+  const selectedListId = localStorage.getItem('selectedListId');
+
+  // Guardar todas las listas (claves que empiezan con 'list_')
+  const listsData = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith('list_')) {
+      listsData[key] = localStorage.getItem(key);
+    }
+  }
+
   localStorage.clear();
+
   // Restaurar datos que no son de autenticación
   if (storageData) {
     localStorage.setItem('storage', storageData);
@@ -54,6 +66,14 @@ const logout = () => {
   if (langData) {
     localStorage.setItem('lang', langData);
   }
+  if (selectedListId) {
+    localStorage.setItem('selectedListId', selectedListId);
+  }
+
+  // Restaurar todas las listas
+  Object.keys(listsData).forEach((key) => {
+    localStorage.setItem(key, listsData[key]);
+  });
 };
 
 const getCurrentUser = () => {

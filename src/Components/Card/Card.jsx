@@ -13,6 +13,7 @@ const Card = ({
   sortOrder = null,
   role,
   onEditSeries,
+  onAddToList,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [dataset, setDataset] = useState([]);
@@ -88,6 +89,7 @@ const Card = ({
                 onDelete={() => handleDeleteCard(el.production_ranking_number)}
                 role={role}
                 onEdit={onEditSeries}
+                onAddToList={onAddToList}
               />
             );
           })}

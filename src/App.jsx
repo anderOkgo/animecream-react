@@ -17,7 +17,7 @@ const App = () => {
   const [role, setRole] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
 
-  useEffect(() => {
+  const updateUserInfo = () => {
     const user = AuthService.getCurrentUser();
     if (user) {
       const userInfo = AuthService.getUserName(user.token);
@@ -27,7 +27,34 @@ const App = () => {
       setUsername(null);
       setRole(null);
     }
+  };
+
+  useEffect(() => {
+    updateUserInfo();
   }, [init]);
+
+  // Actualizar información del usuario cuando cambie el localStorage (misma pestaña)
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      // Solo actualizar si cambió algo relacionado con el usuario
+      if (e.key && e.key.includes('user-in')) {
+        updateUserInfo();
+      }
+    };
+
+    // Escuchar cambios en localStorage (solo funciona entre pestañas)
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Para cambios en la misma pestaña, usar un intervalo más largo
+    const interval = setInterval(() => {
+      updateUserInfo();
+    }, 2000);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, []);
 
   const handleLoginClick = () => {
     setShowLogin(true);
@@ -35,6 +62,8 @@ const App = () => {
 
   const handleLoginSuccess = () => {
     setShowLogin(false);
+    // Actualizar información del usuario después del login
+    updateUserInfo();
   };
 
   return (

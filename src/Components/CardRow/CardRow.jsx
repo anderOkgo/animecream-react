@@ -2,7 +2,17 @@ import * as React from 'react';
 import './CardRow.css';
 import { useTextToSpeech } from '../../hooks/useTextToSpeech';
 
-export default function CardRow({ el, t, language, realNumber = null, onFilterChange, onDelete, role, onEdit }) {
+export default function CardRow({
+  el,
+  t,
+  language,
+  realNumber = null,
+  onFilterChange,
+  onDelete,
+  role,
+  onEdit,
+  onAddToList,
+}) {
   let {
     production_name,
     production_year,
@@ -121,6 +131,30 @@ export default function CardRow({ el, t, language, realNumber = null, onFilterCh
           ✎
         </button>
       )}
+      <button
+        type="button"
+        className={`card-add-to-list-btn ${role === 'admin' ? 'with-edit' : 'no-edit'}`}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (onAddToList) {
+            // Usar el.id (ID real de la base de datos) en lugar de production_ranking_number
+            const seriesId = el.id || production_ranking_number;
+            onAddToList({
+              id: seriesId,
+              name: production_name,
+            });
+          }
+        }}
+        onMouseDown={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        title={t('addToList') || 'Add to List'}
+        aria-label={t('addToList') || 'Add to List'}
+      >
+        +
+      </button>
       <button
         type="button"
         className="card-close-btn"
