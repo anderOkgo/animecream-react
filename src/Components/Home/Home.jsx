@@ -35,12 +35,15 @@ const Home = ({
   }, [opt, setSortOrder]);
 
   useEffect(() => {
+    // Cargar datos del localStorage primero para mostrar contenido inmediatamente
     try {
       var localResp = localStorage.getItem('storage');
-      localResp && (localResp = JSON.parse(localResp));
-      setDb(localResp);
-      if (Object.keys(localResp || {}).length !== 0) {
-        setDb(localResp);
+      if (localResp) {
+        localResp = JSON.parse(localResp);
+        // Solo establecer si hay datos válidos
+        if (localResp && (Array.isArray(localResp) ? localResp.length > 0 : Object.keys(localResp).length > 0)) {
+          setDb(localResp);
+        }
       }
     } catch (error) {
       console.log(error);
@@ -65,6 +68,7 @@ const Home = ({
           error = t(productionsInfo?.err?.message || 'Error');
         }
         setError(error);
+        // No limpiar db si hay error, mantener los datos anteriores
       }
       setLoading(false);
       setProc(false);

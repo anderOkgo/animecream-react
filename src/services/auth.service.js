@@ -43,7 +43,17 @@ const login = async (username, password) => {
 };
 
 const logout = () => {
+  // Solo limpiar datos de autenticación, mantener otros datos como 'storage'
+  const storageData = localStorage.getItem('storage');
+  const langData = localStorage.getItem('lang');
   localStorage.clear();
+  // Restaurar datos que no son de autenticación
+  if (storageData) {
+    localStorage.setItem('storage', storageData);
+  }
+  if (langData) {
+    localStorage.setItem('lang', langData);
+  }
 };
 
 const getCurrentUser = () => {
