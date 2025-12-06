@@ -17,6 +17,7 @@ function Tab({ t, toggleLanguage, language, setProc, init, role }) {
   const [showListManager, setShowListManager] = useState(false);
   const [loadByIds, setLoadByIds] = useState(null);
   const [selectedListId, setSelectedListId] = useState(null);
+  const [currentSeries, setCurrentSeries] = useState([]);
 
   const handleTabClick = (tabId) => {
     setSelectedOption(tabId);
@@ -115,6 +116,7 @@ function Tab({ t, toggleLanguage, language, setProc, init, role }) {
             setIsAdvancedSearchVisible,
             onAddToList: handleAddToList,
             loadByIds: loadByIds,
+            onSeriesDataChange: setCurrentSeries,
           }}
         />
       ),
@@ -241,6 +243,7 @@ function Tab({ t, toggleLanguage, language, setProc, init, role }) {
           onLoadSeries={handleLoadSeriesFromList}
           selectedListId={selectedListId}
           onListSelected={handleListSelected}
+          currentSeries={currentSeries}
         />
       )}
     </div>

@@ -23,6 +23,7 @@ const Home = ({
   setIsAdvancedSearchVisible,
   onAddToList,
   loadByIds: externalLoadByIds,
+  onSeriesDataChange,
 }) => {
   const [db, setDb] = useState(null);
   const [error, setError] = useState(null);
@@ -32,6 +33,13 @@ const Home = ({
   const isLoadingByIdsRef = useRef(false);
   const hasInitialLoad = useRef(false);
   const lastOptRef = useRef({}); // Guardar el último opt usado para recargar
+  
+  // Sincronizar db con onSeriesDataChange siempre que cambie
+  useEffect(() => {
+    if (db && Array.isArray(db) && db.length > 0 && onSeriesDataChange) {
+      onSeriesDataChange(db);
+    }
+  }, [db, onSeriesDataChange]);
   
   // Sincronizar loadByIds externo
   useEffect(() => {
@@ -113,6 +121,10 @@ const Home = ({
           localStorage.setItem('storage', JSON.stringify(filtered));
           setDb(filtered);
           setError(null);
+          // Notificar cambios en los datos de series
+          if (onSeriesDataChange) {
+            onSeriesDataChange(filtered);
+          }
         } else {
           let error = '';
           if (typeof productionsInfo?.err?.message === 'object') {
@@ -155,6 +167,10 @@ const Home = ({
         if (localResp && (Array.isArray(localResp) ? localResp.length > 0 : Object.keys(localResp).length > 0)) {
           // Mostrar datos del localStorage temporalmente
           setDb(localResp);
+          // Notificar las series actuales desde localStorage
+          if (onSeriesDataChange) {
+            onSeriesDataChange(localResp);
+          }
         }
       }
     } catch (error) {
@@ -177,6 +193,10 @@ const Home = ({
           localStorage.setItem('storage', JSON.stringify(data));
           setDb(data);
           setError(null);
+          // Notificar cambios en los datos de series
+          if (onSeriesDataChange) {
+            onSeriesDataChange(data);
+          }
         } else {
           setError(t(productionsInfo?.err?.message || 'Error'));
         }
@@ -252,6 +272,10 @@ const Home = ({
         localStorage.setItem('storage', JSON.stringify(data));
         setDb(data);
         setError(null);
+        // Notificar cambios en los datos de series
+        if (onSeriesDataChange) {
+          onSeriesDataChange(data);
+        }
       } else {
         let error = '';
         if (typeof productionsInfo?.err?.message === 'object') {
@@ -297,6 +321,7 @@ const Home = ({
           role={role}
           onEditSeries={onEditSeries}
           onAddToList={onAddToList}
+          onFilteredDataChange={onSeriesDataChange}
         />
       )}
     </article>

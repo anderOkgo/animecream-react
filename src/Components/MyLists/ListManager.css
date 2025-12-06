@@ -168,6 +168,7 @@
 /* Ajustar tamaños de botones en los controles del selector */
 .list-selector-controls .btn-recalculate-index,
 .list-selector-controls .btn-copy-list,
+.list-selector-controls .btn-add-all-cards,
 .list-selector-controls .btn-load-series {
   padding: 8px 14px;
   font-size: 14px;
@@ -249,6 +250,7 @@
 
 .btn-recalculate-index,
 .btn-copy-list,
+.btn-add-all-cards,
 .btn-load-series {
   padding: 10px 16px;
   background-color: var(--main-color);
@@ -278,7 +280,14 @@
   background-color: var(--soft-gray);
 }
 
-.btn-copy-list:hover:not(:disabled) {
+.btn-add-all-cards {
+  padding: 10px 14px;
+  font-size: 16px;
+  background-color: var(--soft-green);
+}
+
+.btn-copy-list:hover:not(:disabled),
+.btn-add-all-cards:hover:not(:disabled) {
   background-color: var(--main-color);
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -293,6 +302,7 @@
 
 .btn-recalculate-index:disabled,
 .btn-copy-list:disabled,
+.btn-add-all-cards:disabled,
 .btn-load-series:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -464,4 +474,3 @@
 .list-items-preview {
   margin-top: 15px;
 }
-

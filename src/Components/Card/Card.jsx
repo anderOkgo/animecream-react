@@ -14,6 +14,7 @@ const Card = ({
   role,
   onEditSeries,
   onAddToList,
+  onFilteredDataChange,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [dataset, setDataset] = useState([]);
@@ -49,6 +50,13 @@ const Card = ({
       setDataset(data);
     }
   }, [data]);
+
+  // Notificar cambios en filteredData (series filtradas actualmente visibles)
+  useEffect(() => {
+    if (filteredData && onFilteredDataChange) {
+      onFilteredDataChange(filteredData);
+    }
+  }, [filteredData, onFilteredDataChange]);
 
   // Handle card deletion
   const handleDeleteCard = (rankingNumber) => {

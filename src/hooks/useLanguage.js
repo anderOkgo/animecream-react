@@ -152,8 +152,13 @@ const translations = {
     showCalculatedIndexes: 'Show calculated indexes',
     showOriginalIds: 'Show original IDs',
     copyList: 'Copy list to clipboard',
+    addAllCurrentCards: 'Add all current cards to list',
     listCopied: 'List copied to clipboard!',
     copyError: 'Error copying to clipboard',
+    noSeriesToAdd: 'No series available to add',
+    seriesAdded: 'Series added to list',
+    seriesAddedWithSkipped: 'Series added, some already in list',
+    allSeriesAlreadyInList: 'All series are already in the list',
   },
   es: {
     welcome: 'AnimeCream APP',
@@ -307,8 +312,13 @@ const translations = {
     showCalculatedIndexes: 'Mostrar índices calculados',
     showOriginalIds: 'Mostrar IDs originales',
     copyList: 'Copiar lista al portapapeles',
+    addAllCurrentCards: 'Agregar todas las tarjetas actuales a la lista',
     listCopied: '¡Lista copiada al portapapeles!',
     copyError: 'Error al copiar al portapapeles',
+    noSeriesToAdd: 'No hay series disponibles para agregar',
+    seriesAdded: 'Series agregadas a la lista',
+    seriesAddedWithSkipped: 'Series agregadas, algunas ya estaban en la lista',
+    allSeriesAlreadyInList: 'Todas las series ya están en la lista',
   },
 };
 

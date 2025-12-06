@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './ListManager.css';
 import { useLanguage } from '../../hooks/useLanguage';
 
-const ListManager = ({ onClose, onLoadSeries, selectedListId: initialSelectedListId, onListSelected }) => {
+const ListManager = ({ onClose, onLoadSeries, selectedListId: initialSelectedListId, onListSelected, currentSeries }) => {
   const { t } = useLanguage();
   const [lists, setLists] = useState([]);
   const [selectedListId, setSelectedListId] = useState(initialSelectedListId || null);
@@ -27,6 +27,11 @@ const ListManager = ({ onClose, onLoadSeries, selectedListId: initialSelectedLis
       setListData(null);
     }
   }, [selectedListId]);
+
+  // Debug: mostrar currentSeries cuando cambia
+  useEffect(() => {
+    console.log('ListManager currentSeries:', currentSeries?.length || 0, 'series', currentSeries);
+  }, [currentSeries]);
 
 
   const loadLists = () => {
@@ -208,6 +213,67 @@ const ListManager = ({ onClose, onLoadSeries, selectedListId: initialSelectedLis
     }
   };
 
+  // Agregar todas las tarjetas actuales (series visibles) a la lista
+  const handleAddAllCurrentCards = () => {
+    console.log('handleAddAllCurrentCards called', { currentSeries, listData, selectedListId });
+    
+    if (!selectedListId) {
+      alert(t('selectListFirst') || 'Please select a list first');
+      return;
+    }
+
+    if (!listData) {
+      alert(t('selectListFirst') || 'Please select a list first');
+      return;
+    }
+
+    if (!currentSeries || !Array.isArray(currentSeries) || currentSeries.length === 0) {
+      alert(t('noSeriesToAdd') || 'No series available to add');
+      return;
+    }
+
+    const existingIds = new Set(listData.items.map(item => item.id));
+    const newItems = [];
+    let addedCount = 0;
+    let skippedCount = 0;
+
+    currentSeries.forEach((series) => {
+      const seriesId = series.id || series.production_ranking_number;
+      const seriesName = series.production_name || series.name;
+      
+      if (seriesId && seriesName) {
+        if (!existingIds.has(seriesId)) {
+          newItems.push({
+            id: seriesId,
+            name: seriesName,
+          });
+          existingIds.add(seriesId);
+          addedCount++;
+        } else {
+          skippedCount++;
+        }
+      }
+    });
+
+    if (newItems.length > 0) {
+      const updatedList = {
+        ...listData,
+        items: [...listData.items, ...newItems],
+      };
+
+      localStorage.setItem(selectedListId, JSON.stringify(updatedList));
+      setListData(updatedList);
+      
+      if (skippedCount > 0) {
+        alert(t('seriesAddedWithSkipped') || `${addedCount} series added, ${skippedCount} already in list`);
+      } else {
+        alert(t('seriesAdded') || `${addedCount} series added to list`);
+      }
+    } else if (skippedCount > 0) {
+      alert(t('allSeriesAlreadyInList') || 'All series are already in the list');
+    }
+  };
+
   return (
     <div className="list-manager-overlay" onClick={onClose}>
       <div className="list-manager-modal" onClick={(e) => e.stopPropagation()}>
@@ -279,6 +345,14 @@ const ListManager = ({ onClose, onLoadSeries, selectedListId: initialSelectedLis
                         title={t('copyList') || 'Copy list to clipboard'}
                       >
                         📋
+                      </button>
+                      <button 
+                        className="btn-add-all-cards" 
+                        onClick={handleAddAllCurrentCards} 
+                        disabled={!currentSeries || !Array.isArray(currentSeries) || currentSeries.length === 0 || !selectedListId}
+                        title={currentSeries && currentSeries.length > 0 ? `${t('addAllCurrentCards') || 'Add all current cards to list'} (${currentSeries.length} series)` : (t('addAllCurrentCards') || 'Add all current cards to list')}
+                      >
+                        ➕
                       </button>
                       <button 
                         className="btn-load-series" 
