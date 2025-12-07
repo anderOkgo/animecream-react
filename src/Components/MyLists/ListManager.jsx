@@ -331,14 +331,6 @@ const ListManager = ({ onClose, onLoadSeries, selectedListId: initialSelectedLis
                   {listData && (
                     <>
                       <button 
-                        className={`btn-recalculate-index ${showRealIndexes ? 'active' : ''}`}
-                        onClick={handleToggleIndexes} 
-                        disabled={listData.items.length === 0}
-                        title={showRealIndexes ? (t('showOriginalIds') || 'Show original IDs') : (t('showCalculatedIndexes') || 'Show calculated indexes')}
-                      >
-                        {t('index') || '#'}
-                      </button>
-                      <button 
                         className="btn-copy-list" 
                         onClick={handleCopyList} 
                         disabled={listData.items.length === 0}
@@ -347,12 +339,20 @@ const ListManager = ({ onClose, onLoadSeries, selectedListId: initialSelectedLis
                         📋
                       </button>
                       <button 
+                        className={`btn-recalculate-index ${showRealIndexes ? 'active' : ''}`}
+                        onClick={handleToggleIndexes} 
+                        disabled={listData.items.length === 0}
+                        title={showRealIndexes ? (t('showOriginalIds') || 'Show original IDs') : (t('showCalculatedIndexes') || 'Show calculated indexes')}
+                      >
+                        {t('index') || '#'}
+                      </button>
+                      <button 
                         className="btn-add-all-cards" 
                         onClick={handleAddAllCurrentCards} 
                         disabled={!currentSeries || !Array.isArray(currentSeries) || currentSeries.length === 0 || !selectedListId}
-                        title={currentSeries && currentSeries.length > 0 ? `${t('addAllCurrentCards') || 'Add all current cards to list'} (${currentSeries.length} series)` : (t('addAllCurrentCards') || 'Add all current cards to list')}
+                        title={currentSeries && currentSeries.length > 0 ? `${t('addAllCurrentCards') || 'Add all current cards to list'} (${currentSeries.length} ${t('series') || 'series'})` : (t('addAllCurrentCards') || 'Add all current cards to list')}
                       >
-                        ➕
+                        {t('addCards') || 'Add Cards'}
                       </button>
                       <button 
                         className="btn-load-series" 

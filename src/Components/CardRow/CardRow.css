@@ -303,30 +303,39 @@ hr {
 
 /* Read Aloud as Tag */
 .read-aloud-tag {
-  background-color: var(--soft-green);
+  background-color: var(--main-color);
   color: var(--white);
-  border: none;
-  padding: 4px;
+  border: 2px solid var(--white);
+  padding: 4px 8px;
   margin-right: 5px;
   margin-top: 3px;
   font-size: 12px;
   border-radius: 4px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 700;
   transition: all 0.3s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-width: 28px;
+  height: auto;
+  line-height: 1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  vertical-align: middle;
 }
 
 .read-aloud-tag:hover {
-  background-color: var(--highlight);
-  transform: translateY(-1px);
+  background-color: var(--third-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  border-color: var(--highlight);
 }
 
 .read-aloud-tag.speaking {
   background-color: var(--soft-green);
+  border-color: var(--soft-green);
   animation: pulse 1.5s infinite;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
 }
 
 @keyframes pulse {
@@ -365,7 +374,7 @@ hr {
     z-index: 1;
   }
 
-  .tab-desc {
+  .label.tab-desc {
     display: none;
   }
 

@@ -27,7 +27,6 @@ const translations = {
     of: 'of',
     records: 'records',
     rows: 'Rows',
-    search: 'Search',
     cardDescription: 'Description',
     info: 'Information',
     switchToSpanish: 'ESP',
@@ -96,7 +95,6 @@ const translations = {
     edit: 'Edit',
     close: 'Close',
     admin: 'Admin',
-    series: 'Series',
     editSeries: 'Edit Series',
     createSeries: 'Create Series',
     cancel: 'Cancel',
@@ -147,18 +145,22 @@ const translations = {
     save: 'Save',
     selectList: 'Select List',
     selectListFirst: 'Please select a list first',
-    createList: 'Create List',
-    selectListToAdd: 'Select a list to add it',
     showCalculatedIndexes: 'Show calculated indexes',
     showOriginalIds: 'Show original IDs',
     copyList: 'Copy list to clipboard',
     addAllCurrentCards: 'Add all current cards to list',
+    addCards: 'Add Cards',
     listCopied: 'List copied to clipboard!',
     copyError: 'Error copying to clipboard',
     noSeriesToAdd: 'No series available to add',
     seriesAdded: 'Series added to list',
     seriesAddedWithSkipped: 'Series added, some already in list',
     allSeriesAlreadyInList: 'All series are already in the list',
+    series: 'series',
+    login: 'Login',
+    username: 'Username',
+    password: 'Password',
+    Offline: 'You are offline. Please check your internet connection.',
   },
   es: {
     welcome: 'AnimeCream APP',
@@ -186,7 +188,6 @@ const translations = {
     of: 'de',
     records: 'registros',
     rows: 'Filas',
-    search: 'Buscar',
     cardDescription: 'Descripción',
     info: 'Información',
     switchToSpanish: 'ESP',
@@ -256,7 +257,6 @@ const translations = {
     edit: 'Editar',
     close: 'Cerrar',
     admin: 'Admin',
-    series: 'Series',
     editSeries: 'Editar Serie',
     createSeries: 'Crear Serie',
     cancel: 'Cancelar',
@@ -307,18 +307,22 @@ const translations = {
     save: 'Guardar',
     selectList: 'Seleccionar Lista',
     selectListFirst: 'Por favor selecciona una lista primero',
-    createList: 'Crear Lista',
-    selectListToAdd: 'Selecciona una lista para agregarla',
     showCalculatedIndexes: 'Mostrar índices calculados',
     showOriginalIds: 'Mostrar IDs originales',
     copyList: 'Copiar lista al portapapeles',
     addAllCurrentCards: 'Agregar todas las tarjetas actuales a la lista',
+    addCards: 'Agregar Tarjetas',
     listCopied: '¡Lista copiada al portapapeles!',
     copyError: 'Error al copiar al portapapeles',
     noSeriesToAdd: 'No hay series disponibles para agregar',
     seriesAdded: 'Series agregadas a la lista',
     seriesAddedWithSkipped: 'Series agregadas, algunas ya estaban en la lista',
     allSeriesAlreadyInList: 'Todas las series ya están en la lista',
+    series: 'series',
+    login: 'Iniciar Sesión',
+    username: 'Usuario',
+    password: 'Contraseña',
+    Offline: 'Estás sin conexión. Por favor verifica tu conexión a internet.',
   },
 };
 
@@ -360,7 +364,7 @@ export const useLanguage = () => {
 
   // Update language state and document configurations
   const updateLanguage = (lang) => {
-    //setStoredLanguage(lang);
+    setStoredLanguage(lang);
     setLanguageState(lang);
     setLanguage(lang);
   };
@@ -372,11 +376,32 @@ export const useLanguage = () => {
   };
 
   // Translate a given key
-  const t = (key) => translations[language][key] || key;
+  const t = (key) => translations[language]?.[key] || translations['en'][key] || key;
 
-  // Apply language on mount
+  // Apply language on mount and sync with localStorage changes
   useEffect(() => {
     setLanguage(language);
+
+    // Sync with localStorage changes (for cross-tab synchronization)
+    const handleStorageChange = (e) => {
+      if (e.key === 'lang' && e.newValue && e.newValue !== language) {
+        setLanguageState(e.newValue);
+        setLanguage(e.newValue);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    // Also check localStorage on mount/update to ensure consistency
+    const storedLang = getStoredLanguage();
+    if (storedLang !== language) {
+      setLanguageState(storedLang);
+      setLanguage(storedLang);
+    }
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, [language]);
 
   return {

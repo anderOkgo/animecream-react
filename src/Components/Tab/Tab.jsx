@@ -195,7 +195,7 @@ function Tab({ t, toggleLanguage, language, setProc, init, role }) {
                     {language === 'en' ? 'EN' : 'ES'}
                   </span>
                   <span className="lang lang-numbers" onClick={() => setShowRealNumbers(!showRealNumbers)} title={t('index')}>
-                    #
+                    IX
                   </span>
                   <span
                     className="lang lang-sort"
@@ -210,7 +210,7 @@ function Tab({ t, toggleLanguage, language, setProc, init, role }) {
                     }}
                     title={t('rankingOrder')}
                   >
-                    {sortOrder === null ? '↔' : sortOrder === 'asc' ? '↑' : '↓'}
+                    {sortOrder === null ? '⇄' : sortOrder === 'asc' ? '▲' : '▼'}
                   </span>
                   {selectedOption === 1 && (
                     <>

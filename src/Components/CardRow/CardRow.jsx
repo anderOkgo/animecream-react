@@ -241,7 +241,7 @@ export default function CardRow({
                     }}
                     title={isSpeaking ? t('stopReading') : t('readAloud')}
                   >
-                    {isSpeaking ? '🔊' : '🔈'}
+                    {isSpeaking ? '⏸' : '▶'}
                   </button>
                 </div>
               </div>
