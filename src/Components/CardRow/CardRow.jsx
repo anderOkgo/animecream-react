@@ -128,7 +128,7 @@ export default function CardRow({
           title={t('edit') || 'Editar'}
           aria-label={t('edit') || 'Editar serie'}
         >
-          ✎
+          ⚙
         </button>
       )}
       <button
