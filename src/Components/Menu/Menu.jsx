@@ -3,7 +3,16 @@ import './Menu.css';
 import Status from '../Status/Status';
 import AuthService from '../../services/auth.service';
 
-const Menu = ({ init, proc, boot, toggleDarkMode, saveThemeAsDefault, restoreThemeDefault, setInit, onLoginClick }) => {
+const Menu = ({
+  init,
+  proc,
+  boot,
+  toggleDarkMode,
+  saveThemeAsDefault,
+  restoreThemeDefault,
+  setInit,
+  onLoginClick,
+}) => {
   const [currentUser, setCurrentUser] = useState(undefined);
   useEffect(() => {
     const user = AuthService.getCurrentUser();
@@ -26,13 +35,22 @@ const Menu = ({ init, proc, boot, toggleDarkMode, saveThemeAsDefault, restoreThe
   const handleThemeDoubleClick = () => {
     // Verificar si hay una preferencia guardada
     const hasStoredPreference = localStorage.getItem('themePreference') !== null;
-    
+
+    // Obtener el idioma actual para mostrar el mensaje correcto
+    const currentLang = localStorage.getItem('lang') || (navigator.language.split('-')[0] === 'es' ? 'es' : 'en');
+    const messages = {
+      en: { system: 'Theme: System Default', user: 'Theme: User Default' },
+      es: { system: 'Tema: Predeterminado del Sistema', user: 'Tema: Predeterminado del Usuario' },
+    };
+
     if (hasStoredPreference) {
       // Si hay preferencia guardada, restaurar el default del sistema
       restoreThemeDefault();
+      alert(messages[currentLang]?.system || 'Theme: System Default');
     } else {
       // Si no hay preferencia guardada, guardar la actual como default
       saveThemeAsDefault();
+      alert(messages[currentLang]?.user || 'Theme: User Default');
     }
   };
 
@@ -110,7 +128,13 @@ const Menu = ({ init, proc, boot, toggleDarkMode, saveThemeAsDefault, restoreThe
                           !subMenu.isSessionNeeded &&
                           !currentUser && (
                             <li key={subMenu.label}>
-                              <a href={subMenu.url} onClick={(e) => { e.preventDefault(); subMenu.trigger && subMenu.trigger(e); }}>
+                              <a
+                                href={subMenu.url}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  subMenu.trigger && subMenu.trigger(e);
+                                }}
+                              >
                                 {subMenu.label}
                               </a>
                             </li>

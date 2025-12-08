@@ -136,9 +136,11 @@ function Tab({ t, toggleLanguage, saveLanguageAsDefault, restoreLanguageDefault,
     if (hasStoredPreference) {
       // Si hay preferencia guardada, restaurar el default del sistema
       restoreLanguageDefault();
+      alert(t('languageSystemDefault') || 'Language: System Default');
     } else {
       // Si no hay preferencia guardada, guardar la actual como default
       saveLanguageAsDefault();
+      alert(t('languageUserDefault') || 'Language: User Default');
     }
   };
 

@@ -161,6 +161,10 @@ const translations = {
     username: 'Username',
     password: 'Password',
     Offline: 'You are offline. Please check your internet connection.',
+    languageSystemDefault: 'Language: System Default',
+    languageUserDefault: 'Language: User Default',
+    themeSystemDefault: 'Theme: System Default',
+    themeUserDefault: 'Theme: User Default',
   },
   es: {
     welcome: 'AnimeCream APP',
@@ -323,6 +327,10 @@ const translations = {
     username: 'Usuario',
     password: 'Contraseña',
     Offline: 'Estás sin conexión. Por favor verifica tu conexión a internet.',
+    languageSystemDefault: 'Idioma: Predeterminado del Sistema',
+    languageUserDefault: 'Idioma: Predeterminado del Usuario',
+    themeSystemDefault: 'Tema: Predeterminado del Sistema',
+    themeUserDefault: 'Tema: Predeterminado del Usuario',
   },
 };
 
