@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import useSwipeableTabs from '../../hooks/useSwipeableTabs';
 import Home from '../Home/Home';
 import AdminPanel from '../Admin/AdminPanel';
 import ListManager from '../MyLists/ListManager';
 import './Tab.css';
 
-function Tab({ t, toggleLanguage, language, setProc, init, role }) {
+function Tab({ t, toggleLanguage, saveLanguageAsDefault, restoreLanguageDefault, language, setProc, init, role }) {
   const [nTab, setnTab] = useState(2);
   const { selectedOption, setSelectedOption, handleTouchStart, handleTouchEnd } = useSwipeableTabs(1, nTab, 170);
   const [width, setWidth] = useState('20%');
@@ -18,6 +18,8 @@ function Tab({ t, toggleLanguage, language, setProc, init, role }) {
   const [loadByIds, setLoadByIds] = useState(null);
   const [selectedListId, setSelectedListId] = useState(null);
   const [currentSeries, setCurrentSeries] = useState([]);
+  const [isAtTop, setIsAtTop] = useState(true);
+  const sectionTabRef = useRef(null);
 
   const handleTabClick = (tabId) => {
     setSelectedOption(tabId);
@@ -90,6 +92,53 @@ function Tab({ t, toggleLanguage, language, setProc, init, role }) {
       setShowListManager(false);
       // Actualizar loadByIds directamente, el useEffect en Home se encargará de la carga
       setLoadByIds(ids);
+    }
+  };
+
+  const handleScrollToEnd = () => {
+    // Buscar el contenedor con scroll activo usando el selectedOption
+    const radioInput = document.getElementById(`tab-${selectedOption}`);
+    let scrollContainer = null;
+    
+    if (radioInput) {
+      // Encontrar el panel-tab que sigue al label-tab que sigue al radio checked
+      const labelTab = radioInput.nextElementSibling;
+      if (labelTab && labelTab.classList.contains('label-tab')) {
+        const panelTab = labelTab.nextElementSibling;
+        if (panelTab && panelTab.classList.contains('panel-tab')) {
+          scrollContainer = panelTab.querySelector('.section-tab');
+        }
+      }
+    }
+    
+    // Fallback: usar el ref o buscar cualquier section-tab
+    if (!scrollContainer) {
+      scrollContainer = sectionTabRef.current || document.querySelector('.section-tab') || document.documentElement;
+    }
+    
+    if (scrollContainer) {
+      if (isAtTop) {
+        // Ir al final del contenedor
+        scrollContainer.scrollTo({ top: scrollContainer.scrollHeight, behavior: 'smooth' });
+        setIsAtTop(false);
+      } else {
+        // Ir al inicio del contenedor
+        scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+        setIsAtTop(true);
+      }
+    }
+  };
+
+  const handleLanguageDoubleClick = () => {
+    // Verificar si hay una preferencia guardada
+    const hasStoredPreference = localStorage.getItem('lang') !== null;
+    
+    if (hasStoredPreference) {
+      // Si hay preferencia guardada, restaurar el default del sistema
+      restoreLanguageDefault();
+    } else {
+      // Si no hay preferencia guardada, guardar la actual como default
+      saveLanguageAsDefault();
     }
   };
 
@@ -188,10 +237,15 @@ function Tab({ t, toggleLanguage, language, setProc, init, role }) {
             </pre>
           </label>
           <div className="panel-tab">
-            <div className="section-tab">
+            <div className="section-tab" ref={selectedOption === tab.id ? sectionTabRef : null}>
               <div className="container-tab">
                 <div className="lang-container">
-                  <span className="lang" onClick={toggleLanguage} title={language === 'en' ? t('switchToSpanish') : t('switchToEnglish')}>
+                  <span 
+                    className="lang" 
+                    onClick={toggleLanguage} 
+                    onDoubleClick={handleLanguageDoubleClick}
+                    title={language === 'en' ? t('switchToSpanish') : t('switchToEnglish')}
+                  >
                     {language === 'en' ? 'EN' : 'ES'}
                   </span>
                   <span className="lang lang-numbers" onClick={() => setShowRealNumbers(!showRealNumbers)} title={t('index')}>
@@ -221,15 +275,22 @@ function Tab({ t, toggleLanguage, language, setProc, init, role }) {
                       >
                         {isAdvancedSearchVisible ? '✕' : '🔍'}
                       </span>
-                      <span
-                        className="lang lang-my-lists"
-                        onClick={() => setShowListManager(true)}
-                        title={t('myLists') || 'My Lists'}
-                      >
-                        📋
-                      </span>
+                  <span
+                    className="lang lang-my-lists"
+                    onClick={() => setShowListManager(true)}
+                    title={t('myLists') || 'My Lists'}
+                  >
+                    📋
+                  </span>
                     </>
                   )}
+                  <span
+                    className="lang lang-scroll"
+                    onClick={handleScrollToEnd}
+                    title={isAtTop ? (t('goToBottom') || 'Go to bottom') : (t('goToTop') || 'Go to top')}
+                  >
+                    {isAtTop ? '↓' : '↑'}
+                  </span>
                 </div>
                 {tab.component}
               </div>

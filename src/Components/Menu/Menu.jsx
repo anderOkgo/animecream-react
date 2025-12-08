@@ -3,7 +3,7 @@ import './Menu.css';
 import Status from '../Status/Status';
 import AuthService from '../../services/auth.service';
 
-const Menu = ({ init, proc, boot, toggleDarkMode, setInit, onLoginClick }) => {
+const Menu = ({ init, proc, boot, toggleDarkMode, saveThemeAsDefault, restoreThemeDefault, setInit, onLoginClick }) => {
   const [currentUser, setCurrentUser] = useState(undefined);
   useEffect(() => {
     const user = AuthService.getCurrentUser();
@@ -21,6 +21,19 @@ const Menu = ({ init, proc, boot, toggleDarkMode, setInit, onLoginClick }) => {
   const handleStatusClick = () => {
     boot();
     toggleDarkMode();
+  };
+
+  const handleThemeDoubleClick = () => {
+    // Verificar si hay una preferencia guardada
+    const hasStoredPreference = localStorage.getItem('themePreference') !== null;
+    
+    if (hasStoredPreference) {
+      // Si hay preferencia guardada, restaurar el default del sistema
+      restoreThemeDefault();
+    } else {
+      // Si no hay preferencia guardada, guardar la actual como default
+      saveThemeAsDefault();
+    }
   };
 
   const handleLogout = () => {
@@ -117,7 +130,7 @@ const Menu = ({ init, proc, boot, toggleDarkMode, setInit, onLoginClick }) => {
         </ul>
       </div>
       <div className="logo insetshadow">
-        <span className="icon-activity" onClick={handleStatusClick}>
+        <span className="icon-activity" onClick={handleStatusClick} onDoubleClick={handleThemeDoubleClick}>
           <Status {...{ init, proc }} />
         </span>
         {title}

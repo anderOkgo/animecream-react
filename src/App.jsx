@@ -11,8 +11,8 @@ import { useState, useEffect } from 'react';
 
 const App = () => {
   const { init, setInit, proc, setProc, boot } = useAlive();
-  const { toggleDarkMode } = useTheme();
-  const { language, toggleLanguage, t } = useLanguage();
+  const { toggleDarkMode, saveThemeAsDefault, restoreSystemDefault: restoreThemeDefault } = useTheme();
+  const { language, toggleLanguage, saveLanguageAsDefault, restoreSystemDefault: restoreLanguageDefault, t } = useLanguage();
   const [username, setUsername] = useState(null);
   const [role, setRole] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
@@ -68,10 +68,10 @@ const App = () => {
 
   return (
     <div className="app">
-      <Menu {...{ init, proc, boot, toggleDarkMode, setInit, onLoginClick: handleLoginClick }} />
+      <Menu {...{ init, proc, boot, toggleDarkMode, saveThemeAsDefault, restoreThemeDefault, setInit, onLoginClick: handleLoginClick }} />
       <div className="card-area">
         {/* <Jumbotron {...{ t }} /> */}
-        <Tab {...{ t, toggleLanguage, language, setProc, init, role }} />
+        <Tab {...{ t, toggleLanguage, saveLanguageAsDefault, restoreLanguageDefault, language, setProc, init, role }} />
         {showLogin && (
           <div
             className="login-overlay"

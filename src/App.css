@@ -57,6 +57,10 @@
   background-color: var(--main-color);
 }
 
+.lang-scroll {
+  background-color: var(--main-color);
+}
+
 .login-overlay {
   position: fixed;
   top: 0;

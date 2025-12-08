@@ -1,17 +1,69 @@
 import { useEffect, useState } from 'react';
 
+// Helper functions for localStorage
+const getStoredTheme = () => {
+  const stored = localStorage.getItem('themePreference');
+  if (stored === null) return null;
+  return stored === 'dark';
+};
+
+const setStoredTheme = (isDark) => {
+  localStorage.setItem('themePreference', isDark ? 'dark' : 'light');
+};
+
+const removeStoredTheme = () => {
+  localStorage.removeItem('themePreference');
+};
+
+const getSystemTheme = () => {
+  return window.matchMedia('(prefers-color-scheme: dark)').matches;
+};
+
 // Custom React hook for managing theme state
 export const useTheme = () => {
-  // State to manage dark mode, initialized based on system preference
-  const [isDarkMode, setIsDarkMode] = useState(window.matchMedia('(prefers-color-scheme: dark)').matches);
+  // Initialize: check localStorage first, then system preference
+  const storedTheme = getStoredTheme();
+  const systemTheme = getSystemTheme();
+  const initialTheme = storedTheme ?? systemTheme;
+  
+  const [isDarkMode, setIsDarkMode] = useState(initialTheme);
+  const [useSystemDefault, setUseSystemDefault] = useState(storedTheme === null);
 
   // Function to toggle dark mode
   const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
+    const newMode = !isDarkMode;
+    setIsDarkMode(newMode);
+    // If not using system default, update stored preference
+    if (!useSystemDefault) {
+      setStoredTheme(newMode);
+    }
   };
 
-  // Effect hook to monitor system preference changes
+  // Function to save current theme as default
+  const saveThemeAsDefault = () => {
+    setStoredTheme(isDarkMode);
+    setUseSystemDefault(false);
+  };
+
+  // Function to restore system default
+  const restoreSystemDefault = () => {
+    removeStoredTheme();
+    setUseSystemDefault(true);
+    const systemTheme = getSystemTheme();
+    setIsDarkMode(systemTheme);
+  };
+
+  // Effect hook to monitor system preference changes (only if using system default)
   useEffect(() => {
+    if (!useSystemDefault) {
+      // If not using system default, stop listening to system changes
+      return;
+    }
+
+    // When using system default, sync with current system preference
+    const systemTheme = getSystemTheme();
+    setIsDarkMode(systemTheme);
+
     const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
     const handleChange = (event) => {
@@ -23,7 +75,7 @@ export const useTheme = () => {
     return () => {
       darkModeMediaQuery.removeEventListener('change', handleChange);
     };
-  }, []);
+  }, [useSystemDefault]);
 
   // Effect hook to apply theme styles
   useEffect(() => {
@@ -79,5 +131,7 @@ export const useTheme = () => {
   return {
     isDarkMode,
     toggleDarkMode,
+    saveThemeAsDefault,
+    restoreSystemDefault,
   };
 };
