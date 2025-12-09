@@ -82,6 +82,20 @@ const SearchMethod = ({ setOpt, t, isFormVisible, setIsFormVisible }) => {
     }
   };
 
+  // Función helper para obtener el contenedor con scroll activo (reutilizada de Tab.jsx)
+  const getScrollContainer = () => {
+    // Buscar cualquier section-tab visible o el documentElement como fallback
+    const scrollContainer = document.querySelector('.section-tab') || document.documentElement;
+    return scrollContainer;
+  };
+
+  const handleScrollToTop = () => {
+    const scrollContainer = getScrollContainer();
+    if (scrollContainer) {
+      scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -101,6 +115,9 @@ const SearchMethod = ({ setOpt, t, isFormVisible, setIsFormVisible }) => {
     if (setIsFormVisible) {
       setIsFormVisible(false);
     }
+
+    // Ir al inicio después de enviar la búsqueda
+    handleScrollToTop();
   };
 
   const handleReset = () => {
