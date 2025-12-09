@@ -429,8 +429,8 @@ export const useLanguage = () => {
     const handleStorageChange = (e) => {
       if (e.key === 'lang') {
         if (e.newValue) {
-          setLanguageState(e.newValue);
-          setLanguage(e.newValue);
+        setLanguageState(e.newValue);
+        setLanguage(e.newValue);
           setUseSystemDefault(false);
         } else {
           // If removed, restore system default

@@ -58,7 +58,7 @@ function Tab({ t, toggleLanguage, saveLanguageAsDefault, restoreLanguageDefault,
       if (stored) {
         const listData = JSON.parse(stored);
         const items = listData.items || [];
-        
+
         // Verificar si ya existe
         const exists = items.some((item) => item.id === series.id);
         if (!exists) {
@@ -95,11 +95,11 @@ function Tab({ t, toggleLanguage, saveLanguageAsDefault, restoreLanguageDefault,
     }
   };
 
-  const handleScrollToEnd = () => {
-    // Buscar el contenedor con scroll activo usando el selectedOption
+  // Función helper para obtener el contenedor con scroll activo
+  const getScrollContainer = () => {
     const radioInput = document.getElementById(`tab-${selectedOption}`);
     let scrollContainer = null;
-    
+
     if (radioInput) {
       // Encontrar el panel-tab que sigue al label-tab que sigue al radio checked
       const labelTab = radioInput.nextElementSibling;
@@ -110,12 +110,26 @@ function Tab({ t, toggleLanguage, saveLanguageAsDefault, restoreLanguageDefault,
         }
       }
     }
-    
+
     // Fallback: usar el ref o buscar cualquier section-tab
     if (!scrollContainer) {
-      scrollContainer = sectionTabRef.current || document.querySelector('.section-tab') || document.documentElement;
+      scrollContainer =
+        sectionTabRef.current || document.querySelector('.section-tab') || document.documentElement;
     }
-    
+
+    return scrollContainer;
+  };
+
+  const handleScrollToTop = () => {
+    const scrollContainer = getScrollContainer();
+    if (scrollContainer) {
+      scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+      setIsAtTop(true);
+    }
+  };
+
+  const handleScrollToEnd = () => {
+    const scrollContainer = getScrollContainer();
     if (scrollContainer) {
       if (isAtTop) {
         // Ir al final del contenedor
@@ -132,7 +146,7 @@ function Tab({ t, toggleLanguage, saveLanguageAsDefault, restoreLanguageDefault,
   const handleLanguageDoubleClick = () => {
     // Verificar si hay una preferencia guardada
     const hasStoredPreference = localStorage.getItem('lang') !== null;
-    
+
     if (hasStoredPreference) {
       // Si hay preferencia guardada, restaurar el default del sistema
       restoreLanguageDefault();
@@ -149,7 +163,7 @@ function Tab({ t, toggleLanguage, saveLanguageAsDefault, restoreLanguageDefault,
       id: 1,
       icon: '',
       label: t('series') || 'Series',
-          component: true && (
+      component: true && (
         <Home
           {...{
             t,
@@ -242,15 +256,19 @@ function Tab({ t, toggleLanguage, saveLanguageAsDefault, restoreLanguageDefault,
             <div className="section-tab" ref={selectedOption === tab.id ? sectionTabRef : null}>
               <div className="container-tab">
                 <div className="lang-container">
-                  <span 
-                    className="lang" 
-                    onClick={toggleLanguage} 
+                  <span
+                    className="lang"
+                    onClick={toggleLanguage}
                     onDoubleClick={handleLanguageDoubleClick}
                     title={language === 'en' ? t('switchToSpanish') : t('switchToEnglish')}
                   >
                     {language === 'en' ? 'EN' : 'ES'}
                   </span>
-                  <span className="lang lang-numbers" onClick={() => setShowRealNumbers(!showRealNumbers)} title={t('index')}>
+                  <span
+                    className="lang lang-numbers"
+                    onClick={() => setShowRealNumbers(!showRealNumbers)}
+                    title={t('index')}
+                  >
                     IX
                   </span>
                   <span
@@ -271,25 +289,28 @@ function Tab({ t, toggleLanguage, saveLanguageAsDefault, restoreLanguageDefault,
                   {selectedOption === 1 && (
                     <>
                       <span
+                        className="lang lang-my-lists"
+                        onClick={() => setShowListManager(true)}
+                        title={t('myLists') || 'My Lists'}
+                      >
+                        ☰
+                      </span>
+                      <span
                         className="lang lang-advanced-search"
-                        onClick={() => setIsAdvancedSearchVisible(!isAdvancedSearchVisible)}
+                        onClick={() => {
+                          setIsAdvancedSearchVisible(!isAdvancedSearchVisible);
+                          handleScrollToTop();
+                        }}
                         title={isAdvancedSearchVisible ? t('closeAdvancedSearch') : t('openAdvancedSearch')}
                       >
                         {isAdvancedSearchVisible ? '✕' : '🔍'}
                       </span>
-                  <span
-                    className="lang lang-my-lists"
-                    onClick={() => setShowListManager(true)}
-                    title={t('myLists') || 'My Lists'}
-                  >
-                    📋
-                  </span>
                     </>
                   )}
                   <span
                     className="lang lang-scroll"
                     onClick={handleScrollToEnd}
-                    title={isAtTop ? (t('goToBottom') || 'Go to bottom') : (t('goToTop') || 'Go to top')}
+                    title={isAtTop ? t('goToBottom') || 'Go to bottom' : t('goToTop') || 'Go to top'}
                   >
                     {isAtTop ? '↓' : '↑'}
                   </span>

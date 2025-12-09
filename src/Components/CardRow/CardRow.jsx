@@ -128,7 +128,7 @@ export default function CardRow({
           title={t('edit') || 'Editar'}
           aria-label={t('edit') || 'Editar serie'}
         >
-          ⚙
+          ✎
         </button>
       )}
       <button
@@ -203,21 +203,21 @@ export default function CardRow({
                 <div className="tags">
                   <span
                     className="tag year"
-                    onClick={handleYearClick}
+                    onDoubleClick={handleYearClick}
                     title={t('filterByYear') || 'Filter by year'}
                   >
                     {`${production_year}`}
                   </span>
                   <span
                     className="tag ep"
-                    onClick={handleEpisodesClick}
+                    onDoubleClick={handleEpisodesClick}
                     title={t('filterByEpisodes') || 'Filter by episodes'}
                   >
                     {`${production_number_chapters} Ep`}
                   </span>
                   <span
                     className="tag"
-                    onClick={handleDemographicClick}
+                    onDoubleClick={handleDemographicClick}
                     title={t('filterByDemographic') || 'Filter by demographic'}
                   >
                     {demographic_name}
@@ -227,7 +227,7 @@ export default function CardRow({
                       className="tag"
                       key={genre}
                       variant="text"
-                      onClick={(e) => handleGenreClick(e, genre)}
+                      onDoubleClick={(e) => handleGenreClick(e, genre)}
                       title={t('filterByGenre') || 'Filter by genre'}
                     >
                       {t(genre)}
