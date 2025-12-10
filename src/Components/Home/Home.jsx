@@ -24,23 +24,31 @@ const Home = ({
   onAddToList,
   loadByIds: externalLoadByIds,
   onSeriesDataChange,
+  onSetOptReady,
 }) => {
   const [db, setDb] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [opt, setOpt] = useState({});
+
+  // Exponer setOpt al componente padre
+  useEffect(() => {
+    if (onSetOptReady) {
+      onSetOptReady(setOpt);
+    }
+  }, [onSetOptReady]);
   const [loadByIds, setLoadByIds] = useState(externalLoadByIds);
   const isLoadingByIdsRef = useRef(false);
   const hasInitialLoad = useRef(false);
   const lastOptRef = useRef({}); // Guardar el último opt usado para recargar
-  
+
   // Sincronizar db con onSeriesDataChange siempre que cambie
   useEffect(() => {
     if (db && Array.isArray(db) && db.length > 0 && onSeriesDataChange) {
       onSeriesDataChange(db);
     }
   }, [db, onSeriesDataChange]);
-  
+
   // Sincronizar loadByIds externo
   useEffect(() => {
     if (externalLoadByIds && !isLoadingByIdsRef.current) {
@@ -80,21 +88,21 @@ const Home = ({
       isLoadingByIdsRef.current = true;
       setLoading(true);
       setProc(true);
-      
+
       try {
         const urlProduction = set.base_url + set.api_url;
         // Asegurar que los IDs sean números
         const ids = loadByIds
           .filter(Boolean)
-          .map(id => typeof id === 'string' ? parseInt(id, 10) : Number(id))
-          .filter(id => !isNaN(id) && id > 0);
-        
+          .map((id) => (typeof id === 'string' ? parseInt(id, 10) : Number(id)))
+          .filter((id) => !isNaN(id) && id > 0);
+
         console.log('Home: Loading series with IDs:', ids);
-        
+
         if (ids.length === 0) {
           throw new Error('No valid IDs to load');
         }
-        
+
         // El API espera el parámetro "id" (no "ids") como array de números
         // Según series-read.mysql.ts línea 216: id: HDB.generateInCondition
         const productionsInfo = await helpHttp.post(urlProduction, {
@@ -102,12 +110,14 @@ const Home = ({
             id: ids, // Array de IDs numéricos - el API usa generateInCondition
           },
         });
-        
+
         console.log('Home: Response from API:', productionsInfo);
-        
+
         if (!productionsInfo?.err) {
-          const allData = Array.isArray(productionsInfo) ? productionsInfo : (productionsInfo.data || productionsInfo);
-          
+          const allData = Array.isArray(productionsInfo)
+            ? productionsInfo
+            : productionsInfo.data || productionsInfo;
+
           // Filtrar solo los que necesitamos
           let filtered = allData;
           if (allData.length > ids.length) {
@@ -117,7 +127,7 @@ const Home = ({
               return ids.includes(seriesId);
             });
           }
-          
+
           localStorage.setItem('storage', JSON.stringify(filtered));
           setDb(filtered);
           setError(null);
@@ -158,7 +168,7 @@ const Home = ({
   // Carga inicial cuando el componente se monta
   useEffect(() => {
     if (hasInitialLoad.current) return;
-    
+
     // Cargar datos del localStorage primero (solo como preview mientras carga)
     try {
       var localResp = localStorage.getItem('storage');
@@ -176,7 +186,7 @@ const Home = ({
     } catch (error) {
       console.log(error);
     }
-    
+
     // Siempre hacer carga inicial completa del API al recargar
     hasInitialLoad.current = true;
     const fetchInitialData = async () => {
@@ -186,7 +196,7 @@ const Home = ({
         const urlProduction = set.base_url + set.api_url;
         const response = await helpHttp.post(urlProduction, {});
         const productionsInfo = response;
-        
+
         if (!productionsInfo?.err) {
           const data = Array.isArray(productionsInfo) ? productionsInfo : productionsInfo.data || productionsInfo;
           // Guardar todos los datos en localStorage
@@ -220,8 +230,8 @@ const Home = ({
     }
 
     // Si opt está vacío pero refreshTrigger cambió, usar el último opt guardado
-    const optToUse = (opt && Object.keys(opt).length > 0) ? opt : lastOptRef.current;
-    
+    const optToUse = opt && Object.keys(opt).length > 0 ? opt : lastOptRef.current;
+
     // Si no hay opt y no hay refreshTrigger, no hacer nada
     if ((!opt || Object.keys(opt).length === 0) && (!refreshTrigger || refreshTrigger === 0)) {
       return;
@@ -249,11 +259,11 @@ const Home = ({
     const fetchData = async () => {
       setLoading(true);
       setProc(true);
-      
+
       // Carga normal - asegurar que opt.body sea un objeto válido, no una string serializada
       let urlProduction = set.base_url + set.api_url;
       const requestOpt = { ...optToUse };
-      
+
       // Si opt.body es una string, parsearla primero
       if (typeof requestOpt.body === 'string') {
         try {
@@ -263,10 +273,10 @@ const Home = ({
           delete requestOpt.body;
         }
       }
-      
+
       const [response] = await Promise.all([helpHttp.post(urlProduction, requestOpt)]);
       const productionsInfo = response;
-      
+
       if (!productionsInfo?.err) {
         const data = Array.isArray(productionsInfo) ? productionsInfo : productionsInfo.data || productionsInfo;
         localStorage.setItem('storage', JSON.stringify(data));

@@ -20,6 +20,7 @@ function Tab({ t, toggleLanguage, saveLanguageAsDefault, restoreLanguageDefault,
   const [currentSeries, setCurrentSeries] = useState([]);
   const [isAtTop, setIsAtTop] = useState(true);
   const sectionTabRef = useRef(null);
+  const homeSetOptRef = useRef(null);
 
   const handleTabClick = (tabId) => {
     setSelectedOption(tabId);
@@ -158,6 +159,19 @@ function Tab({ t, toggleLanguage, saveLanguageAsDefault, restoreLanguageDefault,
     }
   };
 
+  const handleTop250Click = () => {
+    if (homeSetOptRef.current) {
+      homeSetOptRef.current({
+        method: 'POST',
+        body: {
+          limit: 250,
+          production_ranking_number: 'ASC',
+        },
+      });
+      handleScrollToTop();
+    }
+  };
+
   const tabsData = [
     {
       id: 1,
@@ -182,6 +196,9 @@ function Tab({ t, toggleLanguage, saveLanguageAsDefault, restoreLanguageDefault,
             onAddToList: handleAddToList,
             loadByIds: loadByIds,
             onSeriesDataChange: setCurrentSeries,
+            onSetOptReady: (setOptFn) => {
+              homeSetOptRef.current = setOptFn;
+            },
           }}
         />
       ),
@@ -314,6 +331,14 @@ function Tab({ t, toggleLanguage, saveLanguageAsDefault, restoreLanguageDefault,
                   >
                     {isAtTop ? '↓' : '↑'}
                   </span>
+                  {selectedOption === 1 && (
+                    <>
+                      <span className="lang-separator"></span>
+                      <span className="lang lang-top250" onClick={handleTop250Click} title="Top 250">
+                        Top 250
+                      </span>
+                    </>
+                  )}
                 </div>
                 {tab.component}
               </div>

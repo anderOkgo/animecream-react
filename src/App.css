@@ -61,6 +61,53 @@
   background-color: var(--main-color);
 }
 
+.lang-separator {
+  flex: 1;
+  min-width: 0;
+}
+
+.lang-top250 {
+  background: linear-gradient(135deg, #f5c518 0%, #f5c518 50%, #000000 50%, #000000 100%);
+  background-size: 200% 200%;
+  background-position: 0% 0%;
+  color: #000000;
+  font-weight: 900;
+  font-size: 0.75em;
+  letter-spacing: 0.5px;
+  border: 2px solid #000000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  margin-left: auto;
+}
+
+.lang-top250::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #f5c518 0%, #f5c518 50%, #000000 50%, #000000 100%);
+  background-size: 200% 200%;
+  background-position: 0% 0%;
+  z-index: -1;
+}
+
+.lang-top250:hover {
+  background-position: 100% 0%;
+  color: #000000;
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.8), 0 1px 2px rgba(0, 0, 0, 0.3);
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(245, 197, 24, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border-color: #f5c518;
+}
+
+.lang-top250:active {
+  transform: scale(0.98);
+}
+
 .login-overlay {
   position: fixed;
   top: 0;
