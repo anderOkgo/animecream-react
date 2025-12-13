@@ -6,13 +6,21 @@ import Login from './Components/Auth/Login/Login';
 import { useAlive } from './hooks/useAlive';
 import { useTheme } from './hooks/useTheme';
 import { useLanguage } from './hooks/useLanguage';
+import { useNavigationHistory } from './hooks/useNavigationHistory';
 import AuthService from './services/auth.service';
 import { useState, useEffect } from 'react';
 
 const App = () => {
   const { init, setInit, proc, setProc, boot } = useAlive();
   const { toggleDarkMode, saveThemeAsDefault, restoreSystemDefault: restoreThemeDefault } = useTheme();
-  const { language, toggleLanguage, saveLanguageAsDefault, restoreSystemDefault: restoreLanguageDefault, t } = useLanguage();
+  const {
+    language,
+    toggleLanguage,
+    saveLanguageAsDefault,
+    restoreSystemDefault: restoreLanguageDefault,
+    t,
+  } = useLanguage();
+  const navigation = useNavigationHistory();
   const [username, setUsername] = useState(null);
   const [role, setRole] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
@@ -33,7 +41,7 @@ const App = () => {
     updateUserInfo();
   }, [init]);
 
-  // Actualizar información del usuario cuando cambie el localStorage (misma pestaña)
+  // Actualizar información del usuario cuando cambie el localStorage (entre pestañas)
   useEffect(() => {
     const handleStorageChange = (e) => {
       // Solo actualizar si cambió algo relacionado con el usuario
@@ -44,15 +52,9 @@ const App = () => {
 
     // Escuchar cambios en localStorage (solo funciona entre pestañas)
     window.addEventListener('storage', handleStorageChange);
-    
-    // Para cambios en la misma pestaña, usar un intervalo más largo
-    const interval = setInterval(() => {
-      updateUserInfo();
-    }, 2000);
 
     return () => {
       window.removeEventListener('storage', handleStorageChange);
-      clearInterval(interval);
     };
   }, []);
 
@@ -62,16 +64,38 @@ const App = () => {
 
   const handleLoginSuccess = () => {
     setShowLogin(false);
-    // Actualizar información del usuario después del login
     updateUserInfo();
   };
 
   return (
     <div className="app">
-      <Menu {...{ init, proc, boot, toggleDarkMode, saveThemeAsDefault, restoreThemeDefault, setInit, onLoginClick: handleLoginClick }} />
+      <Menu
+        {...{
+          init,
+          proc,
+          boot,
+          toggleDarkMode,
+          saveThemeAsDefault,
+          restoreThemeDefault,
+          setInit,
+          onLoginClick: handleLoginClick,
+        }}
+      />
       <div className="card-area">
         {/* <Jumbotron {...{ t }} /> */}
-        <Tab {...{ t, toggleLanguage, saveLanguageAsDefault, restoreLanguageDefault, language, setProc, init, role }} />
+        <Tab
+          {...{
+            t,
+            toggleLanguage,
+            saveLanguageAsDefault,
+            restoreLanguageDefault,
+            language,
+            setProc,
+            init,
+            role,
+            navigation,
+          }}
+        />
         {showLogin && (
           <div
             className="login-overlay"

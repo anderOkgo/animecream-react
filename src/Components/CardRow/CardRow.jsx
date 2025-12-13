@@ -12,6 +12,7 @@ export default function CardRow({
   role,
   onEdit,
   onAddToList,
+  navigation,
 }) {
   let {
     production_name,
@@ -42,26 +43,30 @@ export default function CardRow({
   const handleYearClick = (e) => {
     e.stopPropagation();
     if (onFilterChange && production_year) {
-      onFilterChange({
+      const requestData = {
         method: 'POST',
         body: {
           production_year: production_year.toString(),
           production_ranking_number: 'ASC',
         },
-      });
+      };
+      navigation?.pushHistory('request', { type: 'filter-year', data: requestData, value: production_year });
+      onFilterChange(requestData);
     }
   };
 
   const handleEpisodesClick = (e) => {
     e.stopPropagation();
     if (onFilterChange && production_number_chapters) {
-      onFilterChange({
+      const requestData = {
         method: 'POST',
         body: {
           production_number_chapters: production_number_chapters.toString(),
           production_ranking_number: 'ASC',
         },
-      });
+      };
+      navigation?.pushHistory('request', { type: 'filter-episodes', data: requestData, value: production_number_chapters });
+      onFilterChange(requestData);
     }
   };
 
@@ -83,26 +88,30 @@ export default function CardRow({
         'Shounen-Seinen': 'shonen-seinen',
       };
       const slug = demographicMap[demographic_name] || demographic_name.toLowerCase().replace(/\s+/g, '-');
-      onFilterChange({
+      const requestData = {
         method: 'POST',
         body: {
           demographic_name: slug,
           production_ranking_number: 'ASC',
         },
-      });
+      };
+      navigation?.pushHistory('request', { type: 'filter-demographic', data: requestData, value: demographic_name });
+      onFilterChange(requestData);
     }
   };
 
   const handleGenreClick = (e, genreName) => {
     e.stopPropagation();
     if (onFilterChange && genreName) {
-      onFilterChange({
+      const requestData = {
         method: 'POST',
         body: {
           genre_names: genreName.trim(),
           production_ranking_number: 'ASC',
         },
-      });
+      };
+      navigation?.pushHistory('request', { type: 'filter-genre', data: requestData, value: genreName.trim() });
+      onFilterChange(requestData);
     }
   };
 

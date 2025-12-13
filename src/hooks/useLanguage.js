@@ -365,9 +365,6 @@ const setLanguage = (language) => {
       'Discover the best anime recommendations of all time on Animecream. Explore rankings, Top 10 lists, and more. Create and share your own lists, and find your favorite anime. Welcome!';
     document.title = 'Animecream - Discover the Best Anime Recommendations';
   }
-
-  // Optionally log the change for debugging
-  console.log(`Language set to: ${language}`);
 };
 
 // Custom Hook
@@ -429,8 +426,8 @@ export const useLanguage = () => {
     const handleStorageChange = (e) => {
       if (e.key === 'lang') {
         if (e.newValue) {
-        setLanguageState(e.newValue);
-        setLanguage(e.newValue);
+          setLanguageState(e.newValue);
+          setLanguage(e.newValue);
           setUseSystemDefault(false);
         } else {
           // If removed, restore system default

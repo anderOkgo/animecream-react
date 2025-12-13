@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import './searchMethod.css';
 
-const SearchMethod = ({ setOpt, t, isFormVisible, setIsFormVisible }) => {
-
+const SearchMethod = ({ setOpt, t, isFormVisible, setIsFormVisible, navigation }) => {
   const genreOptions = [
     { id: 1, name: 'Acción', slug: 'accion' },
     { id: 2, name: 'Psicologico', slug: 'psicologico' },
@@ -106,10 +105,12 @@ const SearchMethod = ({ setOpt, t, isFormVisible, setIsFormVisible }) => {
       }
     });
 
-    setOpt({
+    const requestData = {
       method: 'POST',
       body: conditions,
-    });
+    };
+
+    setOpt(requestData);
 
     // Ocultar el formulario después de enviar la búsqueda
     if (setIsFormVisible) {

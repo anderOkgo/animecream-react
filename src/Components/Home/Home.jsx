@@ -25,11 +25,21 @@ const Home = ({
   loadByIds: externalLoadByIds,
   onSeriesDataChange,
   onSetOptReady,
+  navigation,
 }) => {
   const [db, setDb] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [opt, setOpt] = useState({});
+  const isRestoringRef = useRef(false);
+
+  // Wrapper para setOpt que agrega al historial
+  const setOptWithHistory = (requestData) => {
+    if (navigation && !isRestoringRef.current) {
+      navigation.pushHistory('request', { type: 'filter', data: requestData });
+    }
+    setOpt(requestData);
+  };
 
   // Exponer setOpt al componente padre
   useEffect(() => {
@@ -37,6 +47,22 @@ const Home = ({
       onSetOptReady(setOpt);
     }
   }, [onSetOptReady]);
+
+  // Restaurar peticiones cuando se navega hacia atrás
+  useEffect(() => {
+    if (!navigation) return;
+
+    const currentState = navigation.currentState;
+    if (currentState && currentState.type === 'request' && currentState.data?.data) {
+      // Restaurar la petición anterior sin agregar al historial
+      isRestoringRef.current = true;
+      setOpt(currentState.data.data);
+      // Resetear el flag después de un breve delay
+      setTimeout(() => {
+        isRestoringRef.current = false;
+      }, 50);
+    }
+  }, [navigation?.currentState, navigation?.currentIndex]);
   const [loadByIds, setLoadByIds] = useState(externalLoadByIds);
   const isLoadingByIdsRef = useRef(false);
   const hasInitialLoad = useRef(false);
@@ -313,10 +339,11 @@ const Home = ({
   return (
     <article className="grid-1-2">
       <SearchMethod
-        setOpt={setOpt}
+        setOpt={setOptWithHistory}
         t={t}
         isFormVisible={isAdvancedSearchVisible}
         setIsFormVisible={setIsAdvancedSearchVisible}
+        navigation={navigation}
       />
       {false && <Loader />}
       {error && <Message msg={`Error: ${error}`} bgColor="#dc3545" onDoubleClick={handleErrorDoubleClick} />}
@@ -326,7 +353,8 @@ const Home = ({
           t={t}
           language={language}
           showRealNumbers={showRealNumbers}
-          onFilterChange={setOpt}
+          onFilterChange={setOptWithHistory}
+          navigation={navigation}
           sortOrder={sortOrder}
           role={role}
           onEditSeries={onEditSeries}

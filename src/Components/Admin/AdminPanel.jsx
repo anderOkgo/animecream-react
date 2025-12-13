@@ -487,7 +487,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete }) => {
         if (onEditComplete) {
           setTimeout(() => {
             onEditComplete();
-          }, 1500);
+          }, 500);
         }
       } else {
         // Create new series

@@ -5,7 +5,17 @@ import AdminPanel from '../Admin/AdminPanel';
 import ListManager from '../MyLists/ListManager';
 import './Tab.css';
 
-function Tab({ t, toggleLanguage, saveLanguageAsDefault, restoreLanguageDefault, language, setProc, init, role }) {
+function Tab({
+  t,
+  toggleLanguage,
+  saveLanguageAsDefault,
+  restoreLanguageDefault,
+  language,
+  setProc,
+  init,
+  role,
+  navigation,
+}) {
   const [nTab, setnTab] = useState(2);
   const { selectedOption, setSelectedOption, handleTouchStart, handleTouchEnd } = useSwipeableTabs(1, nTab, 170);
   const [width, setWidth] = useState('20%');
@@ -23,7 +33,9 @@ function Tab({ t, toggleLanguage, saveLanguageAsDefault, restoreLanguageDefault,
   const homeSetOptRef = useRef(null);
 
   const handleTabClick = (tabId) => {
-    setSelectedOption(tabId);
+    if (tabId !== selectedOption) {
+      setSelectedOption(tabId);
+    }
   };
 
   const handleEditSeries = (seriesData) => {
@@ -161,13 +173,15 @@ function Tab({ t, toggleLanguage, saveLanguageAsDefault, restoreLanguageDefault,
 
   const handleTop250Click = () => {
     if (homeSetOptRef.current) {
-      homeSetOptRef.current({
+      const requestData = {
         method: 'POST',
         body: {
           limit: 250,
           production_ranking_number: 'ASC',
         },
-      });
+      };
+      navigation?.pushHistory('request', { type: 'top250', data: requestData });
+      homeSetOptRef.current(requestData);
       handleScrollToTop();
     }
   };
@@ -199,6 +213,7 @@ function Tab({ t, toggleLanguage, saveLanguageAsDefault, restoreLanguageDefault,
             onSetOptReady: (setOptFn) => {
               homeSetOptRef.current = setOptFn;
             },
+            navigation,
           }}
         />
       ),
@@ -234,6 +249,26 @@ function Tab({ t, toggleLanguage, saveLanguageAsDefault, restoreLanguageDefault,
       setSelectedOption(1);
     }
   }, [tabsData.length, role, selectedOption, setSelectedOption]);
+
+  // Manejar navegación hacia atrás
+  useEffect(() => {
+    if (!navigation) return;
+
+    const currentState = navigation.currentState;
+    if (currentState) {
+      switch (currentState.type) {
+        case 'request':
+          // Las peticiones se restauran en Home.jsx
+          // Aquí solo manejamos el scroll si es necesario
+          if (currentState.data?.type === 'top250') {
+            handleScrollToTop();
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  }, [navigation?.currentState, navigation?.currentIndex]);
 
   // Cargar lista seleccionada al montar
   useEffect(() => {

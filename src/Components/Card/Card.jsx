@@ -15,6 +15,7 @@ const Card = ({
   onEditSeries,
   onAddToList,
   onFilteredDataChange,
+  navigation,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [dataset, setDataset] = useState([]);
@@ -98,6 +99,7 @@ const Card = ({
                 role={role}
                 onEdit={onEditSeries}
                 onAddToList={onAddToList}
+                navigation={navigation}
               />
             );
           })}
