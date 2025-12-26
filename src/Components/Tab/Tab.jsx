@@ -34,7 +34,7 @@ function Tab({
 
   const handleTabClick = (tabId) => {
     if (tabId !== selectedOption) {
-      setSelectedOption(tabId);
+    setSelectedOption(tabId);
     }
   };
 
@@ -71,7 +71,7 @@ function Tab({
       if (stored) {
         const listData = JSON.parse(stored);
         const items = listData.items || [];
-
+        
         // Verificar si ya existe
         const exists = items.some((item) => item.id === series.id);
         if (!exists) {
@@ -191,7 +191,7 @@ function Tab({
       id: 1,
       icon: '',
       label: t('series') || 'Series',
-      component: true && (
+          component: true && (
         <Home
           {...{
             t,
@@ -359,11 +359,11 @@ function Tab({
                       </span>
                     </>
                   )}
-                  <span
+                      <span
                     className="lang lang-scroll"
                     onClick={handleScrollToEnd}
                     title={isAtTop ? t('goToBottom') || 'Go to bottom' : t('goToTop') || 'Go to top'}
-                  >
+                      >
                     {isAtTop ? '↓' : '↑'}
                   </span>
                   {selectedOption === 1 && (

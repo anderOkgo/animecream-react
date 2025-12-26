@@ -28,7 +28,8 @@
   margin-bottom: 19px;
 }
 
-.label {
+.card-container .label,
+.form-group .label {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;

@@ -25,7 +25,7 @@ export const useTheme = () => {
   const storedTheme = getStoredTheme();
   const systemTheme = getSystemTheme();
   const initialTheme = storedTheme ?? systemTheme;
-  
+
   const [isDarkMode, setIsDarkMode] = useState(initialTheme);
   const [useSystemDefault, setUseSystemDefault] = useState(storedTheme === null);
 
@@ -111,7 +111,7 @@ export const useTheme = () => {
       '--light-gray': '#555',
       '--background': '#121212',
       '--text': '#fff',
-      '--text-alt': '#00000045',
+      '--text-alt': '#000000',
     };
 
     const colors = isDarkMode ? darkModeColors : lightModeColors;

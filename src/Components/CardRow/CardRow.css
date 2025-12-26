@@ -3,6 +3,39 @@
   max-width: 900px;
   margin: auto;
   position: relative;
+  transition: all 0.3s ease;
+}
+
+.card:hover .tabs .radiotab:checked + .label {
+  border-color: var(--third-color) !important;
+  box-shadow: -6px -2px 6px rgba(14, 97, 121, 0.35), 6px -2px 6px rgba(14, 97, 121, 0.35),
+    0 -2px 10px rgba(14, 97, 121, 0.25), 0 -1px 4px rgba(14, 97, 121, 0.2);
+  overflow: hidden;
+  background: var(--text-alt) !important;
+  background-color: var(--text-alt) !important;
+  clip-path: inset(-10px -10px 1px -10px);
+  top: 1px;
+  border-radius: 5px 5px 0 0;
+  opacity: 1 !important;
+}
+
+.card:hover .tabs .radiotab:checked + .label + .panel {
+  box-shadow: 0 0 10px rgba(14, 97, 121, 0.45), 0 0 16px rgba(14, 97, 121, 0.3), 0 0 22px rgba(14, 97, 121, 0.2),
+    0 4px 12px rgba(14, 97, 121, 0.35), 0 -2px 8px rgba(14, 97, 121, 0.25), inset 0 0 0 1px rgba(14, 97, 121, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover .tabs .radiotab:checked + .label + .panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--text-alt);
+  z-index: 21;
+  box-shadow: 0 0 0 3px var(--text-alt);
 }
 
 /* Edit Button */
@@ -134,7 +167,7 @@
   opacity: 0;
 }
 
-.label {
+.tabs .label {
   background-color: var(--background);
   position: relative;
   width: 7em;
@@ -147,25 +180,29 @@
   border-radius: 0;
   text-align: center;
   margin: 0;
+  margin-bottom: 0 !important;
   left: 1em;
+  z-index: 10;
 }
 
-.label:hover {
+.tabs .label:hover {
   background: var(--soft-gray);
 }
 
-.label:active {
+.tabs .label:active {
   background-color: var(--background);
 }
 
-.radiotab:checked + .label {
+.tabs .radiotab:checked + .label {
   background: var(--text-alt);
   color: var(--fourth-color);
   border-top: 1px solid var(--soft-gray);
   border-left: 1px solid var(--soft-gray);
   border-right: 1px solid var(--soft-gray);
   border-bottom: none;
-  z-index: 2;
+  z-index: 20;
+  margin-bottom: 0 !important;
+  position: relative;
 }
 
 .panel {
@@ -183,11 +220,13 @@
   transition: box-shadow 0.4s ease-out;
   max-height: 295px;
   min-height: 265px;
+  position: relative;
+  z-index: 1;
 }
 
 .panel:hover {
   box-shadow: 0 0 10px rgba(14, 97, 121, 0.45), 0 0 16px rgba(14, 97, 121, 0.3), 0 0 22px rgba(14, 97, 121, 0.2),
-    0 4px 12px rgba(14, 97, 121, 0.35), 0 -2px 8px rgba(14, 97, 121, 0.25), inset 0 0 0 1px rgba(14, 97, 121, 0.2);
+    0 4px 12px rgba(14, 97, 121, 0.35), inset 0 0 0 1px rgba(14, 97, 121, 0.2);
 }
 
 .radiotab:checked + .label + .panel {
