@@ -8,8 +8,8 @@
 
 .card:hover .tabs .radiotab:checked + .label {
   border-color: var(--third-color) !important;
-  box-shadow: -6px -2px 6px rgba(14, 97, 121, 0.35), 6px -2px 6px rgba(14, 97, 121, 0.35),
-    0 -2px 10px rgba(14, 97, 121, 0.25), 0 -1px 4px rgba(14, 97, 121, 0.2);
+  box-shadow: -6px -2px 4px rgba(14, 97, 121, 0.35), 6px -2px 4px rgba(14, 97, 121, 0.35),
+    0 -2px 7px rgba(14, 97, 121, 0.25), 0 -1px 3px rgba(14, 97, 121, 0.2);
   overflow: hidden;
   background: var(--text-alt) !important;
   background-color: var(--text-alt) !important;
@@ -20,8 +20,8 @@
 }
 
 .card:hover .tabs .radiotab:checked + .label + .panel {
-  box-shadow: 0 0 10px rgba(14, 97, 121, 0.45), 0 0 16px rgba(14, 97, 121, 0.3), 0 0 22px rgba(14, 97, 121, 0.2),
-    0 4px 12px rgba(14, 97, 121, 0.35), 0 -2px 8px rgba(14, 97, 121, 0.25), inset 0 0 0 1px rgba(14, 97, 121, 0.2);
+  box-shadow: 0 0 7px rgba(14, 97, 121, 0.45), 0 0 11px rgba(14, 97, 121, 0.3), 0 0 15px rgba(14, 97, 121, 0.2),
+    0 4px 8px rgba(14, 97, 121, 0.35), 0 -2px 6px rgba(14, 97, 121, 0.25), inset 0 0 0 1px rgba(14, 97, 121, 0.2);
   position: relative;
   overflow: hidden;
 }
@@ -225,8 +225,8 @@
 }
 
 .panel:hover {
-  box-shadow: 0 0 10px rgba(14, 97, 121, 0.45), 0 0 16px rgba(14, 97, 121, 0.3), 0 0 22px rgba(14, 97, 121, 0.2),
-    0 4px 12px rgba(14, 97, 121, 0.35), inset 0 0 0 1px rgba(14, 97, 121, 0.2);
+  box-shadow: 0 0 7px rgba(14, 97, 121, 0.45), 0 0 11px rgba(14, 97, 121, 0.3), 0 0 15px rgba(14, 97, 121, 0.2),
+    0 4px 8px rgba(14, 97, 121, 0.35), inset 0 0 0 1px rgba(14, 97, 121, 0.2);
 }
 
 .radiotab:checked + .label + .panel {

@@ -56,6 +56,5 @@ input[type='number'],
 }
 
 .toggle-search {
-  margin-bottom: 1em !important;
   cursor: pointer;
 }

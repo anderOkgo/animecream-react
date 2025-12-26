@@ -3,7 +3,9 @@
   justify-content: space-between;
   align-items: center;
   padding-bottom: 2px;
+  padding-right: 0;
   background-color: var(--background);
+  gap: 6px;
 }
 
 .search-box label {
@@ -19,17 +21,29 @@
 
 .search-input-wrapper {
   position: relative;
-  width: 50%;
+  flex: 1;
 }
 
 .search-box-input {
   width: 100%;
-  padding: 5px;
-  border: 1px solid var(--soft-gray);
-  border-radius: 4px;
+  padding: 7px 9px;
+  border: 1.5px solid var(--soft-gray);
+  border-radius: 6px;
   background-color: var(--text-alt);
   color: var(--fourth-color);
   box-sizing: border-box;
+  font-size: 15px;
+  transition: all 0.2s ease;
+}
+
+.search-box-input:hover {
+  border-color: var(--tertiary-color);
+}
+
+.search-box-input:focus {
+  outline: none;
+  border-color: var(--main-color);
+  box-shadow: 0 0 0 2px var(--main-color);
 }
 
 .search-box-input::placeholder {
