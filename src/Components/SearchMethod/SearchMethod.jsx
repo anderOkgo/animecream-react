@@ -154,7 +154,7 @@ const SearchMethod = ({ setOpt, t, isFormVisible, setIsFormVisible, navigation }
               <input
                 type="text"
                 name="production_number_chapters"
-                placeholder="e.g. 1,10"
+                placeholder={t('numberOfChaptersPlaceholder')}
                 value={form.production_number_chapters}
                 onChange={handleChange}
               />
@@ -174,7 +174,7 @@ const SearchMethod = ({ setOpt, t, isFormVisible, setIsFormVisible, navigation }
               <input
                 type="text"
                 name="production_year"
-                placeholder="e.g. 1994,1995"
+                placeholder={t('productionYearPlaceholder')}
                 value={form.production_year}
                 onChange={handleChange}
               />

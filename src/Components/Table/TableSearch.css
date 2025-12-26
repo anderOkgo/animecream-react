@@ -32,7 +32,6 @@
   background-color: var(--text-alt);
   color: var(--fourth-color);
   box-sizing: border-box;
-  font-size: 15px;
   transition: all 0.2s ease;
 }
 

@@ -34,6 +34,15 @@ input[type='number'],
   border-radius: 4px;
   background-color: var(--background);
   color: var(--fourth-color);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input[type='text']:focus,
+input[type='number']:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--main-color);
+  box-shadow: 0 0 0 2px var(--main-color);
 }
 
 .form-group input[type='submit'],

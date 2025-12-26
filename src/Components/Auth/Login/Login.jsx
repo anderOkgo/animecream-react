@@ -28,7 +28,7 @@ const Login = ({ t, init, setInit, setProc, onLoginSuccess }) => {
         if (Array.isArray(resp?.err?.message)) {
           resp.err.message.map((err) => alert(t(err)));
         } else {
-          alert(t(resp?.err?.message || 'Unknown error'));
+          alert(t(resp?.err?.message || 'errorUnknown'));
         }
         setInit(false);
       } else {

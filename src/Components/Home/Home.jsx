@@ -168,13 +168,13 @@ const Home = ({
               .map((err) => t(err))
               .join(', ');
           } else {
-            error = t(productionsInfo?.err?.message || 'Error');
+            error = t(productionsInfo?.err?.message || 'errorGeneric');
           }
           setError(error);
         }
       } catch (error) {
         console.error('Error loading by IDs:', error);
-        setError('Error loading series by IDs');
+        setError(t('errorLoadingSeriesByIds'));
       } finally {
         setLoading(false);
         setProc(false);
@@ -234,11 +234,11 @@ const Home = ({
             onSeriesDataChange(data);
           }
         } else {
-          setError(t(productionsInfo?.err?.message || 'Error'));
+          setError(t(productionsInfo?.err?.message || 'errorGeneric'));
         }
       } catch (error) {
         console.error('Error loading initial data:', error);
-        setError('Error loading data');
+        setError(t('errorLoadingData'));
       } finally {
         setLoading(false);
         setProc(false);
@@ -319,7 +319,7 @@ const Home = ({
             .map((err) => t(err))
             .join(', ');
         } else {
-          error = t(productionsInfo?.err?.message || 'Error');
+          error = t(productionsInfo?.err?.message || 'errorGeneric');
         }
         setError(error);
         // No limpiar db si hay error, mantener los datos anteriores
@@ -346,7 +346,7 @@ const Home = ({
         navigation={navigation}
       />
       {false && <Loader />}
-      {error && <Message msg={`Error: ${error}`} bgColor="#dc3545" onDoubleClick={handleErrorDoubleClick} />}
+      {error && <Message msg={`${t('errorPrefix')} ${error}`} bgColor="#dc3545" onDoubleClick={handleErrorDoubleClick} />}
       {db && (
         <Card
           data={db}
