@@ -22,6 +22,7 @@
   font-size: 20px;
   transition: border-bottom 0.1s, color 0.5s;
   text-align: center;
+  color: var(--third-color);
 }
 
 .radio-tab {
@@ -31,7 +32,7 @@
 }
 
 .radio-tab:checked + .label-tab {
-  color: var(--third-color);
+  color: var(--fourth-color);
   border-top: 1px solid var(--third-color);
 }
 
