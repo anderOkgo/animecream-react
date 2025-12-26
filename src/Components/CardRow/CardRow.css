@@ -17,6 +17,7 @@
   top: 1px;
   border-radius: 5px 5px 0 0;
   opacity: 1 !important;
+  z-index: 20;
 }
 
 .card:hover .tabs .radiotab:checked + .label + .panel {
@@ -24,6 +25,7 @@
     0 4px 8px rgba(14, 97, 121, 0.35), 0 -2px 6px rgba(14, 97, 121, 0.25), inset 0 0 0 1px rgba(14, 97, 121, 0.2);
   position: relative;
   overflow: hidden;
+  z-index: 15;
 }
 
 .card:hover .tabs .radiotab:checked + .label + .panel::before {
@@ -208,7 +210,7 @@
 .panel {
   order: 99;
   display: none;
-  padding: 1em;
+  padding: 0.9em;
   width: 100%;
   border-left: 1px solid var(--soft-gray);
   border-bottom: 1px solid var(--soft-gray);
@@ -389,6 +391,61 @@ hr {
   }
 }
 
+/* Extra small screen styles - pantallas menores a 380px */
+@media (max-width: 380px) {
+  /* Reducir tamaño de texto general - reducción moderada */
+  .card {
+    font-size: 0.98em;
+  }
+
+  .tabs .label {
+    font-size: 14.5px;
+    padding: 0.6em;
+  }
+
+  .panel {
+    font-size: 0.98em;
+  }
+
+  .section-details h2 {
+    font-size: 1.15em;
+  }
+
+  .section-details + p {
+    font-size: 0.98em;
+  }
+
+  .tab-section p {
+    font-size: 0.98em;
+  }
+
+  /* Reducir padding de etiquetas - reducción moderada */
+  .tag {
+    padding: 3.5px;
+    font-size: 11.5px;
+    margin-right: 4px;
+    margin-top: 2px;
+  }
+
+  .read-aloud-tag {
+    padding: 3.5px 7px;
+    font-size: 11.5px;
+    margin-right: 4px;
+    margin-top: 2px;
+  }
+
+  .read-aloud-btn {
+    padding: 7px 11px;
+    font-size: 12px;
+  }
+
+  .year,
+  .ep {
+    padding: 3.5px;
+    font-size: 11.5px;
+  }
+}
+
 /* Small screen styles */
 @media (min-width: 320px) {
   .section-content {
@@ -404,6 +461,7 @@ hr {
 /* Large screen styles */
 @media (min-width: 650px) {
   .panel {
+    padding: 1em;
     border-top: 1px solid var(--soft-gray);
   }
 

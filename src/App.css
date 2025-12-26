@@ -161,3 +161,30 @@
   border-color: var(--main-color);
   transform: scale(1.1);
 }
+
+/* Extra small screen styles - pantallas menores a 380px */
+@media (max-width: 380px) {
+  .lang-top250 {
+    text-indent: -9999px;
+    overflow: hidden;
+    width: auto;
+    min-width: 40px;
+    padding: 6px 10px;
+    position: relative;
+  }
+
+  .lang-top250::after {
+    content: 'Top';
+    font-size: 0.95em;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    color: #000000;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    white-space: nowrap;
+    text-indent: 0;
+  }
+}
