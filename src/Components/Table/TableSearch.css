@@ -22,11 +22,12 @@
 .search-input-wrapper {
   position: relative;
   flex: 1;
+  max-width: 50%;
 }
 
 .search-box-input {
   width: 100%;
-  padding: 7px 9px;
+  padding: 8px 10px;
   border: 1.5px solid var(--soft-gray);
   border-radius: 6px;
   background-color: var(--text-alt);
