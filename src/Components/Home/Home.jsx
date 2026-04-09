@@ -32,6 +32,7 @@ const Home = ({
   const [loading, setLoading] = useState(false);
   const [opt, setOpt] = useState({});
   const isRestoringRef = useRef(false);
+  const initialDbRef = useRef(null); // Ref para guardar los datos de la carga inicial
 
   // Wrapper para setOpt que agrega al historial
   const setOptWithHistory = (requestData) => {
@@ -63,15 +64,40 @@ const Home = ({
           isRestoringRef.current = false;
         }, 50);
       } else if (currentState.type === 'initial') {
-        // Si volvemos al estado inicial, resetear los filtros
+        // Si volvemos al estado inicial, resetear los filtros y restaurar datos iniciales
         isRestoringRef.current = true;
         setOpt({});
+
+        // Si tenemos datos iniciales guardados, los restauramos
+        if (initialDbRef.current) {
+          setDb(initialDbRef.current);
+          if (onSeriesDataChange) {
+            onSeriesDataChange(initialDbRef.current);
+          }
+        } else {
+          // Si por alguna razón no los tenemos (ej: refresh), los cargamos del localStorage
+          try {
+            const localResp = localStorage.getItem('storage_initial');
+            if (localResp) {
+              const data = JSON.parse(localResp);
+              setDb(data);
+              initialDbRef.current = data;
+              if (onSeriesDataChange) onSeriesDataChange(data);
+            } else {
+              setDb(null); // Fallback si no hay nada
+            }
+          } catch (e) {
+            setDb(null);
+          }
+        }
+
+        // Resetear el flag después de un delay
         setTimeout(() => {
           isRestoringRef.current = false;
-        }, 50);
+        }, 100);
       }
     }
-  }, [navigation.currentState]);
+  }, [navigation.currentState, onSeriesDataChange]);
   const [loadByIds, setLoadByIds] = useState(externalLoadByIds);
   const isLoadingByIdsRef = useRef(false);
   const hasInitialLoad = useRef(false);
@@ -206,12 +232,13 @@ const Home = ({
 
     // Cargar datos del localStorage primero (solo como preview mientras carga)
     try {
-      var localResp = localStorage.getItem('storage');
+      var localResp = localStorage.getItem('storage_initial') || localStorage.getItem('storage');
       if (localResp) {
         localResp = JSON.parse(localResp);
         if (localResp && (Array.isArray(localResp) ? localResp.length > 0 : Object.keys(localResp).length > 0)) {
           // Mostrar datos del localStorage temporalmente
           setDb(localResp);
+          initialDbRef.current = localResp;
           // Notificar las series actuales desde localStorage
           if (onSeriesDataChange) {
             onSeriesDataChange(localResp);
@@ -236,7 +263,9 @@ const Home = ({
           const data = Array.isArray(productionsInfo) ? productionsInfo : productionsInfo.data || productionsInfo;
           // Guardar todos los datos en localStorage
           localStorage.setItem('storage', JSON.stringify(data));
+          localStorage.setItem('storage_initial', JSON.stringify(data)); // Guardar copia fija de la carga inicial
           setDb(data);
+          initialDbRef.current = data;
           setError(null);
           // Notificar cambios en los datos de series
           if (onSeriesDataChange) {

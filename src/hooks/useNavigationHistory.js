@@ -25,11 +25,15 @@ export const useNavigationHistory = () => {
 
   const pushHistory = useCallback(
     (type, data = null) => {
-      // No agregar si estamos navegando programáticamente o procesando popstate
-      if (isNavigatingRef.current || isProcessingPopStateRef.current || pushHistoryLockRef.current) {
-        if (isNavigatingRef.current) {
-          isNavigatingRef.current = false;
-        }
+      // No agregar si estamos procesando popstate o si hay un bloqueo activo
+      if (isProcessingPopStateRef.current || pushHistoryLockRef.current) {
+        return;
+      }
+
+      // Si estamos en medio de una navegación (isNavigatingRef), 
+      // bloqueamos este push para evitar que efectos secundarios de la navegación
+      // contaminen el historial.
+      if (isNavigatingRef.current) {
         return;
       }
 
@@ -84,7 +88,6 @@ export const useNavigationHistory = () => {
     if (currentIndexRef.current > 0) {
       isNavigatingRef.current = true;
       const newIndex = currentIndexRef.current - 1;
-      // No actualizamos state aquí, esperamos al popstate
       window.history.go(-1);
       return historyRef.current[newIndex];
     }
@@ -95,7 +98,6 @@ export const useNavigationHistory = () => {
     if (currentIndexRef.current < historyRef.current.length - 1) {
       isNavigatingRef.current = true;
       const newIndex = currentIndexRef.current + 1;
-      // No actualizamos state aquí, esperamos al popstate
       window.history.go(1);
       return historyRef.current[newIndex];
     }
@@ -109,44 +111,49 @@ export const useNavigationHistory = () => {
       }
 
       isProcessingPopStateRef.current = true;
+      isNavigatingRef.current = true; // Marcar como navegando
+
+      const clearFlags = () => {
+        setTimeout(() => {
+          isProcessingPopStateRef.current = false;
+          isNavigatingRef.current = false;
+        }, 150); // Tiempo suficiente para que React procese los efectos de estado
+      };
 
       if (event.state?.index !== undefined) {
         const stateIndex = event.state.index;
 
         if (stateIndex >= 0 && stateIndex < historyRef.current.length) {
-          isNavigatingRef.current = true;
           setCurrentIndex(stateIndex);
           currentIndexRef.current = stateIndex;
-          setTimeout(() => {
-            isProcessingPopStateRef.current = false;
-          }, 50);
-          return;
+        } else if (stateIndex >= historyRef.current.length) {
+          // Si el índice es mayor a lo que tenemos (ej: Forward después de refresh)
+          // intentamos sincronizar al último conocido
+          const lastIndex = historyRef.current.length - 1;
+          setCurrentIndex(lastIndex);
+          currentIndexRef.current = lastIndex;
         }
       } else if (currentIndexRef.current > 0) {
-        isNavigatingRef.current = true;
+        // Fallback para cuando el estado es null (navegación a página inicial no gestionada)
         const newIndex = currentIndexRef.current - 1;
         setCurrentIndex(newIndex);
         currentIndexRef.current = newIndex;
-        setTimeout(() => {
-          isProcessingPopStateRef.current = false;
-        }, 50);
-        return;
       }
 
-      setTimeout(() => {
-        isProcessingPopStateRef.current = false;
-      }, 50);
+      clearFlags();
     };
 
     window.addEventListener('popstate', handlePopState);
 
     // Inicializar estado de browser si es necesario
-    if (window.history.state === null) {
+    const currentBrowserState = window.history.state;
+    if (currentBrowserState === null || currentBrowserState.index === undefined) {
       window.history.replaceState({ index: 0, type: 'initial', data: null }, '', window.location.href);
-    } else if (window.history.state.index !== undefined) {
-      // Si ya hay un estado con índice (por ej. tras un refresh),
-      // sincronizar nuestro índice inicial para evitar saltos.
-      // Pero como React history empieza de nuevo, reemplazamos el estado actual.
+    } else {
+      // Si ya hay un estado con índice, sincronizamos nuestro estado inicial a eso
+      // para evitar que el primer push cree un salto o un índice duplicado.
+      // Pero como el array 'history' local empieza de 0, forzamos el browser a 0
+      // si estamos reiniciando la app.
       window.history.replaceState({ index: 0, type: 'initial', data: null }, '', window.location.href);
     }
 
