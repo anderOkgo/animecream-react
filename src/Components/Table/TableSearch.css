@@ -4,7 +4,7 @@
   align-items: center;
   padding-bottom: 2px;
   padding-right: 0;
-  background-color: var(--background);
+  background-color: var(--bg-surface);
   gap: 6px;
 }
 
@@ -15,8 +15,8 @@
 }
 
 .search-box option {
-  color: var(--text);
-  background-color: var(--background);
+  color: var(--text-body);
+  background-color: var(--bg-surface);
 }
 
 .search-input-wrapper {
@@ -28,10 +28,10 @@
 .search-box-input {
   width: 100%;
   padding: 8px 10px;
-  border: 1.5px solid var(--soft-gray);
+  border: 1.5px solid var(--border-subtle);
   border-radius: 6px;
-  background-color: var(--text-alt);
-  color: var(--fourth-color);
+  background-color: var(--text-invert);
+  color: var(--text-heading);
   box-sizing: border-box;
   transition: all 0.2s ease;
 }
@@ -42,12 +42,12 @@
 
 .search-box-input:focus {
   outline: none;
-  border-color: var(--main-color);
-  box-shadow: 0 0 0 2px var(--main-color);
+  border-color: var(--brand-primary);
+  box-shadow: var(--focus-ring);
 }
 
 .search-box-input::placeholder {
-  color: var(--fourth-color);
+  color: var(--text-heading);
 }
 
 .search-suggestions {
@@ -58,24 +58,24 @@
   margin-top: 2px;
   max-height: 200px;
   overflow-y: auto;
-  background-color: var(--background);
-  border: 1px solid var(--soft-gray);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
   border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-sm);
   z-index: 10000;
 }
 
 .suggestion-item {
   padding: 8px 12px;
   cursor: pointer;
-  color: var(--fourth-color);
+  color: var(--text-heading);
   font-size: 14px;
   transition: background-color 0.2s ease;
 }
 
 .suggestion-item:hover,
 .suggestion-item.selected {
-  background-color: var(--soft-gray);
+  background-color: var(--border-subtle);
 }
 
 .suggestion-item:first-child {

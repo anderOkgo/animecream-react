@@ -834,8 +834,8 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete }) => {
               ? t('updating') || 'Updating...'
               : t('creating') || 'Creating...'
             : isEditMode
-            ? t('updateSeries') || 'Update Series'
-            : t('createSeries') || 'Create Series'}
+              ? t('updateSeries') || 'Update Series'
+              : t('createSeries') || 'Create Series'}
         </button>
       </form>
     </div>

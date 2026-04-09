@@ -46,7 +46,7 @@ const ListView = ({ listId, onBack, onLoadSeries }) => {
     setLoading(true);
     try {
       const ids = listData.items.map((item) => item.id).filter(Boolean);
-      
+
       if (ids.length === 0) {
         setSeriesData([]);
         setLoading(false);
@@ -54,9 +54,9 @@ const ListView = ({ listId, onBack, onLoadSeries }) => {
       }
 
       console.log('Loading series with IDs:', ids);
-      
+
       const postUrl = set.base_url + set.api_url;
-      
+
       // El API espera el parámetro "id" (no "ids") como array para usar IN condition
       // Según series-read.mysql.ts línea 216: id: HDB.generateInCondition
       const response = await helpHttp.post(postUrl, {
@@ -64,16 +64,16 @@ const ListView = ({ listId, onBack, onLoadSeries }) => {
           id: ids, // Array de IDs - el API usa generateInCondition que espera un array
         },
       });
-      
+
       console.log('Response from API:', response);
-      
+
       if (!response?.err) {
         // Asegurar que response sea un array
-        const seriesArray = Array.isArray(response) ? response : (response.data || []);
-        
+        const seriesArray = Array.isArray(response) ? response : response.data || [];
+
         console.log('Series loaded:', seriesArray.length, 'items');
         console.log('Expected IDs:', ids);
-        
+
         // Si recibimos todos los resultados, filtrar solo los que necesitamos
         let filteredArray = seriesArray;
         if (seriesArray.length > ids.length) {
@@ -84,7 +84,7 @@ const ListView = ({ listId, onBack, onLoadSeries }) => {
           });
           console.log('Filtered to:', filteredArray.length, 'items');
         }
-        
+
         // Crear un mapa para búsqueda rápida usando tanto id como production_ranking_number
         const seriesMap = new Map();
         filteredArray.forEach((series) => {
@@ -97,7 +97,7 @@ const ListView = ({ listId, onBack, onLoadSeries }) => {
             seriesMap.set(dbId, series);
           }
         });
-        
+
         // Ordenar según el orden de la lista
         const orderedData = listData.items
           .map((listItem) => {
@@ -113,7 +113,7 @@ const ListView = ({ listId, onBack, onLoadSeries }) => {
             return found;
           })
           .filter(Boolean);
-        
+
         console.log('Final ordered data:', orderedData.length, 'items');
         setSeriesData(orderedData);
       } else {
@@ -140,7 +140,7 @@ const ListView = ({ listId, onBack, onLoadSeries }) => {
 
   const handleDrop = (e, dropIndex) => {
     e.preventDefault();
-    
+
     if (draggedItem === null || draggedItem === dropIndex) {
       return;
     }
@@ -193,7 +193,7 @@ const ListView = ({ listId, onBack, onLoadSeries }) => {
           {t('loadSeries') || 'Load Series'}
         </button>
       </div>
-      
+
       <div className="list-view-content">
         {loading ? (
           <div className="loading">{t('loading') || 'Loading...'}</div>
@@ -235,4 +235,3 @@ const ListView = ({ listId, onBack, onLoadSeries }) => {
 };
 
 export default ListView;
-

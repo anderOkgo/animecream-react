@@ -34,7 +34,7 @@ function Table({
   // reorder columns based on orderColumnsList array
   useEffect(() => {
     if (data && data.length > 0) {
-      const initialData = orderColumnsList?.length ?? 0 > 0 ? reorderTableHeader(data, orderColumnsList) : data;
+      const initialData = (orderColumnsList?.length ?? 0 > 0) ? reorderTableHeader(data, orderColumnsList) : data;
       setDataset(initialData);
       setFilteredData(initialData);
       setHeader(Object.keys(initialData[0]));
@@ -69,8 +69,8 @@ function Table({
             {sortOrder.columnIndex === index && sortOrder.descending
               ? ' ▼'
               : sortOrder.columnIndex === index
-              ? ' ▲'
-              : ''}
+                ? ' ▲'
+                : ''}
           </th>
         ))}
       </tr>

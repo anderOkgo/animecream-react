@@ -7,12 +7,11 @@
 }
 
 .card:hover .tabs .radiotab:checked + .label {
-  border-color: var(--third-color) !important;
-  box-shadow: -6px -2px 4px rgba(14, 97, 121, 0.35), 6px -2px 4px rgba(14, 97, 121, 0.35),
-    0 -2px 7px rgba(14, 97, 121, 0.25), 0 -1px 3px rgba(14, 97, 121, 0.2);
+  border-color: var(--brand-accent) !important;
+  box-shadow: var(--shadow-md);
   overflow: hidden;
-  background: var(--text-alt) !important;
-  background-color: var(--text-alt) !important;
+  background: var(--text-invert) !important;
+  background-color: var(--text-invert) !important;
   clip-path: inset(-10px -10px 1px -10px);
   top: 1px;
   border-radius: 5px 5px 0 0;
@@ -21,8 +20,8 @@
 }
 
 .card:hover .tabs .radiotab:checked + .label + .panel {
-  box-shadow: 0 0 7px rgba(14, 97, 121, 0.45), 0 0 11px rgba(14, 97, 121, 0.3), 0 0 15px rgba(14, 97, 121, 0.2),
-    0 4px 8px rgba(14, 97, 121, 0.35), 0 -2px 6px rgba(14, 97, 121, 0.25), inset 0 0 0 1px rgba(14, 97, 121, 0.2);
+  box-shadow: var(--shadow-md);
+  border-color: var(--brand-accent) !important;
   position: relative;
   overflow: hidden;
   z-index: 15;
@@ -35,9 +34,9 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: var(--text-alt);
+  background: var(--text-invert);
   z-index: 21;
-  box-shadow: 0 0 0 3px var(--text-alt);
+  box-shadow: 0 0 0 3px var(--text-invert);
 }
 
 /* Edit Button */
@@ -45,9 +44,9 @@
   position: absolute;
   top: 5px;
   right: 40px;
-  background-color: var(--main-color);
+  background-color: var(--brand-primary);
   color: var(--white);
-  border: 1px solid var(--white);
+  border: var(--border-invert);
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -60,15 +59,15 @@
   justify-content: center;
   z-index: 1001;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 4px var(--main-color);
+  box-shadow: var(--shadow-sm);
 }
 
 .card-edit-btn:hover {
-  background-color: var(--third-color);
+  background-color: var(--brand-accent);
   color: var(--white);
   transform: scale(1.1);
   border-color: var(--white);
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), 0 6px 12px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(10, 70, 86, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 .card-edit-btn:active {
@@ -79,9 +78,9 @@
 .card-add-to-list-btn {
   position: absolute;
   top: 5px;
-  background-color: var(--soft-green);
+  background-color: var(--color-success);
   color: var(--white);
-  border: 1px solid var(--white);
+  border: var(--border-invert);
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -94,7 +93,7 @@
   justify-content: center;
   z-index: 1001;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 4px var(--soft-green);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Cuando hay botón de editar (admin), el botón de agregar está más a la izquierda */
@@ -108,11 +107,11 @@
 }
 
 .card-add-to-list-btn:hover {
-  background-color: var(--third-color);
+  background-color: var(--brand-accent);
   color: var(--white);
   transform: scale(1.1);
   border-color: var(--white);
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), 0 6px 12px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(10, 70, 86, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 .card-add-to-list-btn:active {
@@ -124,9 +123,9 @@
   position: absolute;
   top: 5px;
   right: 5px;
-  background-color: var(--main-color);
+  background-color: var(--brand-primary);
   color: var(--white);
-  border: 1px solid var(--white);
+  border: var(--border-invert);
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -139,16 +138,16 @@
   justify-content: center;
   z-index: 1001;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 4px var(--third-color);
+  box-shadow: var(--shadow-sm);
 }
 
 .card-close-btn:hover {
-  background-color: var(--third-color);
+  background-color: var(--brand-accent);
   color: var(--white);
   transform: scale(1.1);
   border-color: var(--white);
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), 0 6px 12px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(211, 47, 47, 0.3);
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  box-shadow: var(--shadow-md);
+  text-shadow: var(--text-body-shadow);
 }
 
 .card-close-btn:active {
@@ -170,14 +169,16 @@
 }
 
 .tabs .label {
-  background-color: var(--background);
+  background-color: var(--bg-surface);
   position: relative;
   width: 7em;
   padding: 0.7em;
   cursor: pointer;
   font-weight: bold;
   font-size: 15px;
-  transition: background 0.3s, color 0.3s;
+  transition:
+    background 0.3s,
+    color 0.3s;
   border: none;
   border-radius: 0;
   text-align: center;
@@ -188,19 +189,19 @@
 }
 
 .tabs .label:hover {
-  background: var(--soft-gray);
+  background: var(--border-subtle);
 }
 
 .tabs .label:active {
-  background-color: var(--background);
+  background-color: var(--bg-surface);
 }
 
 .tabs .radiotab:checked + .label {
-  background: var(--text-alt);
-  color: var(--fourth-color);
-  border-top: 1px solid var(--soft-gray);
-  border-left: 1px solid var(--soft-gray);
-  border-right: 1px solid var(--soft-gray);
+  background: var(--text-invert);
+  color: var(--text-heading);
+  border-top: 1px solid var(--border-subtle);
+  border-left: 1px solid var(--border-subtle);
+  border-right: 1px solid var(--border-subtle);
   border-bottom: none;
   z-index: 20;
   margin-bottom: 0 !important;
@@ -212,13 +213,13 @@
   display: none;
   padding: 0.9em;
   width: 100%;
-  border-left: 1px solid var(--soft-gray);
-  border-bottom: 1px solid var(--soft-gray);
-  border-right: 1px solid var(--soft-gray);
+  border-left: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  border-right: 1px solid var(--border-subtle);
   border-radius: 0.5em;
   margin-top: 0;
-  box-shadow: 0px 3px 3px var(--soft-gray);
-  background-color: var(--text-alt);
+  box-shadow: var(--shadow-sm);
+  background-color: var(--text-invert);
   transition: box-shadow 0.4s ease-out;
   max-height: 295px;
   min-height: 265px;
@@ -227,8 +228,7 @@
 }
 
 .panel:hover {
-  box-shadow: 0 0 7px rgba(14, 97, 121, 0.45), 0 0 11px rgba(14, 97, 121, 0.3), 0 0 15px rgba(14, 97, 121, 0.2),
-    0 4px 8px rgba(14, 97, 121, 0.35), inset 0 0 0 1px rgba(14, 97, 121, 0.2);
+  box-shadow: var(--shadow-md);
 }
 
 .radiotab:checked + .label + .panel {
@@ -248,8 +248,8 @@
   height: auto;
   margin-right: 15px;
   padding: 4px;
-  background-color: var(--text-alt);
-  border: 1px solid var(--soft-gray);
+  background-color: var(--text-invert);
+  border: 1px solid var(--border-subtle);
   border-radius: 4px;
 }
 
@@ -262,7 +262,7 @@
 }
 
 .section-details h2 {
-  color: var(--highlight);
+  color: var(--text-heading);
 }
 
 .tags {
@@ -271,7 +271,7 @@
 }
 
 .tag {
-  background-color: var(--third-color);
+  background-color: var(--brand-accent);
   padding: 4px;
   margin-right: 5px;
   margin-top: 3px;
@@ -290,7 +290,7 @@
 
 .year,
 .ep {
-  background-color: var(--soft-green) !important;
+  background-color: var(--color-success) !important;
   display: inline;
 }
 
@@ -316,7 +316,7 @@ hr {
 
 /* Read Aloud Button */
 .read-aloud-btn {
-  background-color: var(--third-color);
+  background-color: var(--brand-accent);
   color: var(--white);
   border: none;
   padding: 8px 12px;
@@ -332,21 +332,21 @@ hr {
 }
 
 .read-aloud-btn:hover {
-  background-color: var(--highlight);
+  background-color: var(--color-highlight);
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-sm);
 }
 
 .read-aloud-btn.speaking {
-  background-color: var(--soft-green);
+  background-color: var(--color-success);
   animation: pulse 1.5s infinite;
 }
 
 /* Read Aloud as Tag */
 .read-aloud-tag {
-  background-color: var(--main-color);
+  background-color: var(--brand-primary);
   color: var(--white);
-  border: 2px solid var(--white);
+  border: var(--border-invert);
   padding: 4px 8px;
   margin-right: 5px;
   margin-top: 3px;
@@ -361,20 +361,20 @@ hr {
   min-width: 28px;
   height: auto;
   line-height: 1;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-sm);
   vertical-align: middle;
 }
 
 .read-aloud-tag:hover {
-  background-color: var(--third-color);
+  background-color: var(--brand-accent);
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  border-color: var(--highlight);
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-highlight);
 }
 
 .read-aloud-tag.speaking {
-  background-color: var(--soft-green);
-  border-color: var(--soft-green);
+  background-color: var(--color-success);
+  border-color: var(--color-success);
   animation: pulse 1.5s infinite;
   box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
 }
@@ -462,11 +462,11 @@ hr {
 @media (min-width: 650px) {
   .panel {
     padding: 1em;
-    border-top: 1px solid var(--soft-gray);
+    border-top: 1px solid var(--border-subtle);
   }
 
   .label {
-    background-color: var(--background);
+    background-color: var(--bg-surface);
     border-radius: 10px 10px 0 0;
     z-index: 1;
   }

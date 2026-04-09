@@ -65,7 +65,11 @@ export default function CardRow({
           production_ranking_number: 'ASC',
         },
       };
-      navigation?.pushHistory('request', { type: 'filter-episodes', data: requestData, value: production_number_chapters });
+      navigation?.pushHistory('request', {
+        type: 'filter-episodes',
+        data: requestData,
+        value: production_number_chapters,
+      });
       onFilterChange(requestData);
     }
   };
@@ -95,7 +99,11 @@ export default function CardRow({
           production_ranking_number: 'ASC',
         },
       };
-      navigation?.pushHistory('request', { type: 'filter-demographic', data: requestData, value: demographic_name });
+      navigation?.pushHistory('request', {
+        type: 'filter-demographic',
+        data: requestData,
+        value: demographic_name,
+      });
       onFilterChange(requestData);
     }
   };

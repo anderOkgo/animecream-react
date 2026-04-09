@@ -4,7 +4,7 @@
   flex-wrap: wrap-reverse;
   margin: 0 auto 0em;
   border-radius: 0;
-  background-color: var(--soft-gray);
+  background-color: var(--border-subtle);
   place-content: flex-start;
 }
 
@@ -16,13 +16,15 @@
   width: 20%;
   height: 6vh;
   padding: 0.3em;
-  background: var(--background);
+  background: var(--bg-surface);
   cursor: pointer;
   font-weight: bold;
   font-size: 20px;
-  transition: border-bottom 0.1s, color 0.5s;
+  transition:
+    border-bottom 0.1s,
+    color 0.5s;
   text-align: center;
-  color: var(--third-color);
+  color: var(--brand-accent);
 }
 
 .radio-tab {
@@ -32,8 +34,8 @@
 }
 
 .radio-tab:checked + .label-tab {
-  color: var(--fourth-color);
-  border-top: 1px solid var(--third-color);
+  color: var(--text-heading);
+  border-top: 1px solid var(--brand-accent);
 }
 
 .radio-tab:checked + .label-tab + .panel-tab {
@@ -49,9 +51,9 @@
   order: 99;
   display: none;
   padding: 0;
-  background: var(--background);
+  background: var(--bg-surface);
   width: 100%;
-  border-bottom: 1px solid var(--soft-gray);
+  border-bottom: 1px solid var(--border-subtle);
   height: 84vh;
   overflow: hidden;
 }

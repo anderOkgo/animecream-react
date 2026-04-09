@@ -12,8 +12,8 @@ table {
 
 /* Table Header Styles */
 thead th {
-  background-color: var(--main-color);
-  color: var(--text-alt);
+  background-color: var(--brand-primary);
+  color: var(--text-invert);
   padding: 0.4em;
   cursor: pointer;
 }
@@ -44,7 +44,7 @@ td:first-child {
 }
 
 table tr:nth-child(odd) {
-  background-color: var(--soft-gray);
+  background-color: var(--border-subtle);
 }
 
 tbody tr:hover {

@@ -7,8 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "up": "call com/db-sync-FTP-both.bat",
-    "bup": "vite build & npm run up"
+    "up": "node scripts/bump-sw-version.cjs && call com/db-sync-FTP-both.bat",
+    "bup": "npm run build & npm run up"
   },
   "dependencies": {
     "@fontsource/roboto": "^5.0.8",

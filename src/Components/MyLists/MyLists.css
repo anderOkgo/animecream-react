@@ -3,10 +3,10 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: var(--background);
-  border: 1px solid var(--soft-gray);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
   border-radius: 8px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-md);
   z-index: 2000;
   max-width: 500px;
   width: 90%;
@@ -20,12 +20,12 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px 20px;
-  border-bottom: 1px solid var(--soft-gray);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .my-lists-header h3 {
   margin: 0;
-  color: var(--fourth-color);
+  color: var(--text-heading);
 }
 
 .close-btn {
@@ -33,7 +33,7 @@
   border: none;
   font-size: 28px;
   cursor: pointer;
-  color: var(--fourth-color);
+  color: var(--text-heading);
   padding: 0;
   width: 30px;
   height: 30px;
@@ -45,8 +45,8 @@
 }
 
 .close-btn:hover {
-  background-color: var(--soft-gray);
-  color: var(--main-color);
+  background-color: var(--border-subtle);
+  color: var(--brand-primary);
 }
 
 .my-lists-content {
@@ -58,7 +58,7 @@
 .btn-add-list {
   width: 100%;
   padding: 10px;
-  background-color: var(--main-color);
+  background-color: var(--brand-primary);
   color: var(--white);
   border: none;
   border-radius: 4px;
@@ -70,7 +70,7 @@
 }
 
 .btn-add-list:hover {
-  background-color: var(--third-color);
+  background-color: var(--brand-accent);
 }
 
 .add-list-form {
@@ -80,12 +80,12 @@
 .add-list-form input {
   width: 100%;
   padding: 10px;
-  border: 1px solid var(--soft-gray);
+  border: 1px solid var(--border-subtle);
   border-radius: 4px;
   font-size: 14px;
   margin-bottom: 10px;
-  background-color: var(--background);
-  color: var(--fourth-color);
+  background-color: var(--bg-surface);
+  color: var(--text-heading);
 }
 
 .add-list-buttons {
@@ -105,21 +105,21 @@
 }
 
 .add-list-buttons button:first-child {
-  background-color: var(--main-color);
+  background-color: var(--brand-primary);
   color: var(--white);
 }
 
 .add-list-buttons button:first-child:hover {
-  background-color: var(--third-color);
+  background-color: var(--brand-accent);
 }
 
 .add-list-buttons button:last-child {
-  background-color: var(--soft-gray);
-  color: var(--fourth-color);
+  background-color: var(--border-subtle);
+  color: var(--text-heading);
 }
 
 .add-list-buttons button:last-child:hover {
-  background-color: var(--main-color);
+  background-color: var(--brand-primary);
   color: var(--white);
 }
 
@@ -134,22 +134,22 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px;
-  border: 1px solid var(--soft-gray);
+  border: 1px solid var(--border-subtle);
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.3s ease;
-  background-color: var(--background);
+  background-color: var(--bg-surface);
 }
 
 .list-item:hover {
-  background-color: var(--soft-gray);
-  border-color: var(--main-color);
+  background-color: var(--border-subtle);
+  border-color: var(--brand-primary);
 }
 
 .list-item.selected {
-  background-color: var(--main-color);
+  background-color: var(--brand-primary);
   color: var(--white);
-  border-color: var(--main-color);
+  border-color: var(--brand-primary);
 }
 
 .list-item.selected .list-name,
@@ -165,12 +165,12 @@
 
 .list-name {
   font-weight: 600;
-  color: var(--fourth-color);
+  color: var(--text-heading);
 }
 
 .list-count {
   font-size: 12px;
-  color: var(--soft-gray);
+  color: var(--border-subtle);
 }
 
 .btn-delete-list {
@@ -178,7 +178,7 @@
   border: none;
   font-size: 24px;
   cursor: pointer;
-  color: var(--fourth-color);
+  color: var(--text-heading);
   padding: 0;
   width: 24px;
   height: 24px;
@@ -190,7 +190,7 @@
 }
 
 .btn-delete-list:hover {
-  background-color: var(--third-color);
+  background-color: var(--brand-accent);
   color: var(--white);
 }
 
@@ -199,17 +199,11 @@
 }
 
 .list-item.selected .btn-delete-list:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: var(--white-alpha-20);
 }
 
 .no-lists {
   text-align: center;
-  color: var(--soft-gray);
+  color: var(--border-subtle);
   padding: 20px;
 }
-
-
-
-
-
-

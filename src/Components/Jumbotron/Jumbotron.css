@@ -5,7 +5,7 @@
   text-align: center;
   min-height: 10vh;
   color: var(--white);
-  background-color: var(--main-color);
+  background-color: var(--brand-primary);
 }
 
 .jumbotron-title {

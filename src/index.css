@@ -16,22 +16,22 @@ th {
 
 body {
   font-family: Helvetica, Roboto, Arial, sans-serif;
-  background-color: var(--background);
-  color: var(--fourth-color);
+  background-color: var(--bg-surface);
+  color: var(--text-heading);
   font-size: 15px;
   line-height: 1.32857143;
 }
 
 .insetshadow {
   letter-spacing: 0.05em;
-  text-shadow: -1px -1px 1px var(--second-color), 2px 2px 1px var(--black);
+  text-shadow: var(--text-body-shadow-inset);
 }
 
 a {
-  color: var(--main-color);
+  color: var(--brand-primary);
   text-decoration: none;
 }
 
 a:hover {
-  color: var(--second-color);
+  color: var(--brand-secondary);
 }

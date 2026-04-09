@@ -50,7 +50,7 @@ const AddToListModal = ({ seriesId, seriesName, onClose, onAdd }) => {
     setShowAddForm(false);
     loadLists();
     setSelectedListId(listId);
-    
+
     if (onAdd) {
       onAdd(listId, seriesId, seriesName);
     }
@@ -58,21 +58,21 @@ const AddToListModal = ({ seriesId, seriesName, onClose, onAdd }) => {
 
   const handleSelectList = (listId) => {
     setSelectedListId(listId);
-    
+
     // Agregar a la lista seleccionada
     try {
       const stored = localStorage.getItem(listId);
       if (stored) {
         const listData = JSON.parse(stored);
         const items = listData.items || [];
-        
+
         // Verificar si ya existe
         const exists = items.some((item) => item.id === seriesId);
         if (!exists) {
           items.push({ id: seriesId, name: seriesName });
           listData.items = items;
           localStorage.setItem(listId, JSON.stringify(listData));
-          
+
           if (onAdd) {
             onAdd(listId, seriesId, seriesName);
           }
@@ -90,13 +90,15 @@ const AddToListModal = ({ seriesId, seriesName, onClose, onAdd }) => {
       <div className="add-to-list-modal" onClick={(e) => e.stopPropagation()}>
         <div className="add-to-list-header">
           <h3>{t('addToList') || 'Add to List'}</h3>
-          <button className="close-btn" onClick={onClose}>×</button>
+          <button className="close-btn" onClick={onClose}>
+            ×
+          </button>
         </div>
         <div className="add-to-list-content">
           <p className="series-info">
             {t('adding') || 'Adding'}: <strong>{seriesName}</strong>
           </p>
-          
+
           {!showAddForm ? (
             <button className="btn-add-list" onClick={() => setShowAddForm(true)}>
               + {t('createNewList') || 'Create New List'}
@@ -117,10 +119,12 @@ const AddToListModal = ({ seriesId, seriesName, onClose, onAdd }) => {
               />
               <div className="add-list-buttons">
                 <button onClick={handleAddList}>{t('create') || 'Create'}</button>
-                <button onClick={() => {
-                  setShowAddForm(false);
-                  setNewListName('');
-                }}>
+                <button
+                  onClick={() => {
+                    setShowAddForm(false);
+                    setNewListName('');
+                  }}
+                >
                   {t('cancel') || 'Cancel'}
                 </button>
               </div>
@@ -141,11 +145,11 @@ const AddToListModal = ({ seriesId, seriesName, onClose, onAdd }) => {
                   >
                     <div className="list-info">
                       <span className="list-name">{list.name}</span>
-                      <span className="list-count">({list.items.length} {t('items') || 'items'})</span>
+                      <span className="list-count">
+                        ({list.items.length} {t('items') || 'items'})
+                      </span>
                     </div>
-                    {isInList && (
-                      <span className="in-list-badge">{t('alreadyAdded') || 'Added'}</span>
-                    )}
+                    {isInList && <span className="in-list-badge">{t('alreadyAdded') || 'Added'}</span>}
                   </div>
                 );
               })
@@ -158,9 +162,3 @@ const AddToListModal = ({ seriesId, seriesName, onClose, onAdd }) => {
 };
 
 export default AddToListModal;
-
-
-
-
-
-

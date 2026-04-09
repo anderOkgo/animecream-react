@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: var(--bg-overlay);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,10 +13,10 @@
 }
 
 .list-manager-modal {
-  background-color: var(--background);
-  border: 1px solid var(--soft-gray);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
   border-radius: 12px;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-md);
   max-width: 750px;
   width: 90%;
   max-height: 85vh;
@@ -30,12 +30,12 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px 20px;
-  border-bottom: 1px solid var(--soft-gray);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .list-manager-header h3 {
   margin: 0;
-  color: var(--fourth-color);
+  color: var(--text-heading);
 }
 
 .close-btn {
@@ -43,7 +43,7 @@
   border: none;
   font-size: 28px;
   cursor: pointer;
-  color: var(--fourth-color);
+  color: var(--text-heading);
   padding: 0;
   width: 30px;
   height: 30px;
@@ -55,8 +55,8 @@
 }
 
 .close-btn:hover {
-  background-color: var(--soft-gray);
-  color: var(--main-color);
+  background-color: var(--border-subtle);
+  color: var(--brand-primary);
 }
 
 .list-manager-content {
@@ -74,35 +74,35 @@
 }
 
 .list-manager-content::-webkit-scrollbar-track {
-  background: var(--background);
+  background: var(--bg-surface);
 }
 
 .list-manager-content::-webkit-scrollbar-thumb {
-  background: var(--soft-gray);
+  background: var(--border-subtle);
   border-radius: 4px;
 }
 
 .list-manager-content::-webkit-scrollbar-thumb:hover {
-  background: var(--main-color);
+  background: var(--brand-primary);
 }
 
 .series-to-add-info {
   padding: 12px;
-  background-color: var(--soft-gray);
-  border-left: 4px solid var(--main-color);
+  background-color: var(--border-subtle);
+  border-left: 4px solid var(--brand-primary);
   border-radius: 4px;
-  color: var(--fourth-color);
+  color: var(--text-heading);
   margin-bottom: 10px;
 }
 
 .series-to-add-info strong {
-  color: var(--main-color);
+  color: var(--brand-primary);
 }
 
 .info-text {
   display: block;
   font-size: 12px;
-  color: var(--soft-gray);
+  color: var(--border-subtle);
   margin-top: 4px;
 }
 
@@ -121,17 +121,17 @@
   flex: 1;
   min-width: 200px;
   padding: 8px 12px;
-  border: 1px solid var(--soft-gray);
+  border: 1px solid var(--border-subtle);
   border-radius: 4px;
   font-size: 14px;
-  background-color: var(--background);
-  color: var(--fourth-color);
+  background-color: var(--bg-surface);
+  color: var(--text-heading);
   cursor: pointer;
 }
 
 .list-select:focus {
   outline: none;
-  border-color: var(--main-color);
+  border-color: var(--brand-primary);
 }
 
 .btn-add-list,
@@ -147,22 +147,22 @@
 }
 
 .btn-add-list {
-  background-color: var(--main-color);
+  background-color: var(--brand-primary);
   color: var(--white);
 }
 
 .btn-add-list:hover {
-  background-color: var(--third-color);
+  background-color: var(--brand-accent);
 }
 
 .btn-delete-list {
-  background-color: var(--third-color);
+  background-color: var(--brand-accent);
   color: var(--white);
   padding: 8px 12px;
 }
 
 .btn-delete-list:hover {
-  background-color: #d32f2f;
+  background-color: var(--color-danger);
 }
 
 /* Ajustar tamaños de botones en los controles del selector */
@@ -184,11 +184,11 @@
 .add-list-form-inline input {
   flex: 1;
   padding: 8px;
-  border: 1px solid var(--soft-gray);
+  border: 1px solid var(--border-subtle);
   border-radius: 4px;
   font-size: 14px;
-  background-color: var(--background);
-  color: var(--fourth-color);
+  background-color: var(--bg-surface);
+  color: var(--text-heading);
 }
 
 .add-list-form-inline button {
@@ -202,21 +202,21 @@
 }
 
 .add-list-form-inline button:first-of-type {
-  background-color: var(--main-color);
+  background-color: var(--brand-primary);
   color: var(--white);
 }
 
 .add-list-form-inline button:first-of-type:hover {
-  background-color: var(--third-color);
+  background-color: var(--brand-accent);
 }
 
 .add-list-form-inline button:last-of-type {
-  background-color: var(--soft-gray);
-  color: var(--fourth-color);
+  background-color: var(--border-subtle);
+  color: var(--text-heading);
 }
 
 .add-list-form-inline button:last-of-type:hover {
-  background-color: var(--main-color);
+  background-color: var(--brand-primary);
   color: var(--white);
 }
 
@@ -231,13 +231,13 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 0;
-  border-bottom: 2px solid var(--soft-gray);
+  border-bottom: 2px solid var(--border-subtle);
   margin-bottom: 10px;
 }
 
 .list-items-header h4 {
   margin: 0;
-  color: var(--fourth-color);
+  color: var(--text-heading);
   font-size: 18px;
   font-weight: 600;
 }
@@ -253,7 +253,7 @@
 .btn-add-all-cards,
 .btn-load-series {
   padding: 10px 16px;
-  background-color: var(--main-color);
+  background-color: var(--brand-primary);
   color: var(--white);
   border: none;
   border-radius: 6px;
@@ -261,7 +261,7 @@
   font-size: 14px;
   font-weight: 600;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
   white-space: nowrap;
 }
 
@@ -271,7 +271,7 @@
 }
 
 .btn-recalculate-index.active {
-  background-color: var(--third-color);
+  background-color: var(--brand-accent);
 }
 
 .btn-copy-list {
@@ -288,9 +288,9 @@
 .btn-add-all-cards:hover:not(:disabled),
 .btn-recalculate-index:hover:not(:disabled),
 .btn-load-series:hover:not(:disabled) {
-  background-color: var(--third-color);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  background-color: var(--brand-accent);
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-md);
 }
 
 .btn-recalculate-index:disabled,
@@ -309,7 +309,7 @@
 .loading,
 .empty-list {
   text-align: center;
-  color: var(--soft-gray);
+  color: var(--border-subtle);
   padding: 40px 20px;
 }
 
@@ -324,16 +324,16 @@
   align-items: center;
   gap: 10px;
   padding: 12px;
-  border: 1px solid var(--soft-gray);
+  border: 1px solid var(--border-subtle);
   border-radius: 4px;
-  background-color: var(--background);
+  background-color: var(--bg-surface);
   cursor: move;
   transition: all 0.3s ease;
 }
 
 .series-item:hover {
-  background-color: var(--soft-gray);
-  border-color: var(--main-color);
+  background-color: var(--border-subtle);
+  border-color: var(--brand-primary);
 }
 
 .series-item.dragging {
@@ -342,7 +342,7 @@
 
 .drag-handle {
   font-size: 18px;
-  color: var(--soft-gray);
+  color: var(--border-subtle);
   cursor: grab;
   user-select: none;
 }
@@ -353,7 +353,7 @@
 
 .series-name {
   flex: 1;
-  color: var(--fourth-color);
+  color: var(--text-heading);
   font-size: 14px;
 }
 
@@ -362,7 +362,7 @@
   border: none;
   font-size: 24px;
   cursor: pointer;
-  color: var(--fourth-color);
+  color: var(--text-heading);
   padding: 0;
   width: 24px;
   height: 24px;
@@ -374,7 +374,7 @@
 }
 
 .remove-item-btn:hover {
-  background-color: var(--third-color);
+  background-color: var(--brand-accent);
   color: var(--white);
 }
 
@@ -391,19 +391,19 @@
   align-items: center;
   gap: 12px;
   padding: 14px 16px;
-  border: 1px solid var(--soft-gray);
+  border: 1px solid var(--border-subtle);
   border-radius: 6px;
-  background-color: var(--background);
+  background-color: var(--bg-surface);
   cursor: move;
   transition: all 0.3s ease;
   position: relative;
 }
 
 .list-item-simple:hover {
-  background-color: rgba(var(--main-color-rgb, 33, 150, 243), 0.1);
-  border-color: var(--main-color);
+  background-color: var(--white-alpha-20);
+  border-color: var(--brand-primary);
   transform: translateX(4px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
 }
 
 .list-item-simple.dragging {
@@ -413,7 +413,7 @@
 
 .list-item-simple .drag-handle {
   font-size: 20px;
-  color: var(--soft-gray);
+  color: var(--border-subtle);
   cursor: grab;
   user-select: none;
   transition: color 0.2s;
@@ -421,7 +421,7 @@
 }
 
 .list-item-simple:hover .drag-handle {
-  color: var(--main-color);
+  color: var(--brand-primary);
 }
 
 .list-item-simple .drag-handle:active {
@@ -430,7 +430,7 @@
 
 .list-item-simple .item-name {
   flex: 1;
-  color: var(--fourth-color);
+  color: var(--text-heading);
   font-size: 15px;
   font-weight: 500;
   line-height: 1.4;
@@ -441,7 +441,7 @@
   border: none;
   font-size: 20px;
   cursor: pointer;
-  color: var(--soft-gray);
+  color: var(--border-subtle);
   padding: 4px;
   width: 28px;
   height: 28px;
@@ -459,7 +459,7 @@
 }
 
 .list-item-simple .remove-item-btn:hover {
-  background-color: var(--third-color);
+  background-color: var(--brand-accent);
   color: var(--white);
   transform: scale(1.1);
 }

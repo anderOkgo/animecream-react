@@ -2,7 +2,13 @@ import React, { useState, useEffect } from 'react';
 import './ListManager.css';
 import { useLanguage } from '../../hooks/useLanguage';
 
-const ListManager = ({ onClose, onLoadSeries, selectedListId: initialSelectedListId, onListSelected, currentSeries }) => {
+const ListManager = ({
+  onClose,
+  onLoadSeries,
+  selectedListId: initialSelectedListId,
+  onListSelected,
+  currentSeries,
+}) => {
   const { t } = useLanguage();
   const [lists, setLists] = useState([]);
   const [selectedListId, setSelectedListId] = useState(initialSelectedListId || null);
@@ -32,7 +38,6 @@ const ListManager = ({ onClose, onLoadSeries, selectedListId: initialSelectedLis
   useEffect(() => {
     console.log('ListManager currentSeries:', currentSeries?.length || 0, 'series', currentSeries);
   }, [currentSeries]);
-
 
   const loadLists = () => {
     const savedLists = [];
@@ -125,7 +130,7 @@ const ListManager = ({ onClose, onLoadSeries, selectedListId: initialSelectedLis
 
   const handleDrop = (e, dropIndex) => {
     e.preventDefault();
-    
+
     if (draggedItem === null || draggedItem === dropIndex || !listData) {
       return;
     }
@@ -147,7 +152,7 @@ const ListManager = ({ onClose, onLoadSeries, selectedListId: initialSelectedLis
 
   const handleRemoveItem = (index) => {
     if (!listData) return;
-    
+
     const newItems = listData.items.filter((_, i) => i !== index);
     const updatedList = {
       ...listData,
@@ -216,7 +221,7 @@ const ListManager = ({ onClose, onLoadSeries, selectedListId: initialSelectedLis
   // Agregar todas las tarjetas actuales (series visibles) a la lista
   const handleAddAllCurrentCards = () => {
     console.log('handleAddAllCurrentCards called', { currentSeries, listData, selectedListId });
-    
+
     if (!selectedListId) {
       alert(t('selectListFirst') || 'Please select a list first');
       return;
@@ -232,7 +237,7 @@ const ListManager = ({ onClose, onLoadSeries, selectedListId: initialSelectedLis
       return;
     }
 
-    const existingIds = new Set(listData.items.map(item => item.id));
+    const existingIds = new Set(listData.items.map((item) => item.id));
     const newItems = [];
     let addedCount = 0;
     let skippedCount = 0;
@@ -240,7 +245,7 @@ const ListManager = ({ onClose, onLoadSeries, selectedListId: initialSelectedLis
     currentSeries.forEach((series) => {
       const seriesId = series.id || series.production_ranking_number;
       const seriesName = series.production_name || series.name;
-      
+
       if (seriesId && seriesName) {
         if (!existingIds.has(seriesId)) {
           newItems.push({
@@ -263,7 +268,7 @@ const ListManager = ({ onClose, onLoadSeries, selectedListId: initialSelectedLis
 
       localStorage.setItem(selectedListId, JSON.stringify(updatedList));
       setListData(updatedList);
-      
+
       if (skippedCount > 0) {
         alert(t('seriesAddedWithSkipped') || `${addedCount} series added, ${skippedCount} already in list`);
       } else {
@@ -279,17 +284,15 @@ const ListManager = ({ onClose, onLoadSeries, selectedListId: initialSelectedLis
       <div className="list-manager-modal" onClick={(e) => e.stopPropagation()}>
         <div className="list-manager-header">
           <h3>{t('myLists') || 'My Lists'}</h3>
-          <button className="close-btn" onClick={onClose}>×</button>
+          <button className="close-btn" onClick={onClose}>
+            ×
+          </button>
         </div>
-        
+
         <div className="list-manager-content">
           <div className="list-selector-section">
             <div className="list-selector-controls">
-              <select
-                className="list-select"
-                value={selectedListId || ''}
-                onChange={handleListChange}
-              >
+              <select className="list-select" value={selectedListId || ''} onChange={handleListChange}>
                 <option value="">{t('selectList') || 'Select List'}</option>
                 {lists.map((list) => (
                   <option key={list.id} value={list.id}>
@@ -297,7 +300,7 @@ const ListManager = ({ onClose, onLoadSeries, selectedListId: initialSelectedLis
                   </option>
                 ))}
               </select>
-              
+
               {!showAddForm ? (
                 <button className="btn-add-list" onClick={() => setShowAddForm(true)}>
                   + {t('addList') || 'Add List'}
@@ -317,53 +320,72 @@ const ListManager = ({ onClose, onLoadSeries, selectedListId: initialSelectedLis
                     autoFocus
                   />
                   <button onClick={handleAddList}>{t('create') || 'Create'}</button>
-                  <button onClick={() => {
-                    setShowAddForm(false);
-                    setNewListName('');
-                  }}>
+                  <button
+                    onClick={() => {
+                      setShowAddForm(false);
+                      setNewListName('');
+                    }}
+                  >
                     {t('cancel') || 'Cancel'}
                   </button>
                 </div>
               )}
-              
+
               {selectedListId && (
                 <>
                   {listData && (
                     <>
-                      <button 
-                        className="btn-copy-list" 
-                        onClick={handleCopyList} 
+                      <button
+                        className="btn-copy-list"
+                        onClick={handleCopyList}
                         disabled={listData.items.length === 0}
                         title={t('copyList') || 'Copy list to clipboard'}
                       >
                         📋
                       </button>
-                      <button 
+                      <button
                         className={`btn-recalculate-index ${showRealIndexes ? 'active' : ''}`}
-                        onClick={handleToggleIndexes} 
+                        onClick={handleToggleIndexes}
                         disabled={listData.items.length === 0}
-                        title={showRealIndexes ? (t('showOriginalIds') || 'Show original IDs') : (t('showCalculatedIndexes') || 'Show calculated indexes')}
+                        title={
+                          showRealIndexes
+                            ? t('showOriginalIds') || 'Show original IDs'
+                            : t('showCalculatedIndexes') || 'Show calculated indexes'
+                        }
                       >
                         {t('index') || '#'}
                       </button>
-                      <button 
-                        className="btn-add-all-cards" 
-                        onClick={handleAddAllCurrentCards} 
-                        disabled={!currentSeries || !Array.isArray(currentSeries) || currentSeries.length === 0 || !selectedListId}
-                        title={currentSeries && currentSeries.length > 0 ? `${t('addAllCurrentCards') || 'Add all current cards to list'} (${currentSeries.length} ${t('series') || 'series'})` : (t('addAllCurrentCards') || 'Add all current cards to list')}
+                      <button
+                        className="btn-add-all-cards"
+                        onClick={handleAddAllCurrentCards}
+                        disabled={
+                          !currentSeries ||
+                          !Array.isArray(currentSeries) ||
+                          currentSeries.length === 0 ||
+                          !selectedListId
+                        }
+                        title={
+                          currentSeries && currentSeries.length > 0
+                            ? `${t('addAllCurrentCards') || 'Add all current cards to list'} (${currentSeries.length} ${t('series') || 'series'})`
+                            : t('addAllCurrentCards') || 'Add all current cards to list'
+                        }
                       >
                         {t('addCards') || 'Add Cards'}
                       </button>
-                      <button 
-                        className="btn-load-series" 
-                        onClick={handleLoadSeries} 
+                      <button
+                        className="btn-load-series"
+                        onClick={handleLoadSeries}
                         disabled={listData.items.length === 0}
                       >
                         {t('loadSeries') || 'Load Series'}
                       </button>
                     </>
                   )}
-                  <button className="btn-delete-list" onClick={handleDeleteList} title={t('deleteList') || 'Delete list'}>
+                  <button
+                    className="btn-delete-list"
+                    onClick={handleDeleteList}
+                    title={t('deleteList') || 'Delete list'}
+                  >
                     ×
                   </button>
                 </>
@@ -376,7 +398,7 @@ const ListManager = ({ onClose, onLoadSeries, selectedListId: initialSelectedLis
               <div className="list-items-header">
                 <h4>{listData.name}</h4>
               </div>
-              
+
               {listData.items.length === 0 ? (
                 <div className="empty-list">{t('emptyList') || 'This list is empty'}</div>
               ) : (
@@ -392,7 +414,8 @@ const ListManager = ({ onClose, onLoadSeries, selectedListId: initialSelectedLis
                     >
                       <span className="drag-handle">☰</span>
                       <span className="item-name">
-                        {showRealIndexes ? `${index + 1}. ` : `#${item.id} - `}{item.name}
+                        {showRealIndexes ? `${index + 1}. ` : `#${item.id} - `}
+                        {item.name}
                       </span>
                       <button
                         className="remove-item-btn"
@@ -414,4 +437,3 @@ const ListManager = ({ onClose, onLoadSeries, selectedListId: initialSelectedLis
 };
 
 export default ListManager;
-
