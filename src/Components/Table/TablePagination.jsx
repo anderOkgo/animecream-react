@@ -3,13 +3,22 @@ import { useEffect, useState, useRef } from 'react';
 import set from '../../helpers/set.json';
 import './TablePagination.css';
 
-function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPage, element = '', t }) {
+function TablePagination({
+  currentPage,
+  setCurrentPage,
+  filteredData,
+  itemsPerPage,
+  element = '',
+  t,
+  navigation,
+}) {
   const [totalPages, setTotalPages] = useState(1);
   const [startIndex, setStartIndex] = useState(0);
   const [endIndex, setEndIndex] = useState(0);
   const [isRangeEnabled, setIsRangeEnabled] = useState(false);
   const touchStartPosRef = useRef({ x: 0, y: 0 });
   const hasMovedRef = useRef(false);
+  const isInternalChangeRef = useRef(false);
 
   useEffect(() => {
     setTotalPages(Math.ceil(filteredData.length / itemsPerPage));
@@ -19,9 +28,28 @@ function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPa
     setEndIndex(newEndIndex);
   }, [filteredData, itemsPerPage, currentPage]);
 
+  // Manejar el historial de navegación
   useEffect(() => {
-    // No hay limpieza necesaria
-  }, []);
+    if (!navigation) return;
+
+    // Cuando cambia currentPage externamente, registrar en historial
+    if (!isInternalChangeRef.current) {
+      navigation.pushHistory('pagination', { page: currentPage, id: element });
+    }
+    isInternalChangeRef.current = false;
+  }, [currentPage, navigation, element]);
+
+  useEffect(() => {
+    if (!navigation) return;
+
+    const state = navigation.currentState;
+    if (state?.type === 'pagination' && state.data?.id === element) {
+      if (state.data.page !== currentPage) {
+        isInternalChangeRef.current = true;
+        setCurrentPage(state.data.page);
+      }
+    }
+  }, [navigation?.currentState, navigation?.currentIndex, element, currentPage, setCurrentPage]);
 
   const renderPaginationButtons = () => {
     const maxButtons = set.pagination_max_buttons;
@@ -54,7 +82,9 @@ function TablePagination({ currentPage, setCurrentPage, filteredData, itemsPerPa
   const goToElement = () => {
     const gelement = document.getElementById(element);
     if (gelement) gelement.scrollIntoView();
-    document.documentElement.scrollTo({ top: 0 });
+    if (!element || element === 'main-content') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const nextPage = () => {

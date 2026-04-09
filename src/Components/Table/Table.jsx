@@ -13,6 +13,7 @@ function Table({
   hiddenColumns = [],
   onRowDoubleClick = false,
   label = 'No label',
+  navigation,
 }) {
   const [dataset, setDataset] = useState([]);
   const [header, setHeader] = useState([]);
@@ -104,7 +105,9 @@ function Table({
           <tbody>{renderTableRows()}</tbody>
         </table>
         <div className="pagination-container">
-          <TablePagination {...{ currentPage, setCurrentPage, filteredData, itemsPerPage }} />
+          <TablePagination
+            {...{ currentPage, setCurrentPage, filteredData, itemsPerPage, element: label, navigation }}
+          />
         </div>
         <br />
       </div>

@@ -104,7 +104,7 @@ const Card = ({
             );
           })}
           <div className="pagination-container">
-            <TablePagination {...{ currentPage, setCurrentPage, filteredData, itemsPerPage, element, t }} />
+            <TablePagination {...{ currentPage, setCurrentPage, filteredData, itemsPerPage, element, t, navigation }} />
             <br />
           </div>
         </>
