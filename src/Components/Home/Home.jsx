@@ -53,16 +53,25 @@ const Home = ({
     if (!navigation) return;
 
     const currentState = navigation.currentState;
-    if (currentState && currentState.type === 'request' && currentState.data?.data) {
-      // Restaurar la petición anterior sin agregar al historial
-      isRestoringRef.current = true;
-      setOpt(currentState.data.data);
-      // Resetear el flag después de un breve delay
-      setTimeout(() => {
-        isRestoringRef.current = false;
-      }, 50);
+    if (currentState) {
+      if (currentState.type === 'request' && currentState.data?.data) {
+        // Restaurar la petición anterior sin agregar al historial
+        isRestoringRef.current = true;
+        setOpt(currentState.data.data);
+        // Resetear el flag después de un breve delay
+        setTimeout(() => {
+          isRestoringRef.current = false;
+        }, 50);
+      } else if (currentState.type === 'initial') {
+        // Si volvemos al estado inicial, resetear los filtros
+        isRestoringRef.current = true;
+        setOpt({});
+        setTimeout(() => {
+          isRestoringRef.current = false;
+        }, 50);
+      }
     }
-  }, [navigation?.currentState, navigation?.currentIndex]);
+  }, [navigation.currentState]);
   const [loadByIds, setLoadByIds] = useState(externalLoadByIds);
   const isLoadingByIdsRef = useRef(false);
   const hasInitialLoad = useRef(false);

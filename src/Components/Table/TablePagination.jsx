@@ -28,16 +28,26 @@ function TablePagination({
     setEndIndex(newEndIndex);
   }, [filteredData, itemsPerPage, currentPage]);
 
+  const isFirstRender = useRef(true);
+
   // Manejar el historial de navegación
   useEffect(() => {
     if (!navigation) return;
+
+    // No registrar en el historial en el primer render si es la página inicial (1)
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      // Si ya estamos en una página distinta de 1 al montar (por ej. restaurando estado), 
+      // podemos registrarla o simplemente dejar que el hook de restauración lo maneje.
+      if (currentPage === 1) return;
+    }
 
     // Cuando cambia currentPage externamente, registrar en historial
     if (!isInternalChangeRef.current) {
       navigation.pushHistory('pagination', { page: currentPage, id: element });
     }
     isInternalChangeRef.current = false;
-  }, [currentPage, navigation, element]);
+  }, [currentPage, navigation.pushHistory, element]);
 
   useEffect(() => {
     if (!navigation) return;
@@ -48,8 +58,12 @@ function TablePagination({
         isInternalChangeRef.current = true;
         setCurrentPage(state.data.page);
       }
+    } else if (state?.type === 'initial' && currentPage !== 1) {
+      // Si volvemos al estado inicial, resetear a página 1
+      isInternalChangeRef.current = true;
+      setCurrentPage(1);
     }
-  }, [navigation?.currentState, navigation?.currentIndex, element, currentPage, setCurrentPage]);
+  }, [navigation.currentState, element, currentPage, setCurrentPage]);
 
   const renderPaginationButtons = () => {
     const maxButtons = set.pagination_max_buttons;
