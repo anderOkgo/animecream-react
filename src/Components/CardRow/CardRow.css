@@ -251,6 +251,11 @@
   background-color: var(--text-invert);
   border: 1px solid var(--border-subtle);
   border-radius: 4px;
+  transition: filter 0.3s ease-in-out;
+}
+
+.card:hover .img-card {
+  filter: brightness(115%) hue-rotate(3deg);
 }
 
 .section-details {
