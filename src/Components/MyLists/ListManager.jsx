@@ -366,7 +366,7 @@ const ListManager = ({
                         }
                         title={
                           currentSeries && currentSeries.length > 0
-                            ? `${t('addAllCurrentCards') || 'Add all current cards to list'} (${currentSeries.length} ${t('series') || 'series'})`
+                            ? `${t('addAllCurrentCards') || 'Add all current cards to list'} (${currentSeries.length} ${t('seriesUnit') || 'series'})`
                             : t('addAllCurrentCards') || 'Add all current cards to list'
                         }
                       >

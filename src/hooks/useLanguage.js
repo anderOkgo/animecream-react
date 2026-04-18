@@ -1,4 +1,13 @@
-import { useState, useEffect } from 'react';
+import {
+  useState,
+  useEffect,
+  createContext,
+  useContext,
+  useCallback,
+  useMemo,
+  useRef,
+  createElement,
+} from 'react';
 
 const translations = {
   en: {
@@ -158,7 +167,8 @@ const translations = {
     seriesAdded: 'Series added to list',
     seriesAddedWithSkipped: 'Series added, some already in list',
     allSeriesAlreadyInList: 'All series are already in the list',
-    series: 'Animecream app',
+    series: 'Series',
+    seriesUnit: 'series',
     login: 'Login',
     username: 'Username',
     password: 'Password',
@@ -331,7 +341,8 @@ const translations = {
     seriesAdded: 'Series agregadas a la lista',
     seriesAddedWithSkipped: 'Series agregadas, algunas ya estaban en la lista',
     allSeriesAlreadyInList: 'Todas las series ya están en la lista',
-    series: 'Animecream app',
+    series: 'Series',
+    seriesUnit: 'series',
     login: 'Iniciar Sesión',
     username: 'Usuario',
     password: 'Contraseña',
@@ -366,10 +377,13 @@ const removeStoredLanguage = () => {
   localStorage.removeItem('lang');
 };
 
-// Function to handle document updates
-const setLanguage = (language) => {
+// Updates document lang, title and meta description
+const applyDocumentLanguage = (language) => {
   document.documentElement.lang = language;
   const metaDescription = document.querySelector('meta[name="description"]');
+  if (!metaDescription) {
+    return;
+  }
   if (language === 'es') {
     metaDescription.content =
       'Descubre las mejores recomendaciones de anime de todos los tiempos en Animecream. Explora clasificaciones, Top 10, y más. Crea tus listas, compártelas y encuentra tus animes favoritos. ¡Bienvenid@!';
@@ -381,92 +395,94 @@ const setLanguage = (language) => {
   }
 };
 
-// Custom Hook
-export const useLanguage = () => {
-  const storedLang = getStoredLanguage();
-  const browserLang = getBrowserLanguage();
-  const [language, setLanguageState] = useState(storedLang ?? browserLang);
-  const [useSystemDefault, setUseSystemDefault] = useState(storedLang === null);
+const LanguageContext = createContext(null);
 
-  // Update language state and document configurations
-  const updateLanguage = (lang) => {
-    setLanguageState(lang);
-    setLanguage(lang);
-  };
+export function LanguageProvider({ children }) {
+  const [language, setLanguageState] = useState(() => {
+    const stored = getStoredLanguage();
+    return stored ?? getBrowserLanguage();
+  });
+  const [useSystemDefault, setUseSystemDefault] = useState(() => getStoredLanguage() === null);
+  const useSystemDefaultRef = useRef(useSystemDefault);
 
-  // Toggle language
-  const toggleLanguage = () => {
-    const newLang = language === 'en' ? 'es' : 'en';
-    updateLanguage(newLang);
-    // If not using system default, save the change
-    if (!useSystemDefault) {
-      setStoredLanguage(newLang);
-    }
-  };
+  useEffect(() => {
+    useSystemDefaultRef.current = useSystemDefault;
+  }, [useSystemDefault]);
 
-  // Function to save current language as default
-  const saveLanguageAsDefault = () => {
+  const toggleLanguage = useCallback(() => {
+    setLanguageState((prev) => {
+      const newLang = prev === 'en' ? 'es' : 'en';
+      applyDocumentLanguage(newLang);
+      if (!useSystemDefaultRef.current) {
+        setStoredLanguage(newLang);
+      }
+      return newLang;
+    });
+  }, []);
+
+  const saveLanguageAsDefault = useCallback(() => {
     setStoredLanguage(language);
     setUseSystemDefault(false);
-  };
+    useSystemDefaultRef.current = false;
+  }, [language]);
 
-  // Function to restore system default
-  const restoreSystemDefault = () => {
+  const restoreSystemDefault = useCallback(() => {
     removeStoredLanguage();
     setUseSystemDefault(true);
+    useSystemDefaultRef.current = true;
     const browserLang = getBrowserLanguage();
-    updateLanguage(browserLang);
-  };
+    setLanguageState(browserLang);
+    applyDocumentLanguage(browserLang);
+  }, []);
 
-  // Translate a given key
-  const t = (key) => translations[language]?.[key] || translations['en'][key] || key;
+  const t = useCallback(
+    (key) => translations[language]?.[key] ?? translations.en[key] ?? key,
+    [language],
+  );
 
-  // Effect hook to sync with system language when using system default
   useEffect(() => {
     if (useSystemDefault) {
-      // When using system default, sync with current browser language
       const browserLang = getBrowserLanguage();
       setLanguageState(browserLang);
-      setLanguage(browserLang);
+      applyDocumentLanguage(browserLang);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [useSystemDefault]);
 
-  // Apply language on mount and sync with localStorage changes
   useEffect(() => {
-    setLanguage(language);
+    applyDocumentLanguage(language);
 
-    // Sync with localStorage changes (for cross-tab synchronization)
     const handleStorageChange = (e) => {
       if (e.key === 'lang') {
         if (e.newValue) {
           setLanguageState(e.newValue);
-          setLanguage(e.newValue);
+          applyDocumentLanguage(e.newValue);
           setUseSystemDefault(false);
+          useSystemDefaultRef.current = false;
         } else {
-          // If removed, restore system default
           const browserLang = getBrowserLanguage();
           setLanguageState(browserLang);
-          setLanguage(browserLang);
+          applyDocumentLanguage(browserLang);
           setUseSystemDefault(true);
+          useSystemDefaultRef.current = true;
         }
       }
     };
 
     window.addEventListener('storage', handleStorageChange);
 
-    // Also check localStorage on mount/update to ensure consistency
     const storedLang = getStoredLanguage();
     if (storedLang && storedLang !== language) {
       setLanguageState(storedLang);
-      setLanguage(storedLang);
+      applyDocumentLanguage(storedLang);
       setUseSystemDefault(false);
+      useSystemDefaultRef.current = false;
     } else if (!storedLang && !useSystemDefault) {
-      // If no stored language but we're not using system default, restore it
       const browserLang = getBrowserLanguage();
       setLanguageState(browserLang);
-      setLanguage(browserLang);
+      applyDocumentLanguage(browserLang);
       setUseSystemDefault(true);
+      useSystemDefaultRef.current = true;
     }
 
     return () => {
@@ -474,11 +490,24 @@ export const useLanguage = () => {
     };
   }, [language, useSystemDefault]);
 
-  return {
-    language,
-    toggleLanguage,
-    saveLanguageAsDefault,
-    restoreSystemDefault,
-    t,
-  };
+  const value = useMemo(
+    () => ({
+      language,
+      toggleLanguage,
+      saveLanguageAsDefault,
+      restoreSystemDefault,
+      t,
+    }),
+    [language, toggleLanguage, saveLanguageAsDefault, restoreSystemDefault, t],
+  );
+
+  return createElement(LanguageContext.Provider, { value }, children);
+}
+
+export const useLanguage = () => {
+  const ctx = useContext(LanguageContext);
+  if (ctx == null) {
+    throw new Error('useLanguage must be used within LanguageProvider');
+  }
+  return ctx;
 };
