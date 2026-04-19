@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useLanguage } from '../../hooks/useLanguage';
 import helpHttp from '../../helpers/helpHttp';
 import SearchMethod from '../SearchMethod/SearchMethod';
 import Card from '../Card/Card';
@@ -6,6 +7,31 @@ import Loader from '../Loader/Loader';
 import Message from '../Message/Message';
 import './Home.css';
 import set from '../../helpers/set.json';
+
+const formatHttpErrMessage = (err, translate) => {
+  if (!err) {
+    return '';
+  }
+  if (typeof err.message === 'object' && err.message !== null) {
+    return Object.values(err.message)
+      .map((msg) => translate(msg))
+      .join(', ');
+  }
+  return translate(err.message ?? 'errorGeneric');
+};
+
+const resolveAppError = (payload, translate) => {
+  if (!payload) {
+    return null;
+  }
+  if (payload.type === 'i18nKey') {
+    return translate(payload.key);
+  }
+  if (payload.type === 'http') {
+    return formatHttpErrMessage(payload.err, translate);
+  }
+  return null;
+};
 
 const Home = ({
   t,
@@ -27,8 +53,9 @@ const Home = ({
   onSetOptReady,
   navigation,
 }) => {
+  const { t: translate, language: activeLanguage } = useLanguage();
   const [db, setDb] = useState(null);
-  const [error, setError] = useState(null);
+  const [errorPayload, setErrorPayload] = useState(null);
   const [loading, setLoading] = useState(false);
   const [opt, setOpt] = useState({});
   const isRestoringRef = useRef(false);
@@ -191,25 +218,17 @@ const Home = ({
 
           localStorage.setItem('storage', JSON.stringify(filtered));
           setDb(filtered);
-          setError(null);
+          setErrorPayload(null);
           // Notificar cambios en los datos de series
           if (onSeriesDataChange) {
             onSeriesDataChange(filtered);
           }
         } else {
-          let error = '';
-          if (typeof productionsInfo?.err?.message === 'object') {
-            error = Object.values(productionsInfo.err.message)
-              .map((err) => t(err))
-              .join(', ');
-          } else {
-            error = t(productionsInfo?.err?.message || 'errorGeneric');
-          }
-          setError(error);
+          setErrorPayload({ type: 'http', err: productionsInfo.err });
         }
       } catch (error) {
         console.error('Error loading by IDs:', error);
-        setError(t('errorLoadingSeriesByIds'));
+        setErrorPayload({ type: 'i18nKey', key: 'errorLoadingSeriesByIds' });
       } finally {
         setLoading(false);
         setProc(false);
@@ -266,17 +285,17 @@ const Home = ({
           localStorage.setItem('storage_initial', JSON.stringify(data)); // Guardar copia fija de la carga inicial
           setDb(data);
           initialDbRef.current = data;
-          setError(null);
+          setErrorPayload(null);
           // Notificar cambios en los datos de series
           if (onSeriesDataChange) {
             onSeriesDataChange(data);
           }
         } else {
-          setError(t(productionsInfo?.err?.message || 'errorGeneric'));
+          setErrorPayload({ type: 'http', err: productionsInfo.err });
         }
       } catch (error) {
         console.error('Error loading initial data:', error);
-        setError(t('errorLoadingData'));
+        setErrorPayload({ type: 'i18nKey', key: 'errorLoadingData' });
       } finally {
         setLoading(false);
         setProc(false);
@@ -345,21 +364,13 @@ const Home = ({
         const data = Array.isArray(productionsInfo) ? productionsInfo : productionsInfo.data || productionsInfo;
         localStorage.setItem('storage', JSON.stringify(data));
         setDb(data);
-        setError(null);
+        setErrorPayload(null);
         // Notificar cambios en los datos de series
         if (onSeriesDataChange) {
           onSeriesDataChange(data);
         }
       } else {
-        let error = '';
-        if (typeof productionsInfo?.err?.message === 'object') {
-          error = Object.values(productionsInfo.err.message)
-            .map((err) => t(err))
-            .join(', ');
-        } else {
-          error = t(productionsInfo?.err?.message || 'errorGeneric');
-        }
-        setError(error);
+        setErrorPayload({ type: 'http', err: productionsInfo.err });
         // No limpiar db si hay error, mantener los datos anteriores
       }
       setLoading(false);
@@ -371,8 +382,10 @@ const Home = ({
   }, [opt, refreshTrigger]);
 
   const handleErrorDoubleClick = () => {
-    setError(null);
+    setErrorPayload(null);
   };
+
+  const errorMessage = errorPayload ? resolveAppError(errorPayload, translate) : null;
 
   return (
     <article className="grid-1-2">
@@ -384,8 +397,13 @@ const Home = ({
         navigation={navigation}
       />
       {false && <Loader />}
-      {error && (
-        <Message msg={`${t('errorPrefix')} ${error}`} bgColor="#dc3545" onDoubleClick={handleErrorDoubleClick} />
+      {errorMessage && (
+        <Message
+          key={activeLanguage}
+          msg={`${translate('errorPrefix')} ${errorMessage}`}
+          bgColor="#dc3545"
+          onDoubleClick={handleErrorDoubleClick}
+        />
       )}
       {db && (
         <Card
