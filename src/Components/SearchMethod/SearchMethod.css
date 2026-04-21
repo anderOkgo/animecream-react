@@ -7,20 +7,20 @@ input:-webkit-autofill:focus {
 
 /* CSS for the form container */
 .form-container {
-  padding-top: 1em;
+  padding-top: 0.4em;
   max-width: 930px;
   margin: 0 auto;
 }
 
 /* CSS for form elements */
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .form-group label {
   display: block;
-  font-size: 16px;
-  margin-bottom: 5px;
+  font-size: 15px;
+  margin-bottom: 3px;
   color: var(--text-heading);
 }
 
@@ -28,15 +28,13 @@ input:-webkit-autofill:focus {
 input[type='number'],
 .form-group select {
   width: 100%;
-  padding: 7px;
-  font-size: 16px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 4px;
-  background-color: var(--bg-surface);
+  padding: 6px 10px;
+  font-size: 15px;
+  border: 1.5px solid var(--border-subtle);
+  border-radius: 6px;
+  background-color: var(--text-invert);
   color: var(--text-heading);
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .form-group input[type='text']:focus,
@@ -47,14 +45,19 @@ input[type='number']:focus,
   box-shadow: 0 0 0 2px var(--brand-primary);
 }
 
+.form-group:last-child {
+  display: flex;
+  gap: 10px;
+}
+
 .form-group input[type='submit'],
 .form-group input[type='reset'] {
+  flex: 1;
   display: inline-block;
   background-color: var(--brand-primary);
   color: var(--white);
   cursor: pointer;
   padding: 10px;
-  width: 50%;
   border: 1px solid var(--border-subtle);
   border-radius: 4px;
   transition:
