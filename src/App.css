@@ -7,33 +7,98 @@
 }
 
 .lang-container {
-  margin-bottom: 0.3em;
   display: flex;
-  gap: 0.5em;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  background-color: var(--bg-surface);
-  padding: 0.7em 0;
-  margin-left: -15px;
-  margin-right: -15px;
-  padding-left: 15px;
-  padding-right: 15px;
-  border-bottom: 1px solid var(--border-subtle);
+  flex-direction: column;
+  gap: 0.6em;
+  position: fixed;
+  left: -52px; /* Oculto por defecto, permitiendo que sobresalga la pestaña */
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1001;
+  background-color: var(--bg-overlay-subtle);
+  padding: 0.6em 0.4em;
+  border-radius: 0 15px 15px 0;
+  box-shadow: var(--sidebar-shadow);
+  border: 1px solid var(--border-subtle);
+  border-left: none;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  user-select: none;
 }
 
-.lang {
-  font-size: 0.8em;
+.lang-container.sidebar-open {
+  left: 0;
+}
+
+.sidebar-toggle {
+  position: absolute;
+  right: -20px;
+  top: 50%;
+  transform: translateY(-50%);
   background-color: var(--brand-primary);
   color: var(--white);
-  padding: 6px 12px;
-  cursor: pointer;
-  border-radius: 0px 8px 8px 8px;
+  width: 20px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 40px;
+  border-radius: 0 10px 10px 0;
+  cursor: pointer;
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-subtle);
+  border-left: none;
+  font-size: 0.9em;
   transition: all 0.3s ease;
+}
+
+.sidebar-toggle:hover {
+  background-color: var(--brand-accent);
+  width: 24px;
+  right: -24px;
+}
+
+@media (max-width: 600px) {
+
+  .lang {
+    min-width: 32px;
+    min-height: 32px;
+    font-size: 0.75em;
+  }
+
+  .lang-top250 {
+    writing-mode: vertical-rl !important;
+    -webkit-writing-mode: vertical-rl !important;
+    text-orientation: mixed !important;
+    padding: 6px 0 !important;
+    min-height: 70px !important;
+    width: 32px !important;
+    line-height: 32px !important;
+    text-indent: 0 !important;
+  }
+
+  .lang-top250::after {
+    display: none !important;
+  }
+}
+
+.lang {
+  font-size: 0.9em;
+  background-color: var(--brand-primary);
+  color: var(--white);
+  padding: 6px;
+  cursor: pointer;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  min-height: 36px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .lang:hover {
@@ -87,7 +152,21 @@
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-  margin-left: auto;
+  margin-left: 0;
+  writing-mode: vertical-rl !important;
+  -webkit-writing-mode: vertical-rl !important;
+  text-orientation: mixed !important;
+  -webkit-text-orientation: mixed !important;
+  display: block !important;
+  width: 36px !important;
+  min-height: 75px !important;
+  line-height: 36px !important;
+  padding: 6px 0 !important;
+  text-align: center !important;
+  font-size: 0.75em !important;
+  white-space: nowrap !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
 }
 
 .lang-top250::before {
@@ -178,29 +257,7 @@
   transform: scale(1.1);
 }
 
-/* Extra small screen styles - pantallas menores a 380px */
+/* Extra small screen styles - removed Top 250 override to keep it vertical */
 @media (max-width: 380px) {
-  .lang-top250 {
-    text-indent: -9999px;
-    overflow: hidden;
-    width: auto;
-    min-width: 40px;
-    padding: 6px 10px;
-    position: relative;
-  }
-
-  .lang-top250::after {
-    content: 'Top';
-    font-size: 0.95em;
-    font-weight: 900;
-    letter-spacing: 0.5px;
-    color: var(--black);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 10;
-    white-space: nowrap;
-    text-indent: 0;
-  }
+  /* No special overrides needed for Top 250 anymore as we want it vertical */
 }

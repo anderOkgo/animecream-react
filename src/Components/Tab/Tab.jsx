@@ -29,6 +29,7 @@ function Tab({
   const [selectedListId, setSelectedListId] = useState(null);
   const [currentSeries, setCurrentSeries] = useState([]);
   const [isAtTop, setIsAtTop] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sectionTabRef = useRef(null);
   const homeSetOptRef = useRef(null);
 
@@ -307,7 +308,14 @@ function Tab({
           <div className="panel-tab">
             <div className="section-tab" ref={selectedOption === tab.id ? sectionTabRef : null}>
               <div className="container-tab">
-                <div className="lang-container">
+                <div className={`lang-container ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
+                  <div
+                    className="sidebar-toggle"
+                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                    title={isSidebarOpen ? t('close') : t('open')}
+                  >
+                    {isSidebarOpen ? '«' : '»'}
+                  </div>
                   <span
                     className="lang"
                     onClick={toggleLanguage}

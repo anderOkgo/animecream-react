@@ -25,6 +25,8 @@
     color 0.5s;
   text-align: center;
   color: var(--brand-accent);
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .radio-tab {

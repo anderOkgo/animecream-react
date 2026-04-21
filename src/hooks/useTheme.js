@@ -110,6 +110,8 @@ export const useTheme = () => {
       '--border-invert': '1px solid var(--white)',
       '--border-secondary': '1px solid var(--border-subtle)',
       '--ts-inset': '-1px -1px 1px var(--brand-secondary), 2px 2px 1px var(--black)',
+      '--bg-overlay-subtle': 'rgba(255, 255, 255, 0.05)',
+      '--sidebar-shadow': '5px 0 15px rgba(0, 0, 0, 0.08)',
     };
 
     const darkModeColors = {
@@ -140,6 +142,8 @@ export const useTheme = () => {
       '--border-invert': '1px solid var(--white)',
       '--border-secondary': '1px solid var(--border-subtle)',
       '--ts-inset': '-1px -1px 1px var(--brand-secondary), 2px 2px 1px var(--black)',
+      '--bg-overlay-subtle': 'rgba(20, 20, 20, 0.05)',
+      '--sidebar-shadow': '5px 0 25px rgba(0, 0, 0, 0.4)',
     };
 
     const colors = isDarkMode ? darkModeColors : lightModeColors;
