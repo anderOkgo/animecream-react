@@ -72,9 +72,7 @@ const Home = ({
     if (!db || db.length === 0) {
       return { minYear: 1950, maxYear: fallbackYear, minDecade: 1940, maxDecade: 2020 };
     }
-    const years = db
-      .map((item) => parseInt(item.production_year, 10))
-      .filter((y) => !isNaN(y) && y > 0);
+    const years = db.map((item) => parseInt(item.production_year, 10)).filter((y) => !isNaN(y) && y > 0);
 
     if (years.length === 0) {
       return { minYear: 1950, maxYear: fallbackYear, minDecade: 1940, maxDecade: 2020 };
@@ -534,6 +532,10 @@ const Home = ({
         <button className="toolbar-btn" onClick={handleSortCycle} title={translate('rankingOrder')}>
           {sortOrder === null ? '⇄' : sortOrder === 'asc' ? '▲' : '▼'} {translate('sort')}
         </button>
+
+        <button className="toolbar-btn" onClick={onShowListManager} title={translate('myLists')}>
+          ☰ {translate('myLists')}
+        </button>
         <button
           className={`toolbar-btn ${isAdvancedSearchVisible ? 'active' : ''}`}
           onClick={() => {
@@ -545,9 +547,6 @@ const Home = ({
           title={translate('search')}
         >
           🔍 {translate('search')}
-        </button>
-        <button className="toolbar-btn" onClick={onShowListManager} title={translate('myLists')}>
-          ☰ {translate('myLists')}
         </button>
         <button className="toolbar-btn top250-btn" onClick={handleTop250} title="Top 250">
           Top 250
