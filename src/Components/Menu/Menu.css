@@ -30,6 +30,7 @@ li {
   background-color: var(--brand-primary);
   color: var(--white);
   transition: max-height 0.5s ease-out;
+  z-index: 1200;
 }
 
 .nav-links a {
@@ -44,7 +45,7 @@ li {
   display: flex;
   gap: 1em;
   font-size: 18px;
-  z-index: 2;
+  z-index: 1200;
   transition: 0.7s ease-out;
 }
 
@@ -180,7 +181,7 @@ li {
     transition:
       max-height 0.3s ease-in-out,
       opacity 0.3s ease-in-out;
-    z-index: 2;
+    z-index: 1200;
   }
 
   .menu li:hover {
