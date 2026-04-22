@@ -41,15 +41,35 @@
 }
 
 .admin-form .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 18px;
+  display: block !important;
+  width: 100%;
 }
 
-.admin-form .form-group label {
-  display: block;
+.mt-lg {
+  margin-top: 25px !important;
+}
+
+.admin-form .form-group > label {
+  display: block !important;
+  width: 100% !important;
   font-size: 16px;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
   color: var(--text-heading);
   font-weight: normal;
+  clear: both;
+}
+
+.form-group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.form-group-header label {
+  display: block !important;
+  margin-bottom: 0 !important;
 }
 
 .admin-form .form-group label input[type='checkbox'] {
@@ -193,7 +213,7 @@
 .form-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
+  gap: 12px;
 }
 
 .checkbox-group {

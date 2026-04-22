@@ -630,7 +630,35 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete }) => {
               />
             </div>
 
-            <div className="form-row">
+            <div className="form-group">
+              <div className="form-group-header">
+                <label>{t('titles') || 'Alternative Titles'}</label>
+                <button type="button" onClick={handleAddTitle} disabled={loadingSeries} className="btn-add">
+                  + {t('addTitle') || 'Add Title'}
+                </button>
+              </div>
+              {formData.titles.map((title, index) => (
+                <div key={index} className="title-input-group">
+                  <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => handleTitleChange(index, e.target.value)}
+                    placeholder={t('alternativeTitle') || 'Alternative title'}
+                    disabled={loadingSeries}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveTitle(index)}
+                    disabled={loadingSeries}
+                    className="btn-remove"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <div className="form-row mt-lg">
               <div className="form-group">
                 <label htmlFor="year">
                   {t('year') || 'Year'} <span className="required">*</span>
@@ -754,32 +782,6 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete }) => {
                 </div>
               )}
             </div>
-
-            <div className="form-group">
-              <label>{t('titles') || 'Alternative Titles'}</label>
-              {formData.titles.map((title, index) => (
-                <div key={index} className="title-input-group">
-                  <input
-                    type="text"
-                    value={title}
-                    onChange={(e) => handleTitleChange(index, e.target.value)}
-                    placeholder={t('alternativeTitle') || 'Alternative title'}
-                    disabled={loadingSeries}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveTitle(index)}
-                    disabled={loadingSeries}
-                    className="btn-remove"
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-              <button type="button" onClick={handleAddTitle} disabled={loadingSeries} className="btn-add">
-                + {t('addTitle') || 'Add Title'}
-              </button>
-            </div>
           </div>
         ) : (
           /* JSON Mode */
@@ -800,7 +802,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete }) => {
           </div>
         )}
 
-        <div className="form-group">
+        <div className="form-group mt-lg">
           <label htmlFor="image">
             {t('image') || 'Series Image'} {!isEditMode && <span className="required">*</span>}
           </label>
