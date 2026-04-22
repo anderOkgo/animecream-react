@@ -57,15 +57,16 @@ function Tab({
   const handleAddToList = (series) => {
     // Si hay una lista seleccionada, agregar directamente
     if (selectedListId) {
-      addSeriesToSelectedList(series);
+      return addSeriesToSelectedList(series);
     } else {
       // Si no hay lista seleccionada, abrir modal para crear/seleccionar
       setShowListManager(true);
+      return false;
     }
   };
 
   const addSeriesToSelectedList = (series) => {
-    if (!selectedListId) return;
+    if (!selectedListId) return false;
 
     try {
       const stored = localStorage.getItem(selectedListId);
@@ -79,17 +80,16 @@ function Tab({
           items.push({ id: series.id, name: series.name });
           listData.items = items;
           localStorage.setItem(selectedListId, JSON.stringify(listData));
-          // Mostrar mensaje de confirmación breve
-          const listName = listData.name || 'list';
-          // Usar un toast o mensaje discreto (por ahora alert simple)
-          // En el futuro se puede mejorar con un componente de notificación
+          return true;
         } else {
           alert(t('alreadyInList') || 'This series is already in the list');
+          return false;
         }
       }
     } catch (error) {
       console.error('Error adding to list:', error);
     }
+    return false;
   };
 
   const handleListSelected = (listId) => {
@@ -335,28 +335,32 @@ function Tab({
                   >
                     {language === 'en' ? 'EN' : 'ES'}
                   </span>
-                  <span
-                    className="lang lang-numbers"
-                    onClick={() => setShowRealNumbers(!showRealNumbers)}
-                    title={t('index')}
-                  >
-                    IX
-                  </span>
-                  <span
-                    className="lang lang-sort"
-                    onClick={() => {
-                      if (sortOrder === null) {
-                        setSortOrder('asc');
-                      } else if (sortOrder === 'asc') {
-                        setSortOrder('desc');
-                      } else {
-                        setSortOrder(null);
-                      }
-                    }}
-                    title={t('rankingOrder')}
-                  >
-                    {sortOrder === null ? '⇄' : sortOrder === 'asc' ? '▲' : '▼'}
-                  </span>
+                  {selectedOption === 1 && (
+                    <span
+                      className="lang lang-numbers"
+                      onClick={() => setShowRealNumbers(!showRealNumbers)}
+                      title={t('index')}
+                    >
+                      IX
+                    </span>
+                  )}
+                  {selectedOption === 1 && (
+                    <span
+                      className="lang lang-sort"
+                      onClick={() => {
+                        if (sortOrder === null) {
+                          setSortOrder('asc');
+                        } else if (sortOrder === 'asc') {
+                          setSortOrder('desc');
+                        } else {
+                          setSortOrder(null);
+                        }
+                      }}
+                      title={t('rankingOrder')}
+                    >
+                      {sortOrder === null ? '⇄' : sortOrder === 'asc' ? '▲' : '▼'}
+                    </span>
+                  )}
                   {selectedOption === 1 && (
                     <>
                       <span

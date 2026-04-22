@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import './CardRow.css';
 import { useTextToSpeech } from '../../hooks/useTextToSpeech';
 
@@ -35,6 +36,22 @@ export default function CardRow({
 
   // Text-to-speech functionality
   const { isSpeaking, toggle } = useTextToSpeech();
+
+  // Estado de confirmación al agregar a lista
+  const [added, setAdded] = useState(false);
+
+  const handleAddClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (onAddToList && !added) {
+      const seriesId = el.id || production_ranking_number;
+      const success = onAddToList({ id: seriesId, name: production_name });
+      if (success) {
+        setAdded(true);
+        setTimeout(() => setAdded(false), 1500);
+      }
+    }
+  };
 
   // Determine the language for speech synthesis
   const speechLanguage = language === 'en' ? 'en-US' : 'es-ES';
@@ -138,19 +155,8 @@ export default function CardRow({
       )}
       <button
         type="button"
-        className={`card-add-to-list-btn ${role === 'admin' ? 'with-edit' : 'no-edit'}`}
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          if (onAddToList) {
-            // Usar el.id (ID real de la base de datos) en lugar de production_ranking_number
-            const seriesId = el.id || production_ranking_number;
-            onAddToList({
-              id: seriesId,
-              name: production_name,
-            });
-          }
-        }}
+        className={`card-add-to-list-btn ${role === 'admin' ? 'with-edit' : 'no-edit'}${added ? ' added' : ''}`}
+        onClick={handleAddClick}
         onMouseDown={(e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -158,7 +164,7 @@ export default function CardRow({
         title={t('addToList') || 'Add to List'}
         aria-label={t('addToList') || 'Add to List'}
       >
-        +
+        {added ? '✓' : '+'}
       </button>
       <button
         type="button"
