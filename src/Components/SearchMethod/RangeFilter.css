@@ -73,6 +73,45 @@
 .range-slider-wrapper {
   position: relative;
   width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.range-step-btn {
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-heading);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: bold;
+  flex-shrink: 0;
+  padding: 0;
+  font-size: 1rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.range-step-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.range-step-btn:not(:disabled):hover {
+  background: var(--brand-primary);
+  color: var(--white);
+  border-color: var(--brand-primary);
+  transform: scale(1.1);
+}
+
+.range-step-btn:not(:disabled):active {
+  transform: scale(0.95);
 }
 
 input[type='range'] {

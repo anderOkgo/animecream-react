@@ -81,6 +81,17 @@ const RangeFilter = ({ label, min, max, value, onChange, displayValue, step = 1,
         <span className="range-value">{displayValue || value}</span>
       </div>
       <div className="range-slider-wrapper">
+        <button
+          className="range-step-btn"
+          disabled={!isRangeEnabled || value <= min}
+          onClick={(e) => {
+            e.stopPropagation();
+            onChange(Math.max(min, value - step));
+          }}
+          title="Decrease"
+        >
+          &lt;
+        </button>
         <input
           type="range"
           min={min}
@@ -91,6 +102,17 @@ const RangeFilter = ({ label, min, max, value, onChange, displayValue, step = 1,
           onChange={(e) => onChange(parseInt(e.target.value, 10))}
           style={{ opacity: isRangeEnabled ? 1 : 0.4, pointerEvents: isRangeEnabled ? 'auto' : 'none' }}
         />
+        <button
+          className="range-step-btn"
+          disabled={!isRangeEnabled || value >= max}
+          onClick={(e) => {
+            e.stopPropagation();
+            onChange(Math.min(max, value + step));
+          }}
+          title="Increase"
+        >
+          &gt;
+        </button>
       </div>
     </div>
   );
