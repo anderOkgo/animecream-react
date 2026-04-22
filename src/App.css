@@ -34,8 +34,6 @@
 .sidebar-toggle {
   position: absolute;
   right: -20px;
-  top: 50%;
-  transform: translateY(-50%);
   background-color: var(--brand-primary);
   color: var(--white);
   width: 20px;
@@ -56,6 +54,17 @@
   background-color: var(--brand-accent);
   width: 24px;
   right: -24px;
+}
+
+.main-toggle-tab {
+  top: 20px; /* Pestaña de abrir/cerrar en la parte superior */
+}
+
+.scroll-toggle-tab {
+  background-color: var(--brand-accent);
+  font-size: 1.1em;
+  top: 50%; /* Flecha de scroll en el centro */
+  transform: translateY(-50%);
 }
 
 @media (max-width: 600px) {
@@ -255,9 +264,4 @@
   color: var(--white);
   border-color: var(--brand-primary);
   transform: scale(1.1);
-}
-
-/* Extra small screen styles - removed Top 250 override to keep it vertical */
-@media (max-width: 380px) {
-  /* No special overrides needed for Top 250 anymore as we want it vertical */
 }

@@ -1,10 +1,109 @@
 /* Base styles for the container */
 .grid-1-2 {
   /*  padding: 1em; */
-  position: sticky;
 }
 
 .main-content {
   max-width: 900px;
   margin: 0 auto;
+}
+
+/* Toolbar Styles */
+.home-toolbar {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  position: sticky;
+  top: -1px; /* Align perfectly with the top */
+  z-index: 1100;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 0.3rem;
+}
+
+.home-toolbar::-webkit-scrollbar {
+  display: none;
+}
+
+.toolbar-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--bg-overlay-subtle);
+  color: var(--text-heading);
+  border: 1px solid var(--border-subtle);
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.toolbar-btn:not(.top250-btn):hover {
+  background: var(--brand-primary);
+  color: var(--white);
+  border-color: var(--brand-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.toolbar-btn:active {
+  transform: translateY(0);
+}
+
+.toolbar-btn.active {
+  background: var(--brand-primary);
+  color: var(--white);
+  border-color: var(--brand-primary);
+}
+
+/* Top 250 Button - Exact match with sidebar style */
+.top250-btn {
+  background: linear-gradient(
+    135deg,
+    var(--color-highlight) 0%,
+    var(--color-highlight) 50%,
+    var(--black) 50%,
+    var(--black) 100%
+  ) !important;
+  background-size: 200% 200% !important;
+  background-position: 0% 0% !important;
+  color: var(--black) !important;
+  font-weight: 900 !important;
+  border: 1px solid var(--color-highlight) !important;
+  text-shadow: none !important;
+  box-shadow:
+    var(--shadow-sm),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+.top250-btn:hover {
+  color: var(--black) !important;
+  text-shadow: var(--text-body-shadow) !important;
+  transform: scale(1.05) !important;
+  box-shadow:
+    0 4px 8px rgba(245, 197, 24, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  border-color: var(--color-highlight) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .home-toolbar {
+    gap: 0.5rem;
+    padding: 0.8rem 0.3rem;
+  }
+
+  .toolbar-btn {
+    padding: 0.5rem 0.7rem;
+    font-size: 0.75rem;
+    border-radius: 8px;
+  }
 }

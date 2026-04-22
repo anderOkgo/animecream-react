@@ -215,6 +215,9 @@ function Tab({
               homeSetOptRef.current = setOptFn;
             },
             navigation,
+            onShowListManager: () => setShowListManager(true),
+            onScrollToggle: handleScrollToEnd,
+            isAtTop,
           }}
         />
       ),
@@ -309,13 +312,20 @@ function Tab({
             <div className="section-tab" ref={selectedOption === tab.id ? sectionTabRef : null}>
               <div className="container-tab">
                 <div className={`lang-container ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
-                  <div
-                    className="sidebar-toggle"
-                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                    title={isSidebarOpen ? t('close') : t('open')}
-                  >
-                    {isSidebarOpen ? '«' : '»'}
-                  </div>
+                    <div
+                      className="sidebar-toggle main-toggle-tab"
+                      onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                      title={isSidebarOpen ? t('close') : t('open')}
+                    >
+                      {isSidebarOpen ? '«' : '»'}
+                    </div>
+                    <div
+                      className="sidebar-toggle scroll-toggle-tab"
+                      onClick={handleScrollToEnd}
+                      title={isAtTop ? t('goToBottom') || 'Go to bottom' : t('goToTop') || 'Go to top'}
+                    >
+                      {isAtTop ? '↓' : '↑'}
+                    </div>
                   <span
                     className="lang"
                     onClick={toggleLanguage}
@@ -367,13 +377,6 @@ function Tab({
                       </span>
                     </>
                   )}
-                  <span
-                    className="lang lang-scroll"
-                    onClick={handleScrollToEnd}
-                    title={isAtTop ? t('goToBottom') || 'Go to bottom' : t('goToTop') || 'Go to top'}
-                  >
-                    {isAtTop ? '↓' : '↑'}
-                  </span>
                   {selectedOption === 1 && (
                     <>
                       <span className="lang-separator"></span>

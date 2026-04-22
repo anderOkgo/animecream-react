@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { useLanguage } from '../../hooks/useLanguage';
 import helpHttp from '../../helpers/helpHttp';
 import SearchMethod from '../SearchMethod/SearchMethod';
@@ -7,6 +7,8 @@ import Loader from '../Loader/Loader';
 import Message from '../Message/Message';
 import './Home.css';
 import set from '../../helpers/set.json';
+import RangeFilter from '../SearchMethod/RangeFilter';
+import '../SearchMethod/RangeFilter.css';
 
 const formatHttpErrMessage = (err, translate) => {
   if (!err) {
@@ -52,6 +54,9 @@ const Home = ({
   onSeriesDataChange,
   onSetOptReady,
   navigation,
+  onShowListManager,
+  onScrollToggle,
+  isAtTop,
 }) => {
   const { t: translate, language: activeLanguage } = useLanguage();
   const [db, setDb] = useState(null);
@@ -60,6 +65,34 @@ const Home = ({
   const [opt, setOpt] = useState({});
   const isRestoringRef = useRef(false);
   const initialDbRef = useRef(null); // Ref para guardar los datos de la carga inicial
+
+  // Calcular límites de años dinámicamente basados en la data
+  const { minYear, maxYear, minDecade, maxDecade } = useMemo(() => {
+    const fallbackYear = new Date().getFullYear();
+    if (!db || db.length === 0) {
+      return { minYear: 1950, maxYear: fallbackYear, minDecade: 1940, maxDecade: 2020 };
+    }
+    const years = db
+      .map((item) => parseInt(item.production_year, 10))
+      .filter((y) => !isNaN(y) && y > 0);
+
+    if (years.length === 0) {
+      return { minYear: 1950, maxYear: fallbackYear, minDecade: 1940, maxDecade: 2020 };
+    }
+
+    const min = Math.min(...years);
+    const max = Math.max(...years);
+    const minD = Math.floor(min / 10) * 10;
+    const maxD = Math.floor(max / 10) * 10;
+
+    return { minYear: min, maxYear: max, minDecade: minD, maxDecade: maxD };
+  }, [db]);
+
+  const allYearValue = useMemo(() => minYear - 1, [minYear]);
+  const allDecadeValue = useMemo(() => minDecade - 10, [minDecade]);
+
+  const [yearFilter, setYearFilter] = useState(1949); // Default sync with initial fallback
+  const [decadeFilter, setDecadeFilter] = useState(1940); // Default sync with initial fallback
 
   // Wrapper para setOpt que agrega al historial
   const setOptWithHistory = (requestData) => {
@@ -75,6 +108,62 @@ const Home = ({
       onSetOptReady(setOpt);
     }
   }, [onSetOptReady]);
+
+  // Sync sliders with opt
+  useEffect(() => {
+    if (!opt) return;
+    try {
+      const currentBody = opt.body ? (typeof opt.body === 'string' ? JSON.parse(opt.body) : opt.body) : {};
+      const year = currentBody.production_year;
+
+      if (year) {
+        if (Array.isArray(year)) {
+          setDecadeFilter(year[0]);
+          setYearFilter(allYearValue);
+        } else {
+          setYearFilter(parseInt(year, 10));
+          setDecadeFilter(allDecadeValue);
+        }
+      } else {
+        setYearFilter(allYearValue);
+        setDecadeFilter(allDecadeValue);
+      }
+    } catch (e) {
+      console.warn('Error syncing sliders with opt:', e);
+    }
+  }, [opt, allYearValue, allDecadeValue]);
+
+  const handleYearChange = (year) => {
+    setYearFilter(year);
+    setDecadeFilter(allDecadeValue);
+  };
+
+  const handleDecadeChange = (decade) => {
+    setDecadeFilter(decade);
+    setYearFilter(allYearValue);
+  };
+
+  // Handlers para el toolbar completo
+  const handleSortCycle = () => {
+    if (sortOrder === null) {
+      setSortOrder('asc');
+    } else if (sortOrder === 'asc') {
+      setSortOrder('desc');
+    } else {
+      setSortOrder(null);
+    }
+  };
+
+  const handleTop250 = () => {
+    const requestData = {
+      method: 'POST',
+      body: {
+        limit: 250,
+        production_ranking_number: 'ASC',
+      },
+    };
+    setOptWithHistory(requestData);
+  };
 
   // Restaurar peticiones cuando se navega hacia atrás
   useEffect(() => {
@@ -130,12 +219,50 @@ const Home = ({
   const hasInitialLoad = useRef(false);
   const lastOptRef = useRef({}); // Guardar el último opt usado para recargar
 
-  // Sincronizar db con onSeriesDataChange siempre que cambie
-  useEffect(() => {
-    if (db && Array.isArray(db) && db.length > 0 && onSeriesDataChange) {
-      onSeriesDataChange(db);
+  // Filtrar la información actual localmente (según lo solicitado por el usuario)
+  const filteredDb = useMemo(() => {
+    if (!db) return null;
+    let filtered = [...db];
+
+    const isYearFilterActive = yearFilter > allYearValue;
+    const isDecadeFilterActive = decadeFilter > allDecadeValue;
+
+    if (isYearFilterActive) {
+      filtered = filtered.filter((item) => parseInt(item.production_year, 10) === yearFilter);
+    } else if (isDecadeFilterActive) {
+      filtered = filtered.filter((item) => {
+        const itemYear = parseInt(item.production_year, 10);
+        return itemYear >= decadeFilter && itemYear <= decadeFilter + 9;
+      });
     }
-  }, [db, onSeriesDataChange]);
+
+    // Solo aplicar ordenamiento si hay algún filtro de rango activo
+    // Si está en "All", dejar el orden por defecto (el que viene de la API/estado previo)
+    if (isYearFilterActive || isDecadeFilterActive) {
+      filtered.sort((a, b) => {
+        const rankA = parseInt(a.production_ranking_number, 10) || 999999;
+        const rankB = parseInt(b.production_ranking_number, 10) || 999999;
+
+        if (rankA !== rankB) {
+          return rankA - rankB;
+        }
+
+        // Si el ranking es el mismo, ordenar por año (más reciente primero)
+        const yearA = parseInt(a.production_year, 10) || 0;
+        const yearB = parseInt(b.production_year, 10) || 0;
+        return yearB - yearA;
+      });
+    }
+
+    return filtered;
+  }, [db, yearFilter, decadeFilter, allYearValue, allDecadeValue]);
+
+  // Sincronizar filteredDb con onSeriesDataChange siempre que cambie
+  useEffect(() => {
+    if (filteredDb && Array.isArray(filteredDb) && onSeriesDataChange) {
+      onSeriesDataChange(filteredDb);
+    }
+  }, [filteredDb, onSeriesDataChange]);
 
   // Sincronizar loadByIds externo
   useEffect(() => {
@@ -389,6 +516,44 @@ const Home = ({
 
   return (
     <article className="grid-1-2">
+      <div className="home-toolbar">
+        <button
+          className="toolbar-btn"
+          onClick={toggleLanguage}
+          title={language === 'en' ? translate('switchToSpanish') : translate('switchToEnglish')}
+        >
+          {language === 'en' ? 'EN' : 'ES'}
+        </button>
+        <button
+          className="toolbar-btn"
+          onClick={() => setShowRealNumbers(!showRealNumbers)}
+          title={translate('index')}
+        >
+          IX
+        </button>
+        <button className="toolbar-btn" onClick={handleSortCycle} title={translate('rankingOrder')}>
+          {sortOrder === null ? '⇄' : sortOrder === 'asc' ? '▲' : '▼'} {translate('sort')}
+        </button>
+        <button
+          className={`toolbar-btn ${isAdvancedSearchVisible ? 'active' : ''}`}
+          onClick={() => {
+            setIsAdvancedSearchVisible(!isAdvancedSearchVisible);
+            if (!isAdvancedSearchVisible) {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }}
+          title={translate('search')}
+        >
+          🔍 {translate('search')}
+        </button>
+        <button className="toolbar-btn" onClick={onShowListManager} title={translate('myLists')}>
+          ☰ {translate('myLists')}
+        </button>
+        <button className="toolbar-btn top250-btn" onClick={handleTop250} title="Top 250">
+          Top 250
+        </button>
+      </div>
+
       <SearchMethod
         setOpt={setOptWithHistory}
         t={t}
@@ -396,6 +561,27 @@ const Home = ({
         setIsFormVisible={setIsAdvancedSearchVisible}
         navigation={navigation}
       />
+      <section className="ranges-container">
+        <RangeFilter
+          label={translate('filterByYear')}
+          min={allYearValue}
+          max={maxYear}
+          value={yearFilter < allYearValue ? allYearValue : yearFilter}
+          onChange={handleYearChange}
+          displayValue={yearFilter <= allYearValue ? translate('allYears') : yearFilter}
+          onReset={() => handleYearChange(allYearValue)}
+        />
+        <RangeFilter
+          label={translate('filterByDecade')}
+          min={allDecadeValue}
+          max={maxYear ? Math.floor(maxYear / 10) * 10 : maxDecade}
+          step={10}
+          value={decadeFilter < allDecadeValue ? allDecadeValue : decadeFilter}
+          onChange={handleDecadeChange}
+          displayValue={decadeFilter <= allDecadeValue ? translate('allYears') : `${decadeFilter}s`}
+          onReset={() => handleDecadeChange(allDecadeValue)}
+        />
+      </section>
       {false && <Loader />}
       {errorMessage && (
         <Message
@@ -405,9 +591,9 @@ const Home = ({
           onDoubleClick={handleErrorDoubleClick}
         />
       )}
-      {db && (
+      {filteredDb && (
         <Card
-          data={db}
+          data={filteredDb}
           t={t}
           language={language}
           showRealNumbers={showRealNumbers}
