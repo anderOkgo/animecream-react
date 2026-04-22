@@ -56,14 +56,10 @@
   right: -24px;
 }
 
-.main-toggle-tab {
-  top: 20px; /* Pestaña de abrir/cerrar en la parte superior */
-}
-
 .scroll-toggle-tab {
   background-color: var(--brand-accent);
   font-size: 1.1em;
-  top: 50%; /* Flecha de scroll en el centro */
+  top: 50%;
   transform: translateY(-50%);
 }
 

@@ -312,17 +312,18 @@ function Tab({
             <div className="section-tab" ref={selectedOption === tab.id ? sectionTabRef : null}>
               <div className="container-tab">
                 <div className={`lang-container ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
-                    <div
-                      className="sidebar-toggle main-toggle-tab"
-                      onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                      title={isSidebarOpen ? t('close') : t('open')}
-                    >
-                      {isSidebarOpen ? '«' : '»'}
-                    </div>
+                  <span
+                    className="lang lang-sidebar-close"
+                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                    title={isSidebarOpen ? t('close') : t('open')}
+                  >
+                    {isSidebarOpen ? '«' : '»'}
+                  </span>
                     <div
                       className="sidebar-toggle scroll-toggle-tab"
                       onClick={handleScrollToEnd}
-                      title={isAtTop ? t('goToBottom') || 'Go to bottom' : t('goToTop') || 'Go to top'}
+                      onDoubleClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                      title={`${isAtTop ? t('goToBottom') || 'Go to bottom' : t('goToTop') || 'Go to top'} · ${isSidebarOpen ? t('close') || 'Close' : t('open') || 'Open'} (${t('doubleClick') || 'dbl-click'})`}
                     >
                       {isAtTop ? '↓' : '↑'}
                     </div>
