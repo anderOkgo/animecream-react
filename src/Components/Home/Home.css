@@ -12,7 +12,7 @@
 .home-toolbar {
   display: flex;
   gap: 0.5rem;
-  padding: 1rem 10px;
+  padding: 0.5rem 10px !important;
   margin-left: -15px;
   margin-right: -15px;
   overflow-x: auto;
@@ -68,6 +68,8 @@
 
 /* Top 250 Button - Exact match with sidebar style */
 .top250-btn {
+  flex: 1;
+  justify-content: center;
   background: linear-gradient(
     135deg,
     var(--color-highlight) 0%,

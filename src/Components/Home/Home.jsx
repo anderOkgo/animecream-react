@@ -93,6 +93,7 @@ const Home = ({
   const [yearFilter, setYearFilter] = useState(1949); // Default sync with initial fallback
   const [decadeFilter, setDecadeFilter] = useState(1940); // Default sync with initial fallback
   const [isRangesExpanded, setIsRangesExpanded] = useState(false);
+  const [isToolbarVisible, setIsToolbarVisible] = useState(true);
 
   // Wrapper para setOpt que agrega al historial
   const setOptWithHistory = (requestData) => {
@@ -516,9 +517,10 @@ const Home = ({
 
   return (
     <article className="grid-1-2">
-      <div className="home-toolbar">
-        <button
-          className="toolbar-btn"
+      {isToolbarVisible && (
+        <div className="home-toolbar" onDoubleClick={() => setIsToolbarVisible(false)}>
+          <button
+            className="toolbar-btn"
           onClick={toggleLanguage}
           onDoubleClick={onLanguageDoubleClick}
           title={language === 'en' ? translate('switchToSpanish') : translate('switchToEnglish')}
@@ -555,7 +557,8 @@ const Home = ({
         <button className="toolbar-btn top250-btn" onClick={handleTop250} title="Top 250">
           Top 250
         </button>
-      </div>
+        </div>
+      )}
 
       <SearchMethod
         setOpt={setOptWithHistory}

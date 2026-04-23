@@ -70,6 +70,7 @@ li {
   display: none;
   top: 30px;
   left: 10px;
+  z-index: 1300;
 }
 
 .dropdown li + li {
