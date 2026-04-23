@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import './RangeFilter.css';
 
 const RangeFilter = ({ label, min, max, value, onChange, displayValue, step = 1, onReset }) => {
-  const [isRangeEnabled, setIsRangeEnabled] = useState(false);
+  const [isRangeEnabled, setIsRangeEnabled] = useState(true);
   const touchStartPosRef = useRef({ x: 0, y: 0 });
   const hasMovedRef = useRef(false);
 

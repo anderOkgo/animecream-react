@@ -92,6 +92,7 @@ const Home = ({
 
   const [yearFilter, setYearFilter] = useState(1949); // Default sync with initial fallback
   const [decadeFilter, setDecadeFilter] = useState(1940); // Default sync with initial fallback
+  const [isRangesExpanded, setIsRangesExpanded] = useState(false);
 
   // Wrapper para setOpt que agrega al historial
   const setOptWithHistory = (requestData) => {
@@ -562,26 +563,37 @@ const Home = ({
         setIsFormVisible={setIsAdvancedSearchVisible}
         navigation={navigation}
       />
-      <section className="ranges-container">
-        <RangeFilter
-          label={translate('filterByYear')}
-          min={allYearValue}
-          max={maxYear}
-          value={yearFilter < allYearValue ? allYearValue : yearFilter}
-          onChange={handleYearChange}
-          displayValue={yearFilter <= allYearValue ? translate('allYears') : yearFilter}
-          onReset={() => handleYearChange(allYearValue)}
-        />
-        <RangeFilter
-          label={translate('filterByDecade')}
-          min={allDecadeValue}
-          max={maxYear ? Math.floor(maxYear / 10) * 10 : maxDecade}
-          step={10}
-          value={decadeFilter < allDecadeValue ? allDecadeValue : decadeFilter}
-          onChange={handleDecadeChange}
-          displayValue={decadeFilter <= allDecadeValue ? translate('allYears') : `${decadeFilter}s`}
-          onReset={() => handleDecadeChange(allDecadeValue)}
-        />
+      <section className={`ranges-container ${!isRangesExpanded ? 'collapsed' : ''}`}>
+        {isRangesExpanded && (
+          <div className="ranges-content">
+            <RangeFilter
+              label={translate('filterByYear')}
+              min={allYearValue}
+              max={maxYear}
+              value={yearFilter < allYearValue ? allYearValue : yearFilter}
+              onChange={handleYearChange}
+              displayValue={yearFilter <= allYearValue ? translate('allYears') : yearFilter}
+              onReset={() => handleYearChange(allYearValue)}
+            />
+            <RangeFilter
+              label={translate('filterByDecade')}
+              min={allDecadeValue}
+              max={maxYear ? Math.floor(maxYear / 10) * 10 : maxDecade}
+              step={10}
+              value={decadeFilter < allDecadeValue ? allDecadeValue : decadeFilter}
+              onChange={handleDecadeChange}
+              displayValue={decadeFilter <= allDecadeValue ? translate('allYears') : `${decadeFilter}s`}
+              onReset={() => handleDecadeChange(allDecadeValue)}
+            />
+          </div>
+        )}
+        <button 
+          className="ranges-toggle-btn-bottom" 
+          onClick={() => setIsRangesExpanded(!isRangesExpanded)}
+          title={isRangesExpanded ? 'Ocultar Filtros' : 'Mostrar Filtros'}
+        >
+          {isRangesExpanded ? '▲' : '▼'}
+        </button>
       </section>
       {false && <Loader />}
       {errorMessage && (

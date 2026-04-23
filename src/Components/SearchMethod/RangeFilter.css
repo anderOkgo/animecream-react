@@ -7,7 +7,51 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-radius: 16px;
-  margin-bottom: 1rem;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.ranges-container.collapsed {
+  padding: 0;
+  height: 0;
+  min-height: 0;
+  gap: 0;
+  margin-bottom: 15px; /* Leave space below so it doesn't touch the SearchMethod/Rows */
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.ranges-toggle-btn-bottom {
+  position: absolute;
+  top: -12px; /* Pull it up so it touches the top line perfectly */
+  left: 0; /* Totalmente a la izquierda */
+  background: transparent;
+  border: none;
+  color: var(--brand-primary);
+  font-size: 1.4rem;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+  padding: 0;
+}
+
+.ranges-toggle-btn-bottom:hover {
+  color: var(--brand-accent);
+  transform: translateY(3px) scale(1.1);
+}
+
+.ranges-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 0.5rem;
 }
 
 .range-group {
@@ -94,7 +138,7 @@
   flex-shrink: 0;
   padding: 0;
   font-size: 1rem;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .range-step-btn:disabled {
