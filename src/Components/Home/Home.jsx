@@ -38,6 +38,7 @@ const resolveAppError = (payload, translate) => {
 const Home = ({
   t,
   toggleLanguage,
+  onLanguageDoubleClick,
   language,
   setProc,
   showRealNumbers,
@@ -518,6 +519,7 @@ const Home = ({
         <button
           className="toolbar-btn"
           onClick={toggleLanguage}
+          onDoubleClick={onLanguageDoubleClick}
           title={language === 'en' ? translate('switchToSpanish') : translate('switchToEnglish')}
         >
           {language === 'en' ? 'EN' : 'ES'}

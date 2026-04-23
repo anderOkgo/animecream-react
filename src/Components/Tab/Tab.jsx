@@ -197,6 +197,7 @@ function Tab({
           {...{
             t,
             toggleLanguage,
+            onLanguageDoubleClick: handleLanguageDoubleClick,
             language,
             setProc,
             showRealNumbers,
