@@ -22,16 +22,32 @@
   -webkit-backdrop-filter: none;
 }
 
+@keyframes highlight-arrow {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    text-shadow: none;
+    color: var(--brand-primary);
+  }
+  50% {
+    transform: translateY(4px) scale(1.2);
+    text-shadow:
+      0 0 15px var(--brand-primary),
+      0 0 25px var(--brand-accent);
+    color: var(--brand-accent);
+  }
+}
+
 .ranges-toggle-btn-bottom {
   position: absolute;
-  top: -12px; /* Pull it up so it touches the top line perfectly */
-  left: 0; /* Totalmente a la izquierda */
+  top: -14px; /* Adjust slightly for larger size */
+  left: 0;
   background: transparent;
   border: none;
   color: var(--brand-primary);
-  font-size: 1.4rem;
-  width: 30px;
-  height: 30px;
+  font-size: 2rem; /* Make the icon visibly larger by default */
+  width: 40px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -40,11 +56,13 @@
   transition: all 0.3s ease;
   z-index: 10;
   padding: 0;
+  animation: highlight-arrow 1.5s ease-in-out 2;
 }
 
 .ranges-toggle-btn-bottom:hover {
   color: var(--brand-accent);
   transform: translateY(3px) scale(1.1);
+  animation: none;
 }
 
 .ranges-content {

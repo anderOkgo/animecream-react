@@ -537,12 +537,13 @@ const Home = ({
           onClick={() => {
             setIsAdvancedSearchVisible(!isAdvancedSearchVisible);
             if (!isAdvancedSearchVisible) {
-              window.scrollTo({ top: 0, behavior: 'smooth' });
+              const scrollContainer = document.querySelector('.section-tab') || window;
+              scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
             }
           }}
-          title={translate('search')}
+          title={isAdvancedSearchVisible ? translate('closeAdvancedSearch') || 'Cerrar' : translate('search')}
         >
-          🔍
+          {isAdvancedSearchVisible ? '✕' : '🔍'}
         </button>
         <button className="toolbar-btn" onClick={handleSortCycle} title={translate('rankingOrder')}>
           {sortOrder === null ? '⇄' : sortOrder === 'asc' ? '▲' : '▼'} {translate('sort')}
@@ -592,7 +593,7 @@ const Home = ({
           onClick={() => setIsRangesExpanded(!isRangesExpanded)}
           title={isRangesExpanded ? 'Ocultar Filtros' : 'Mostrar Filtros'}
         >
-          {isRangesExpanded ? '▲' : '▼'}
+          {isRangesExpanded ? '︽' : '︾'}
         </button>
       </section>
       {false && <Loader />}
