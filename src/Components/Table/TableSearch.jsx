@@ -27,8 +27,21 @@ function TableSearch({ setCurrentPage, setFilteredData, setItemsPerPage, dataset
   // Perform search and update filtered data
   const performSearch = (searchValue) => {
     setCurrentPage(1);
-    const filteredResults = filterDataset(dataset, searchValue);
-    setFilteredData(filteredResults);
+
+    if (searchValue.trim() === '') {
+      // Si no hay búsqueda, restauramos los datos originales
+      setFilteredData(dataset);
+    } else {
+      // Si hay búsqueda, filtramos y ordenamos por ranking
+      const filteredResults = filterDataset(dataset, searchValue);
+
+      const sortedResults = [...filteredResults].sort((a, b) => {
+        // Orden ascendente: 1, 2, 3...
+        return Number(a.production_ranking_number) - Number(b.production_ranking_number);
+      });
+
+      setFilteredData(sortedResults);
+    }
   };
 
   // Handle input change
