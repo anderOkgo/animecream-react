@@ -12,7 +12,8 @@
   gap: 0.6em;
   position: fixed;
   left: -52px; /* Oculto por defecto, permitiendo que sobresalga la pestaña */
-  top: 20vh;
+  top: 55%;
+  transform: translateY(-50%);
   z-index: 1001;
   background-color: var(--bg-overlay-subtle);
   padding: 0.6em 0.4em;
@@ -58,7 +59,7 @@
 .scroll-toggle-tab {
   background-color: var(--brand-accent);
   font-size: 1.1em;
-  top: 74px;
+  top: 50%;
   transform: translateY(-50%);
 }
 
