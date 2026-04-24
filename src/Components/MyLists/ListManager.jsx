@@ -414,7 +414,7 @@ const ListManager = ({
                     >
                       <span className="drag-handle">☰</span>
                       <span className="item-name">
-                        {showRealIndexes ? `${index + 1}. ` : `#${item.id} - `}
+                        {showRealIndexes ? `${index + 1}. ` : ``}
                         {item.name}
                       </span>
                       <button
