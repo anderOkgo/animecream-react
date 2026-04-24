@@ -189,7 +189,7 @@ const ListManager = ({
         if (showRealIndexes) {
           return `${index + 1}. ${item.name}`;
         } else {
-          return `#${item.id} - ${item.name}`;
+          return `${item.name}`;
         }
       })
       .join('\n');
