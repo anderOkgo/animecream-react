@@ -1,9 +1,6 @@
 .app {
   height: 100vh;
-}
-
-.card-area {
-  height: 90vh;
+  height: 100svh;
 }
 
 .lang-container {
