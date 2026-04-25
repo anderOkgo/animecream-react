@@ -3,6 +3,10 @@
   height: 100svh;
 }
 
+.card-area {
+  height: 90%;
+}
+
 .lang-container {
   display: flex;
   flex-direction: column;
