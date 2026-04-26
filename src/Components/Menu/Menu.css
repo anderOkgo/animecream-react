@@ -23,6 +23,7 @@ li {
 
 .navbar {
   height: 10vh;
+  height: 10svh;
   display: flex;
   align-items: center;
   justify-content: space-between;
