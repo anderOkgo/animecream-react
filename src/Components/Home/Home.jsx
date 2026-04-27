@@ -65,7 +65,8 @@ const Home = ({
   const [loading, setLoading] = useState(false);
   const [opt, setOpt] = useState({});
   const isRestoringRef = useRef(false);
-  const initialDbRef = useRef(null); // Ref para guardar los datos de la carga inicial
+  const initialDbRef = useRef(null);
+  const hasCleanedUrlRef = useRef(false);
 
   // Calcular límites de años dinámicamente basados en la data
   const { minYear, maxYear, minDecade, maxDecade } = useMemo(() => {
@@ -108,17 +109,31 @@ const Home = ({
     return n >= 100 ? Math.floor(n / 10) * 10 : n < 30 ? 2000 + n : 1900 + n;
   }, [tipoParam]);
 
+  const tipoLista = useMemo(() => {
+    if (!tipoParam) return null;
+    const parts = tipoParam.split(',');
+    if (parts[0] !== 'lista' || parts.length < 2) return null;
+    const ids = parts.slice(1).map((s) => parseInt(s, 10)).filter((n) => !isNaN(n) && n > 0);
+    return ids.length > 0 ? ids : null;
+  }, [tipoParam]);
+
   const [yearFilter, setYearFilter] = useState(1949); // Default sync with initial fallback
   const [decadeFilter, setDecadeFilter] = useState(1940); // Default sync with initial fallback
   const [isRangesExpanded, setIsRangesExpanded] = useState(false);
   const [isToolbarVisible, setIsToolbarVisible] = useState(true);
 
-  // Wrapper para setOpt que agrega al historial
   const setOptWithHistory = (requestData) => {
     if (navigation && !isRestoringRef.current) {
       navigation.pushHistory('request', { type: 'filter', data: requestData });
     }
     setOpt(requestData);
+  };
+
+  const cleanUrlParam = () => {
+    if (tipoParam && !hasCleanedUrlRef.current) {
+      hasCleanedUrlRef.current = true;
+      window.history.replaceState(null, '', '/');
+    }
   };
 
   // Exponer setOpt al componente padre
@@ -467,16 +482,15 @@ const Home = ({
 
         if (!productionsInfo?.err) {
           const data = Array.isArray(productionsInfo) ? productionsInfo : productionsInfo.data || productionsInfo;
-          // Guardar todos los datos en localStorage
           localStorage.setItem('storage', JSON.stringify(data));
-          localStorage.setItem('storage_initial', JSON.stringify(data)); // Guardar copia fija de la carga inicial
+          localStorage.setItem('storage_initial', JSON.stringify(data));
           setDb(data);
           initialDbRef.current = data;
           setErrorPayload(null);
-          // Notificar cambios en los datos de series
           if (onSeriesDataChange) {
             onSeriesDataChange(data);
           }
+          if (tipoParam) cleanUrlParam();
         } else {
           setErrorPayload({ type: 'http', err: productionsInfo.err });
         }
@@ -570,7 +584,7 @@ const Home = ({
 
   // Resolver ?tipo= como slug de género o demografía
   useEffect(() => {
-    if (!tipoParam || tipoYear !== null || tipoDecade !== null) return;
+    if (!tipoParam || tipoYear !== null || tipoDecade !== null || tipoLista !== null) return;
 
     const resolveSlug = async () => {
       const slugify = (str) =>
@@ -593,20 +607,67 @@ const Home = ({
       const genre = genres.find((g) => slugify(g.name) === tipoParam || slugify(translateEN(g.name)) === tipoParam);
       if (genre) {
         setOptWithHistory({ method: 'POST', body: { genre_names: genre.name, production_ranking_number: 'ASC' } });
+        cleanUrlParam();
         return;
       }
 
       const demo = demos.find((d) => slugify(d.name) === tipoParam || slugify(translateEN(d.name)) === tipoParam);
       if (demo) {
         setOptWithHistory({ method: 'POST', body: { demographic_name: demo.name, production_ranking_number: 'ASC' } });
+        cleanUrlParam();
         return;
       }
 
-      // Sin coincidencia: cargar todos los datos ordenados
       setOptWithHistory({ method: 'POST', body: { production_ranking_number: 'ASC' } });
+      cleanUrlParam();
     };
 
     resolveSlug();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Handle ?tipo=lista,id1,id2,... — loads by specific IDs preserving URL order, no sorting
+  useEffect(() => {
+    if (!tipoLista) return;
+
+    const fetchDataByListaParam = async () => {
+      setLoading(true);
+      setProc(true);
+
+      try {
+        const urlProduction = set.base_url + set.api_url;
+        const productionsInfo = await helpHttp.post(urlProduction, {
+          body: { id: tipoLista },
+        });
+
+        if (!productionsInfo?.err) {
+          const allData = Array.isArray(productionsInfo)
+            ? productionsInfo
+            : productionsInfo.data || productionsInfo;
+
+          // Preserve the exact order of IDs from the URL param
+          const ordered = tipoLista
+            .map((id) => allData.find((s) => Number(s.id) === id))
+            .filter(Boolean);
+          const result = ordered.length > 0 ? ordered : allData;
+
+          localStorage.setItem('storage', JSON.stringify(result));
+          setDb(result);
+          setErrorPayload(null);
+          if (onSeriesDataChange) onSeriesDataChange(result);
+        } else {
+          setErrorPayload({ type: 'http', err: productionsInfo.err });
+        }
+      } catch (error) {
+        console.error('Error loading by lista param:', error);
+        setErrorPayload({ type: 'i18nKey', key: 'errorLoadingData' });
+      } finally {
+        setLoading(false);
+        setProc(false);
+        cleanUrlParam();
+      }
+    };
+
+    fetchDataByListaParam();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleErrorDoubleClick = () => {
