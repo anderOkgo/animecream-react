@@ -156,20 +156,21 @@
 }
 
 .btn-delete-list {
-  background-color: var(--brand-accent);
+  background-color: var(--color-danger);
   color: var(--white);
   padding: 8px 12px;
 }
 
 .btn-delete-list:hover {
-  background-color: var(--color-danger);
+  opacity: 0.8;
 }
 
 /* Ajustar tamaños de botones en los controles del selector */
 .list-selector-controls .btn-recalculate-index,
 .list-selector-controls .btn-copy-list,
+.list-selector-controls .btn-share-list,
 .list-selector-controls .btn-add-all-cards,
-.list-selector-controls .btn-load-series {
+.list-selector-controls .btn-show-series {
   padding: 8px 14px;
   font-size: 14px;
 }
@@ -250,8 +251,9 @@
 
 .btn-recalculate-index,
 .btn-copy-list,
+.btn-share-list,
 .btn-add-all-cards,
-.btn-load-series {
+.btn-show-series {
   padding: 10px 16px;
   background-color: var(--brand-primary);
   color: var(--white);
@@ -274,7 +276,8 @@
   background-color: var(--brand-accent);
 }
 
-.btn-copy-list {
+.btn-copy-list,
+.btn-share-list {
   padding: 10px 14px;
   font-size: 16px;
 }
@@ -285,9 +288,10 @@
 }
 
 .btn-copy-list:hover:not(:disabled),
+.btn-share-list:hover:not(:disabled),
 .btn-add-all-cards:hover:not(:disabled),
 .btn-recalculate-index:hover:not(:disabled),
-.btn-load-series:hover:not(:disabled) {
+.btn-show-series:hover:not(:disabled) {
   background-color: var(--brand-accent);
   transition: all 0.3s ease;
   box-shadow: var(--shadow-md);
@@ -295,13 +299,14 @@
 
 .btn-recalculate-index:disabled,
 .btn-copy-list:disabled,
+.btn-share-list:disabled,
 .btn-add-all-cards:disabled,
-.btn-load-series:disabled {
+.btn-show-series:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.btn-load-series:disabled {
+.btn-show-series:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }

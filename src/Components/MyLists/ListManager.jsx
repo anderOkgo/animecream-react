@@ -218,6 +218,32 @@ const ListManager = ({
     }
   };
 
+  const handleShareList = async () => {
+    if (!listData || !listData.items || listData.items.length === 0) return;
+
+    const ids = listData.items.map((item) => item.id).filter(Boolean).join(',');
+    const url = `${window.location.origin}/?tipo=lista,${ids}`;
+
+    try {
+      await navigator.clipboard.writeText(url);
+      alert(t('linkCopied') || 'Copiado al portapapeles');
+    } catch (error) {
+      const textArea = document.createElement('textarea');
+      textArea.value = url;
+      textArea.style.position = 'fixed';
+      textArea.style.opacity = '0';
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        alert(t('linkCopied') || 'Copiado al portapapeles');
+      } catch {
+        alert(t('copyError') || 'Error al copiar');
+      }
+      document.body.removeChild(textArea);
+    }
+  };
+
   // Agregar todas las tarjetas actuales (series visibles) a la lista
   const handleAddAllCurrentCards = () => {
     console.log('handleAddAllCurrentCards called', { currentSeries, listData, selectedListId });
@@ -344,6 +370,21 @@ const ListManager = ({
                         📋
                       </button>
                       <button
+                        className="btn-share-list"
+                        onClick={handleShareList}
+                        disabled={listData.items.length === 0}
+                        title={t('shareList') || 'Compartir lista como URL'}
+                      >
+                        🔗
+                      </button>
+                      <button
+                        className="btn-show-series"
+                        onClick={handleLoadSeries}
+                        disabled={listData.items.length === 0}
+                      >
+                        {t('showSeries') || 'Show'}
+                      </button>
+                      <button
                         className={`btn-recalculate-index ${showRealIndexes ? 'active' : ''}`}
                         onClick={handleToggleIndexes}
                         disabled={listData.items.length === 0}
@@ -371,13 +412,6 @@ const ListManager = ({
                         }
                       >
                         {t('addCards') || 'Add Cards'}
-                      </button>
-                      <button
-                        className="btn-load-series"
-                        onClick={handleLoadSeries}
-                        disabled={listData.items.length === 0}
-                      >
-                        {t('loadSeries') || 'Load Series'}
                       </button>
                     </>
                   )}
