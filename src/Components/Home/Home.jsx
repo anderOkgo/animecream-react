@@ -121,6 +121,10 @@ const Home = ({
         if (Array.isArray(year)) {
           setDecadeFilter(year[0]);
           setYearFilter(allYearValue);
+        } else if (typeof year === 'string' && year.includes(',')) {
+          // Range string like "2020,2025" — the API handles the filter, reset local sliders
+          setYearFilter(allYearValue);
+          setDecadeFilter(allDecadeValue);
         } else {
           setYearFilter(parseInt(year, 10));
           setDecadeFilter(allDecadeValue);
