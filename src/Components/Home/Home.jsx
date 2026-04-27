@@ -292,8 +292,9 @@ const Home = ({
       });
     }
 
-    // Aplicar filtro ?tipo= de año/década si los sliders no están activos
-    if (!isYearFilterActive && !isDecadeFilterActive) {
+    // Aplicar filtro ?tipo= de año/década solo si los sliders no están activos y no hay query activa
+    const isOptActive = opt && Object.keys(opt).length > 0;
+    if (!isYearFilterActive && !isDecadeFilterActive && !isOptActive) {
       if (tipoYear) {
         filtered = filtered.filter((item) => parseInt(item.production_year, 10) === tipoYear);
       } else if (tipoDecade) {
@@ -312,7 +313,7 @@ const Home = ({
     }
 
     return filtered;
-  }, [db, yearFilter, decadeFilter, allYearValue, allDecadeValue, tipoYear, tipoDecade]);
+  }, [db, yearFilter, decadeFilter, allYearValue, allDecadeValue, tipoYear, tipoDecade, opt]);
 
   // Sincronizar filteredDb con onSeriesDataChange siempre que cambie
   useEffect(() => {
