@@ -757,7 +757,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete }) => {
                 >
                   {demographics.map((demo) => (
                     <option key={demo.id} value={Number(demo.id)}>
-                      {demo.name}
+                      {t(demo.name)}
                     </option>
                   ))}
                 </select>
@@ -791,7 +791,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete }) => {
                         onChange={() => handleGenreChange(Number(genre.id))}
                         disabled={loadingSeries}
                       />
-                      {genre.name}
+                      {t(genre.name)}
                     </label>
                   ))}
                 </div>
