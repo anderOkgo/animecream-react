@@ -15,7 +15,7 @@ function TablePagination({
   const [totalPages, setTotalPages] = useState(1);
   const [startIndex, setStartIndex] = useState(0);
   const [endIndex, setEndIndex] = useState(0);
-  const [isRangeEnabled, setIsRangeEnabled] = useState(false);
+  const [isRangeEnabled, setIsRangeEnabled] = useState(true);
   const touchStartPosRef = useRef({ x: 0, y: 0 });
   const hasMovedRef = useRef(false);
   const isInternalChangeRef = useRef(false);
@@ -55,15 +55,18 @@ function TablePagination({
     const state = navigation.currentState;
     if (state?.type === 'pagination' && state.data?.id === element) {
       if (state.data.page !== currentPage) {
-        isInternalChangeRef.current = true;
-        setCurrentPage(state.data.page);
+        const maxPage = Math.max(1, Math.ceil(filteredData.length / itemsPerPage));
+        if (state.data.page >= 1 && state.data.page <= maxPage) {
+          isInternalChangeRef.current = true;
+          setCurrentPage(state.data.page);
+        }
       }
     } else if (state?.type === 'initial' && currentPage !== 1) {
       // Si volvemos al estado inicial, resetear a página 1
       isInternalChangeRef.current = true;
       setCurrentPage(1);
     }
-  }, [navigation.currentState, element, currentPage, setCurrentPage]);
+  }, [navigation.currentState, element, currentPage, setCurrentPage, filteredData, itemsPerPage]);
 
   const renderPaginationButtons = () => {
     const maxButtons = set.pagination_max_buttons;
