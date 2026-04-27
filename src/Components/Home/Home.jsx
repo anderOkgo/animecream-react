@@ -90,6 +90,24 @@ const Home = ({
   const allYearValue = useMemo(() => minYear - 1, [minYear]);
   const allDecadeValue = useMemo(() => minDecade - 10, [minDecade]);
 
+  const tipoParam = useMemo(() => {
+    const raw = new URLSearchParams(window.location.search).get('tipo');
+    return raw ? raw.trim().toLowerCase() : null;
+  }, []);
+
+  const tipoYear = useMemo(() => {
+    if (!tipoParam || !/^\d{4}$/.test(tipoParam)) return null;
+    return parseInt(tipoParam, 10);
+  }, [tipoParam]);
+
+  const tipoDecade = useMemo(() => {
+    if (!tipoParam) return null;
+    const m = tipoParam.match(/^(\d{2,4})s$/);
+    if (!m) return null;
+    const n = parseInt(m[1], 10);
+    return n >= 100 ? Math.floor(n / 10) * 10 : n < 30 ? 2000 + n : 1900 + n;
+  }, [tipoParam]);
+
   const [yearFilter, setYearFilter] = useState(1949); // Default sync with initial fallback
   const [decadeFilter, setDecadeFilter] = useState(1940); // Default sync with initial fallback
   const [isRangesExpanded, setIsRangesExpanded] = useState(false);
@@ -259,8 +277,27 @@ const Home = ({
       });
     }
 
+    // Aplicar filtro ?tipo= de año/década si los sliders no están activos
+    if (!isYearFilterActive && !isDecadeFilterActive) {
+      if (tipoYear) {
+        filtered = filtered.filter((item) => parseInt(item.production_year, 10) === tipoYear);
+      } else if (tipoDecade) {
+        filtered = filtered.filter((item) => {
+          const y = parseInt(item.production_year, 10);
+          return y >= tipoDecade && y <= tipoDecade + 9;
+        });
+      }
+      if (tipoYear || tipoDecade) {
+        filtered.sort((a, b) => {
+          const rankA = parseInt(a.production_ranking_number, 10) || 999999;
+          const rankB = parseInt(b.production_ranking_number, 10) || 999999;
+          return rankA !== rankB ? rankA - rankB : (parseInt(b.production_year, 10) || 0) - (parseInt(a.production_year, 10) || 0);
+        });
+      }
+    }
+
     return filtered;
-  }, [db, yearFilter, decadeFilter, allYearValue, allDecadeValue]);
+  }, [db, yearFilter, decadeFilter, allYearValue, allDecadeValue, tipoYear, tipoDecade]);
 
   // Sincronizar filteredDb con onSeriesDataChange siempre que cambie
   useEffect(() => {
@@ -380,6 +417,24 @@ const Home = ({
   // Carga inicial cuando el componente se monta
   useEffect(() => {
     if (hasInitialLoad.current) return;
+
+    // Si ?tipo= es un slug de género/demografía, saltar carga completa
+    // El efecto de resolución de slug hará la llamada API filtrada
+    if (tipoParam && !tipoYear && !tipoDecade) {
+      hasInitialLoad.current = true;
+      try {
+        const cached = localStorage.getItem('storage_initial') || localStorage.getItem('storage');
+        if (cached) {
+          const data = JSON.parse(cached);
+          if (Array.isArray(data) && data.length > 0) {
+            setDb(data);
+            initialDbRef.current = data;
+            if (onSeriesDataChange) onSeriesDataChange(data);
+          }
+        }
+      } catch {}
+      return;
+    }
 
     // Cargar datos del localStorage primero (solo como preview mientras carga)
     try {
@@ -512,6 +567,47 @@ const Home = ({
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opt, refreshTrigger]);
+
+  // Resolver ?tipo= como slug de género o demografía
+  useEffect(() => {
+    if (!tipoParam || tipoYear !== null || tipoDecade !== null) return;
+
+    const resolveSlug = async () => {
+      const slugify = (str) =>
+        str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-');
+
+      let genres = [];
+      let demos = [];
+      try { genres = JSON.parse(localStorage.getItem('options_genres') || '[]'); } catch {}
+      try { demos = JSON.parse(localStorage.getItem('options_demographics') || '[]'); } catch {}
+
+      if (genres.length === 0 || demos.length === 0) {
+        const [gRes, dRes] = await Promise.all([
+          helpHttp.get(`${set.base_url}api/series/genres`),
+          helpHttp.get(`${set.base_url}api/series/demographics`),
+        ]);
+        if (!gRes?.err) genres = gRes.genres || gRes.data || [];
+        if (!dRes?.err) demos = dRes.demographics || dRes.data || [];
+      }
+
+      const genre = genres.find((g) => slugify(g.name) === tipoParam);
+      if (genre) {
+        setOptWithHistory({ method: 'POST', body: { genre_names: genre.name, production_ranking_number: 'ASC' } });
+        return;
+      }
+
+      const demo = demos.find((d) => slugify(d.name) === tipoParam);
+      if (demo) {
+        setOptWithHistory({ method: 'POST', body: { demographic_name: demo.name, production_ranking_number: 'ASC' } });
+        return;
+      }
+
+      // Sin coincidencia: cargar todos los datos ordenados
+      setOptWithHistory({ method: 'POST', body: { production_ranking_number: 'ASC' } });
+    };
+
+    resolveSlug();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleErrorDoubleClick = () => {
     setErrorPayload(null);
