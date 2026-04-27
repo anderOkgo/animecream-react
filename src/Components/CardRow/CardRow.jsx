@@ -88,21 +88,13 @@ export default function CardRow({
   const handleDemographicClick = (e) => {
     e.stopPropagation();
     if (onFilterChange && demographic_name) {
-      // Map demographic names to slugs (based on SearchMethod options)
-      const demographicMap = {
-        Kodomo: 'kodomo',
-        Shōnen: 'shonen',
-        Shonen: 'shonen',
-        Shounen: 'shonen',
-        Shōjo: 'shojo',
-        Shojo: 'shojo',
-        Seinen: 'seinen',
-        Josei: 'josei',
-        'Shōnen-Seinen': 'shonen-seinen',
-        'Shonen-Seinen': 'shonen-seinen',
-        'Shounen-Seinen': 'shonen-seinen',
-      };
-      const slug = demographicMap[demographic_name] || demographic_name.toLowerCase().replace(/\s+/g, '-');
+      const cached = (() => {
+        try { return JSON.parse(localStorage.getItem('options_demographics') || '[]'); } catch { return []; }
+      })();
+      const match = cached.find(
+        (d) => d.name && d.name.toLowerCase() === demographic_name.toLowerCase()
+      );
+      const slug = match?.slug || match?.name?.toLowerCase().replace(/\s+/g, '-') || demographic_name.toLowerCase().replace(/\s+/g, '-');
       const requestData = {
         method: 'POST',
         body: {

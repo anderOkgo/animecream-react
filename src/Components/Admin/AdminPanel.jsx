@@ -62,6 +62,15 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete }) => {
 
   const loadOptions = async () => {
     setLoadingOptions(true);
+
+    // Load from cache immediately so options are available offline
+    try {
+      const cachedGenres = JSON.parse(localStorage.getItem('options_genres') || '[]');
+      const cachedDemographics = JSON.parse(localStorage.getItem('options_demographics') || '[]');
+      if (cachedGenres.length > 0) setGenres(cachedGenres);
+      if (cachedDemographics.length > 0) setDemographics(cachedDemographics);
+    } catch {}
+
     try {
       const currentUser = AuthService.getCurrentUser();
       const token = currentUser?.token ? `Bearer ${currentUser.token}` : '';
@@ -76,12 +85,18 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete }) => {
 
       if (!genresResponse?.err) {
         const genresList = genresResponse.genres || genresResponse.data || [];
-        setGenres(genresList);
+        if (genresList.length > 0) {
+          localStorage.setItem('options_genres', JSON.stringify(genresList));
+          setGenres(genresList);
+        }
       }
 
       if (!demographicsResponse?.err) {
         const demographicsList = demographicsResponse.demographics || demographicsResponse.data || [];
-        setDemographics(demographicsList);
+        if (demographicsList.length > 0) {
+          localStorage.setItem('options_demographics', JSON.stringify(demographicsList));
+          setDemographics(demographicsList);
+        }
       }
     } catch (error) {
       // Silent error handling
