@@ -512,6 +512,8 @@ export function LanguageProvider({ children }) {
   return createElement(LanguageContext.Provider, { value }, children);
 }
 
+export const translateEN = (key) => translations.en[key] ?? key;
+
 export const useLanguage = () => {
   const ctx = useContext(LanguageContext);
   if (ctx == null) {

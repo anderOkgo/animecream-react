@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
-import { useLanguage } from '../../hooks/useLanguage';
+import { useLanguage, translateEN } from '../../hooks/useLanguage';
 import helpHttp from '../../helpers/helpHttp';
 import SearchMethod from '../SearchMethod/SearchMethod';
 import Card from '../Card/Card';
@@ -590,13 +590,13 @@ const Home = ({
         if (!dRes?.err) demos = dRes.demographics || dRes.data || [];
       }
 
-      const genre = genres.find((g) => slugify(g.name) === tipoParam);
+      const genre = genres.find((g) => slugify(g.name) === tipoParam || slugify(translateEN(g.name)) === tipoParam);
       if (genre) {
         setOptWithHistory({ method: 'POST', body: { genre_names: genre.name, production_ranking_number: 'ASC' } });
         return;
       }
 
-      const demo = demos.find((d) => slugify(d.name) === tipoParam);
+      const demo = demos.find((d) => slugify(d.name) === tipoParam || slugify(translateEN(d.name)) === tipoParam);
       if (demo) {
         setOptWithHistory({ method: 'POST', body: { demographic_name: demo.name, production_ranking_number: 'ASC' } });
         return;
