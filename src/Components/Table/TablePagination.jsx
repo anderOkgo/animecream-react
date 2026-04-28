@@ -16,8 +16,6 @@ function TablePagination({
   const [startIndex, setStartIndex] = useState(0);
   const [endIndex, setEndIndex] = useState(0);
   const [isRangeEnabled, setIsRangeEnabled] = useState(true);
-  const touchStartPosRef = useRef({ x: 0, y: 0 });
-  const hasMovedRef = useRef(false);
   const isInternalChangeRef = useRef(false);
 
   useEffect(() => {
@@ -118,99 +116,60 @@ function TablePagination({
     setCurrentPage(parseInt(e.target.value));
   };
 
-  const toggleRangeEnabled = () => {
-    setIsRangeEnabled((prev) => {
-      const newValue = !prev;
-      console.log('Range enabled:', newValue); // Debug
-      return newValue;
-    });
-  };
+  const lastTapRef = useRef(0);
 
-  const handleClick = (e) => {
+  const handleDoubleClick = (e) => {
     e.preventDefault();
-    e.stopPropagation();
-    toggleRangeEnabled();
+    setIsRangeEnabled((prev) => !prev);
   };
 
-  // Touch: guardar posición inicial
-  const handleTouchStart = (e) => {
-    const touch = e.touches[0];
-    touchStartPosRef.current = { x: touch.clientX, y: touch.clientY };
-    hasMovedRef.current = false;
-  };
-
-  // Touch: detectar si hay movimiento
-  const handleTouchMove = () => {
-    hasMovedRef.current = true;
-  };
-
-  // Touch: si no hubo movimiento, toggle enabled/disabled
   const handleTouchEnd = (e) => {
-    if (!hasMovedRef.current) {
+    const now = Date.now();
+    if (now - lastTapRef.current < 300) {
       e.preventDefault();
-      e.stopPropagation();
-      toggleRangeEnabled();
+      setIsRangeEnabled((prev) => !prev);
+      lastTapRef.current = 0;
+    } else {
+      lastTapRef.current = now;
     }
-    hasMovedRef.current = false;
-  };
-
-  const handleTouchCancel = () => {
-    hasMovedRef.current = false;
-  };
-
-  // Desktop: click simple
-  const handleMouseDown = (e) => {
-    if (e.button === 0) {
-      touchStartPosRef.current = { x: e.clientX, y: e.clientY };
-      hasMovedRef.current = false;
-    }
-  };
-
-  const handleMouseMove = (e) => {
-    if (e.buttons === 1) {
-      const deltaX = Math.abs(e.clientX - touchStartPosRef.current.x);
-      const deltaY = Math.abs(e.clientY - touchStartPosRef.current.y);
-      if (deltaX > 5 || deltaY > 5) {
-        hasMovedRef.current = true;
-      }
-    }
-  };
-
-  const handleMouseUp = (e) => {
-    if (e.button === 0 && !hasMovedRef.current) {
-      e.preventDefault();
-      e.stopPropagation();
-      toggleRangeEnabled();
-    }
-    hasMovedRef.current = false;
   };
 
   return (
     <>
-      <div
-        onDoubleClick={handleClick}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        onTouchCancel={handleTouchCancel}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        className={`pagination-range-wrapper ${!isRangeEnabled ? 'disabled' : ''}`}
-        title={!isRangeEnabled ? 'Tap or click to enable' : 'Tap or click to disable'}
-      >
-        <input
-          type="range"
-          min="1"
-          max={totalPages}
-          value={currentPage}
-          onChange={handleRangeChange}
-          disabled={!isRangeEnabled}
-          className="pagination-range"
-          style={{ pointerEvents: !isRangeEnabled ? 'none' : 'auto' }}
-        />
-        {!isRangeEnabled && <span className="range-status-indicator"></span>}
-        {isRangeEnabled && <span className="range-status-indicator enabled"></span>}
+      <div className="pagination-range-row">
+        <button
+          onClick={() => { setCurrentPage(1); goToElement(); }}
+          disabled={currentPage === 1}
+          className="pagination-button pagination-edge"
+          title={t('first')}
+        >
+          «
+        </button>
+        <div
+          onDoubleClick={handleDoubleClick}
+          onTouchEnd={handleTouchEnd}
+          className={`pagination-range-wrapper ${!isRangeEnabled ? 'disabled' : ''}`}
+          title={!isRangeEnabled ? 'Double click to enable' : 'Double click to disable'}
+        >
+          <input
+            type="range"
+            min="1"
+            max={totalPages}
+            value={currentPage}
+            onChange={handleRangeChange}
+            disabled={!isRangeEnabled}
+            className="pagination-range"
+            style={{ pointerEvents: !isRangeEnabled ? 'none' : 'auto' }}
+          />
+        </div>
+        <button
+          onClick={() => { setCurrentPage(totalPages); goToElement(); }}
+          disabled={currentPage === totalPages}
+          className="pagination-button pagination-edge"
+          title={t('last')}
+        >
+          »
+        </button>
       </div>
       <small className="pagination-label">
         {t('showing')} {startIndex}-{endIndex} {t('of')} {filteredData.length} {t('records')}

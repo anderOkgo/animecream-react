@@ -69,9 +69,9 @@ const Menu = ({
 
   const title = '';
   const menuItems = [
-    { label: 'Finanz', url: 'https://finan.animecream.com/' },
+    { label: 'Finanz', url: 'https://finan.animecream.com/', isSessionNeeded: true },
     { label: 'Animecream', url: 'https://www.animecream.com/' },
-    { label: 'Cyfer', url: 'https://cyfer.animecream.com/' },
+    { label: 'Cyfer', url: 'https://cyfer.animecream.com/', isSessionNeeded: true },
     {
       label: 'Sesión',
       url: '#',
@@ -110,7 +110,7 @@ const Menu = ({
           <span ref={spanRef} className="hamb-line"></span>
         </label>
         <ul className="menu">
-          {menuItems.map((menuItem, index) => (
+          {menuItems.filter((menuItem) => !menuItem.isSessionNeeded || currentUser).map((menuItem, index) => (
             <React.Fragment key={index}>
               {menuItem.child ? (
                 <>

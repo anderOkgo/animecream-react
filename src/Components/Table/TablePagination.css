@@ -43,10 +43,23 @@
   font-style: italic;
 }
 
-.pagination-range-wrapper {
+.pagination-range-row {
+  display: flex;
+  align-items: center;
   width: 100%;
+  gap: 4px;
+}
+
+.pagination-edge {
+  flex-shrink: 0;
+  font-size: 1rem;
+  padding: 4px 10px;
+}
+
+.pagination-range-wrapper {
+  flex: 1;
   position: relative;
-  cursor: pointer;
+  cursor: default;
   padding: 1px 0;
   user-select: none;
   min-height: 8px;
@@ -56,25 +69,9 @@
 }
 
 .pagination-range-wrapper.disabled {
-  cursor: pointer;
+  opacity: 0.4;
 }
 
-.range-status-indicator {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 10px;
-  color: var(--border-subtle);
-  pointer-events: none;
-  opacity: 0.6;
-  white-space: nowrap;
-}
-
-.range-status-indicator.enabled {
-  color: var(--brand-accent);
-  opacity: 0.8;
-}
 
 .pagination-range {
   display: block;
