@@ -253,6 +253,7 @@ const Home = ({
     }
   }, [navigation.currentState, onSeriesDataChange]);
   const [loadByIds, setLoadByIds] = useState(externalLoadByIds);
+  const [loadedByList, setLoadedByList] = useState(false);
   const isLoadingByIdsRef = useRef(false);
   const hasInitialLoad = useRef(false);
   const lastOptRef = useRef({}); // Guardar el último opt usado para recargar
@@ -292,9 +293,10 @@ const Home = ({
       });
     }
 
-    // Aplicar filtro ?tipo= de año/década solo si los sliders no están activos y no hay query activa
+    // Aplicar filtro ?tipo= de año/década solo si los sliders no están activos, no hay query activa
+    // y no se cargó desde una lista (loadedByList)
     const isOptActive = opt && Object.keys(opt).length > 0;
-    if (!isYearFilterActive && !isDecadeFilterActive && !isOptActive) {
+    if (!isYearFilterActive && !isDecadeFilterActive && !isOptActive && !loadedByList) {
       if (tipoYear) {
         filtered = filtered.filter((item) => parseInt(item.production_year, 10) === tipoYear);
       } else if (tipoDecade) {
@@ -313,7 +315,7 @@ const Home = ({
     }
 
     return filtered;
-  }, [db, yearFilter, decadeFilter, allYearValue, allDecadeValue, tipoYear, tipoDecade, opt]);
+  }, [db, yearFilter, decadeFilter, allYearValue, allDecadeValue, tipoYear, tipoDecade, opt, loadedByList]);
 
   // Sincronizar filteredDb con onSeriesDataChange siempre que cambie
   useEffect(() => {
@@ -403,6 +405,7 @@ const Home = ({
 
           localStorage.setItem('storage', JSON.stringify(filtered));
           setDb(filtered);
+          setLoadedByList(true);
           setErrorPayload(null);
           // Notificar cambios en los datos de series
           if (onSeriesDataChange) {
@@ -544,6 +547,7 @@ const Home = ({
     const fetchData = async () => {
       setLoading(true);
       setProc(true);
+      setLoadedByList(false);
 
       // Carga normal - asegurar que opt.body sea un objeto válido, no una string serializada
       let urlProduction = set.base_url + set.api_url;
