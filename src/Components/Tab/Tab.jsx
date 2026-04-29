@@ -320,14 +320,14 @@ function Tab({
                   >
                     {isSidebarOpen ? '«' : '»'}
                   </span>
-                    <div
-                      className="sidebar-toggle scroll-toggle-tab"
-                      onClick={handleScrollToEnd}
-                      onDoubleClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                      title={`${isAtTop ? t('goToBottom') || 'Go to bottom' : t('goToTop') || 'Go to top'} · ${isSidebarOpen ? t('close') || 'Close' : t('open') || 'Open'} (${t('doubleClick') || 'dbl-click'})`}
-                    >
-                      {isAtTop ? '↓' : '↑'}
-                    </div>
+                  <div
+                    className="sidebar-toggle scroll-toggle-tab"
+                    onClick={handleScrollToEnd}
+                    onDoubleClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                    title={`${isAtTop ? t('goToBottom') || 'Go to bottom' : t('goToTop') || 'Go to top'} · ${isSidebarOpen ? t('close') || 'Close' : t('open') || 'Open'} (${t('doubleClick') || 'dbl-click'})`}
+                  >
+                    {isAtTop ? '↓' : '↑'}
+                  </div>
                   <span
                     className="lang"
                     onClick={toggleLanguage}
@@ -345,6 +345,16 @@ function Tab({
                       IX
                     </span>
                   )}
+                  <span
+                    className="lang lang-advanced-search"
+                    onClick={() => {
+                      setIsAdvancedSearchVisible(!isAdvancedSearchVisible);
+                      handleScrollToTop();
+                    }}
+                    title={isAdvancedSearchVisible ? t('closeAdvancedSearch') : t('openAdvancedSearch')}
+                  >
+                    {isAdvancedSearchVisible ? '✕' : '🔍'}
+                  </span>
                   {selectedOption === 1 && (
                     <span
                       className="lang lang-sort"
@@ -370,16 +380,6 @@ function Tab({
                         title={t('myLists') || 'My Lists'}
                       >
                         ☰
-                      </span>
-                      <span
-                        className="lang lang-advanced-search"
-                        onClick={() => {
-                          setIsAdvancedSearchVisible(!isAdvancedSearchVisible);
-                          handleScrollToTop();
-                        }}
-                        title={isAdvancedSearchVisible ? t('closeAdvancedSearch') : t('openAdvancedSearch')}
-                      >
-                        {isAdvancedSearchVisible ? '✕' : '🔍'}
                       </span>
                     </>
                   )}

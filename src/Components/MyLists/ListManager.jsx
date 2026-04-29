@@ -221,7 +221,10 @@ const ListManager = ({
   const handleShareList = async () => {
     if (!listData || !listData.items || listData.items.length === 0) return;
 
-    const ids = listData.items.map((item) => item.id).filter(Boolean).join(',');
+    const ids = listData.items
+      .map((item) => item.id)
+      .filter(Boolean)
+      .join(',');
     const url = `${window.location.origin}/?tipo=lista,${ids}`;
 
     try {
@@ -381,8 +384,12 @@ const ListManager = ({
                         className="btn-show-series"
                         onClick={handleLoadSeries}
                         disabled={listData.items.length === 0}
+                        title={t('showSeries') || 'Show'} // Muestra el texto al pasar el ratón
+                        aria-label={t('showSeries') || 'Show'} // Accesibilidad para lectores de pantalla
                       >
-                        {t('showSeries') || 'Show'}
+                        <span role="img" aria-hidden="true">
+                          👁️
+                        </span>
                       </button>
                       <button
                         className={`btn-recalculate-index ${showRealIndexes ? 'active' : ''}`}
