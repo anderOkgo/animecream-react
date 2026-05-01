@@ -1,6 +1,6 @@
-const VERSION = '3.1.59';
+const VERSION = '3.1.62';
 const CACHE_NAME = `animecream-${VERSION}`;
-const appfiles = [`./android-icon-192x192.ico`];
+const appfiles = ['./img/icon/android-icon-192x192.png'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(

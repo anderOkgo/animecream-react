@@ -1,0 +1,33 @@
+User-agent: *
+Disallow: /font/
+
+# Block all AI Scrapers while allowing Search Engines
+User-agent: *
+Disallow: / # This is the standard, but specific bots follow their own rules
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: FacebookBot
+Disallow: /
+
+User-agent: Anthropic-AI
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: PerplexityBot
+Disallow: /
+
+# Sitemaps
+Sitemap: https://animecream.com/sitemap.xml
