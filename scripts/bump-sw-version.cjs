@@ -14,9 +14,19 @@ if (!match) {
   process.exit(1);
 }
 
-const major = parseInt(match[1], 10);
-const minor = parseInt(match[2], 10);
-const patch = parseInt(match[3], 10) + 1;
+let major = parseInt(match[1], 10);
+let minor = parseInt(match[2], 10);
+let patch = parseInt(match[3], 10) + 1;
+
+if (patch > 99) {
+  patch = 0;
+  minor += 1;
+  if (minor > 99) {
+    minor = 0;
+    major += 1;
+  }
+}
+
 const newVersion = `${major}.${minor}.${patch}`;
 
 const newContent = content.replace(versionRegex, `const VERSION = '${newVersion}';`);
