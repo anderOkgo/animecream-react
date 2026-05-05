@@ -74,7 +74,7 @@ const Menu = ({
     { label: 'Cyfer', url: 'https://cyfer.animecream.com/', isSessionNeeded: true },
     { label: 'AI-Shield', url: 'https://shield.animecream.com/' },
     {
-      label: 'Sesión',
+      label: 'Session',
       url: '#',
       child: [
         { isSessionNeeded: false, label: 'Login', url: '#', trigger: handleLogin },
@@ -111,47 +111,49 @@ const Menu = ({
           <span ref={spanRef} className="hamb-line"></span>
         </label>
         <ul className="menu">
-          {menuItems.filter((menuItem) => !menuItem.isSessionNeeded || currentUser).map((menuItem, index) => (
-            <React.Fragment key={index}>
-              {menuItem.child ? (
-                <>
-                  <li key={menuItem.label} className="services">
-                    <a href={menuItem.url}>{menuItem.label}</a>
-                    <ul className="dropdown">
-                      {menuItem.child.map((subMenu) =>
-                        subMenu.isSessionNeeded === true && currentUser ? (
-                          <li key={subMenu.label}>
-                            <a href={subMenu.url} onClick={subMenu.trigger}>
-                              {subMenu.label}
-                            </a>
-                          </li>
-                        ) : (
-                          !subMenu.isSessionNeeded &&
-                          !currentUser && (
+          {menuItems
+            .filter((menuItem) => !menuItem.isSessionNeeded || currentUser)
+            .map((menuItem, index) => (
+              <React.Fragment key={index}>
+                {menuItem.child ? (
+                  <>
+                    <li key={menuItem.label} className="services">
+                      <a href={menuItem.url}>{menuItem.label}</a>
+                      <ul className="dropdown">
+                        {menuItem.child.map((subMenu) =>
+                          subMenu.isSessionNeeded === true && currentUser ? (
                             <li key={subMenu.label}>
-                              <a
-                                href={subMenu.url}
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  subMenu.trigger && subMenu.trigger(e);
-                                }}
-                              >
+                              <a href={subMenu.url} onClick={subMenu.trigger}>
                                 {subMenu.label}
                               </a>
                             </li>
+                          ) : (
+                            !subMenu.isSessionNeeded &&
+                            !currentUser && (
+                              <li key={subMenu.label}>
+                                <a
+                                  href={subMenu.url}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    subMenu.trigger && subMenu.trigger(e);
+                                  }}
+                                >
+                                  {subMenu.label}
+                                </a>
+                              </li>
+                            )
                           )
-                        )
-                      )}
-                    </ul>
+                        )}
+                      </ul>
+                    </li>
+                  </>
+                ) : (
+                  <li key={menuItem.label}>
+                    <a href={menuItem.url}>{menuItem.label}</a>
                   </li>
-                </>
-              ) : (
-                <li key={menuItem.label}>
-                  <a href={menuItem.url}>{menuItem.label}</a>
-                </li>
-              )}
-            </React.Fragment>
-          ))}
+                )}
+              </React.Fragment>
+            ))}
         </ul>
       </div>
       <div className="logo insetshadow">
