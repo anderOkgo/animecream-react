@@ -1,6 +1,14 @@
-.lds-ring {
-  margin: auto;
+.loader-container {
   display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+  width: 100%;
+  min-height: 200px;
+}
+
+.lds-ring {
+  display: inline-block;
   position: relative;
   width: 80px;
   height: 80px;
@@ -13,10 +21,11 @@
   width: 64px;
   height: 64px;
   margin: 8px;
-  border: 4px solid var(--black);
+  border: 6px solid var(--text-heading);
   border-radius: 50%;
   animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  border-color: var(--black) transparent transparent transparent;
+  border-color: var(--text-heading) transparent transparent transparent;
+  filter: drop-shadow(0 0 5px var(--brand-primary));
 }
 
 .lds-ring div:nth-child(1) {

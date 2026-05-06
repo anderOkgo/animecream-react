@@ -775,7 +775,7 @@ const Home = ({
           {isRangesExpanded ? '︽' : '︾'}
         </button>
       </section>
-      {false && <Loader />}
+      {loading && !db && <Loader />}
       {errorMessage && (
         <Message
           key={activeLanguage}
