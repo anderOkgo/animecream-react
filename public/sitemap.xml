@@ -1,9 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://animecream.com/</loc>
-    <lastmod>2026-05-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
-  </url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- animecream.com — URLs match React app query param routing (?tipo=) -->
+
+<!-- Home -->
+<url><loc>https://animecream.com/</loc><changefreq>weekly</changefreq><priority>1.00</priority></url>
+
+<!-- Décadas -->
+<url><loc>https://animecream.com/?tipo=70s</loc><changefreq>weekly</changefreq><priority>0.90</priority></url>
+<url><loc>https://animecream.com/?tipo=80s</loc><changefreq>weekly</changefreq><priority>0.90</priority></url>
+<url><loc>https://animecream.com/?tipo=90s</loc><changefreq>weekly</changefreq><priority>0.90</priority></url>
+<url><loc>https://animecream.com/?tipo=00s</loc><changefreq>weekly</changefreq><priority>0.90</priority></url>
+<url><loc>https://animecream.com/?tipo=10s</loc><changefreq>weekly</changefreq><priority>0.90</priority></url>
+
+<!-- Géneros -->
+<url><loc>https://animecream.com/?tipo=accion</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=psicologico</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=magia</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=drama</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=comedia</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=ciencia-ficcion</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=fantasia</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=romance</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=musical</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=suspenso</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=historico</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=aventura</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=samurais</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=space-opera</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=mecha</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=ciberpunk</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=otaku</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=deporte</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=post-apocaliptico</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=entretenimiento</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=realismo</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=sobrenatural</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=misterio</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=triller-sicologico</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+
+<!-- Demografías -->
+<url><loc>https://animecream.com/?tipo=shonen</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=shojo</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=shonen-seinen</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=seinen</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=kodomo</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=josei</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+
+<!-- Años individuales -->
+<url><loc>https://animecream.com/?tipo=1970</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1971</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1972</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1973</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1974</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1975</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1976</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1977</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1978</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1979</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1980</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1981</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1982</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1983</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1984</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1985</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1986</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1987</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1988</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1989</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1990</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1991</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1992</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1993</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1994</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1995</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1996</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1997</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1998</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=1999</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2000</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2001</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2002</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2003</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2004</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2005</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2006</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2007</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2008</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2009</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2010</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2011</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2012</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2013</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2014</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2015</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2016</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2017</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2018</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2019</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2020</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2021</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2022</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2023</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2024</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2025</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2026</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2027</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2028</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2029</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<url><loc>https://animecream.com/?tipo=2030</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
 </urlset>
