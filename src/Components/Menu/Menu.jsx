@@ -70,7 +70,6 @@ const Menu = ({
   const title = '';
   const menuItems = [
     { label: 'Finanz', url: 'https://finan.animecream.com/', isSessionNeeded: true },
-    { label: 'Animecream', url: 'https://www.animecream.com/' },
     { label: 'Cyfer', url: 'https://cyfer.animecream.com/', isSessionNeeded: true },
     { label: 'AI-Shield', url: 'https://shield.animecream.com/' },
     {
