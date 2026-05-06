@@ -92,9 +92,19 @@ const Home = ({
   const allDecadeValue = useMemo(() => minDecade - 10, [minDecade]);
 
   const tipoParam = useMemo(() => {
+    // Soporte para rutas limpias tipo /producciones/accion → tipo=accion
+    const pathname = window.location.pathname;
+    const prodMatch = pathname.match(/^\/producciones\/([^/]+)\/?$/);
+    if (prodMatch) {
+      // Reemplazar la ruta limpia por / internamente (sin recargar)
+      window.history.replaceState(null, '', '/');
+      return prodMatch[1].trim().toLowerCase();
+    }
+    // Fallback: query param ?tipo=
     const raw = new URLSearchParams(window.location.search).get('tipo');
     return raw ? raw.trim().toLowerCase() : null;
   }, []);
+
 
   const tipoYear = useMemo(() => {
     if (!tipoParam || !/^\d{4}$/.test(tipoParam)) return null;

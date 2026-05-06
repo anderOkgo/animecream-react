@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Serve existing files and directories as-is (assets, sitemap, robots, etc.)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # All other routes (including /producciones/*) → index.html (SPA fallback, no redirect)
+    RewriteRule ^ index.html [L]
+</IfModule>
