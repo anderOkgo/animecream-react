@@ -67,50 +67,8 @@ const Home = ({
   const isLoadingByIdsRef = useRef(false);
   const hasInitialLoad = useRef(false);
   const lastOptRef = useRef({});
-  const initialSeed = useMemo(() => {
-    try {
-      const cached = localStorage.getItem('storage_initial') || localStorage.getItem('storage');
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      }
-    } catch (e) {}
-
-    // Si no hay cache (SEO o primera visita), barajamos los 50 y tomamos 10
-    return [...initialData].sort(() => Math.random() - 0.5).slice(0, 10);
-  }, []);
-
-  const [db, setDb] = useState(initialSeed);
-  const [errorPayload, setErrorPayload] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [opt, setOpt] = useState({});
-  const isRestoringRef = useRef(false);
-  const initialDbRef = useRef(initialSeed);
 
   const hasCleanedUrlRef = useRef(false);
-
-  // Calcular límites de años dinámicamente basados en la data
-  const { minYear, maxYear, minDecade, maxDecade } = useMemo(() => {
-    const fallbackYear = new Date().getFullYear();
-    if (!db || db.length === 0) {
-      return { minYear: 1950, maxYear: fallbackYear, minDecade: 1940, maxDecade: 2020 };
-    }
-    const years = db.map((item) => parseInt(item.production_year, 10)).filter((y) => !isNaN(y) && y > 0);
-
-    if (years.length === 0) {
-      return { minYear: 1950, maxYear: fallbackYear, minDecade: 1940, maxDecade: 2020 };
-    }
-
-    const min = Math.min(...years);
-    const max = Math.max(...years);
-    const minD = Math.floor(min / 10) * 10;
-    const maxD = Math.floor(max / 10) * 10;
-
-    return { minYear: min, maxYear: max, minDecade: minD, maxDecade: maxD };
-  }, [db]);
-
-  const allYearValue = useMemo(() => minYear - 1, [minYear]);
-  const allDecadeValue = useMemo(() => minDecade - 10, [minDecade]);
 
   const tipoParam = useMemo(() => {
     // Soporte para rutas limpias tipo /producciones/accion → tipo=accion
@@ -139,6 +97,80 @@ const Home = ({
     return n >= 100 ? Math.floor(n / 10) * 10 : n < 30 ? 2000 + n : 1900 + n;
   }, [tipoParam]);
 
+  const initialSeed = useMemo(() => {
+    try {
+      const cached = localStorage.getItem('storage_initial') || localStorage.getItem('storage');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {}
+
+    let filtered = [...initialData];
+
+    if (tipoYear) {
+      filtered = filtered.filter((item) => parseInt(item.production_year, 10) === tipoYear);
+    } else if (tipoDecade) {
+      filtered = filtered.filter((item) => {
+        const y = parseInt(item.production_year, 10);
+        return y >= tipoDecade && y <= tipoDecade + 9;
+      });
+    } else if (tipoParam) {
+      const slugify = (str) =>
+        str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-');
+      filtered = filtered.filter((item) => {
+        const matchGenre = item.genre_names?.split(',').some((g) => slugify(g) === tipoParam);
+        const matchDemo = slugify(item.demographic_name || '') === tipoParam;
+        return matchGenre || matchDemo;
+      });
+    }
+
+    // Si no hay coincidencias con el filtro, usamos toda la data
+    if (filtered.length === 0) filtered = [...initialData];
+
+    // Devolvemos 10 aleatorios de la lista filtrada (o de la total si falló el filtro)
+    return filtered.sort(() => Math.random() - 0.5).slice(0, 10);
+  }, [tipoYear, tipoDecade, tipoParam]);
+
+  const [db, setDb] = useState(initialSeed);
+  const [errorPayload, setErrorPayload] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [opt, setOpt] = useState({});
+  const isRestoringRef = useRef(false);
+  const initialDbRef = useRef(initialSeed);
+
+  // Calcular límites de años dinámicamente basados en la data
+  const { minYear, maxYear, minDecade, maxDecade } = useMemo(() => {
+    const fallbackYear = new Date().getFullYear();
+    if (!db || db.length === 0) {
+      return { minYear: 1969, maxYear: fallbackYear, minDecade: 1960, maxDecade: 2020 };
+    }
+    const years = db.map((item) => parseInt(item.production_year, 10)).filter((y) => !isNaN(y) && y > 0);
+
+    if (years.length === 0) {
+      return { minYear: 1969, maxYear: fallbackYear, minDecade: 1960, maxDecade: 2020 };
+    }
+
+    const min = Math.min(...years);
+    const max = Math.max(...years);
+    const minD = Math.floor(min / 10) * 10;
+    const maxD = Math.floor(max / 10) * 10;
+
+    return { minYear: min, maxYear: max, minDecade: minD, maxDecade: maxD };
+  }, [db]);
+
+  const allYearValue = useMemo(() => minYear - 1, [minYear]);
+  const allDecadeValue = useMemo(() => minDecade - 10, [minDecade]);
+
+  const [yearFilter, setYearFilter] = useState(allYearValue);
+  const [decadeFilter, setDecadeFilter] = useState(allDecadeValue);
+
+  // Efecto para sincronizar los filtros con los valores calculados una vez que db esté listo
+  useEffect(() => {
+    setYearFilter(allYearValue);
+    setDecadeFilter(allDecadeValue);
+  }, [allYearValue, allDecadeValue]);
+
   const tipoLista = useMemo(() => {
     if (!tipoParam) return null;
     const parts = tipoParam.split(',');
@@ -150,8 +182,6 @@ const Home = ({
     return ids.length > 0 ? ids : null;
   }, [tipoParam]);
 
-  const [yearFilter, setYearFilter] = useState(1949); // Default sync with initial fallback
-  const [decadeFilter, setDecadeFilter] = useState(1940); // Default sync with initial fallback
   const [isRangesExpanded, setIsRangesExpanded] = useState(false);
   const [isToolbarVisible, setIsToolbarVisible] = useState(true);
 
