@@ -79,6 +79,12 @@ const Home = ({
       window.history.replaceState(null, '', '/');
       return prodMatch[1].trim().toLowerCase();
     }
+
+    // Limpiar cualquier otra ruta que no sea la raíz (evita errores de rutas relativas y limpia rutas random)
+    if (pathname !== '/') {
+      window.history.replaceState(null, '', '/');
+    }
+
     // Fallback: query param ?tipo=
     const raw = new URLSearchParams(window.location.search).get('tipo');
     return raw ? raw.trim().toLowerCase() : null;

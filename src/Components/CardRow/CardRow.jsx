@@ -195,7 +195,7 @@ export default function CardRow({
                 fetchpriority="high"
                 width="140"
                 height="210"
-                src={`.${production_image_path}`}
+                src={production_image_path}
                 alt="Image"
                 className="img-card"
               />
