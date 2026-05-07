@@ -916,8 +916,8 @@ const Home = ({
           {isRangesExpanded ? '︽' : '︾'}
         </button>
       </section>
-      {/* Solo mostrar Loader si está cargando Y no hay absolutamente nada en db (ni siquiera initialData) */}
-      {loading && (!db || db.length === 0) && <Loader />}
+      {/* Mostrar Loader siempre que esté cargando, ahora es flotante y no ocupa espacio */}
+      {loading && <Loader />}
 
       {errorMessage && (
         <Message
