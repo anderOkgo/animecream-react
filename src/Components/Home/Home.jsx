@@ -62,6 +62,11 @@ const Home = ({
   isAtTop,
 }) => {
   const { t: translate, language: activeLanguage } = useLanguage();
+  const [loadByIds, setLoadByIds] = useState(externalLoadByIds);
+  const [loadedByList, setLoadedByList] = useState(false);
+  const isLoadingByIdsRef = useRef(false);
+  const hasInitialLoad = useRef(false);
+  const lastOptRef = useRef({});
   const initialSeed = useMemo(() => {
     try {
       const cached = localStorage.getItem('storage_initial') || localStorage.getItem('storage');
@@ -272,7 +277,6 @@ const Home = ({
               } else {
                 setDb(null);
               }
-
             }
           } catch (e) {
             setDb(null);
@@ -286,11 +290,6 @@ const Home = ({
       }
     }
   }, [navigation.currentState, onSeriesDataChange]);
-  const [loadByIds, setLoadByIds] = useState(externalLoadByIds);
-  const [loadedByList, setLoadedByList] = useState(false);
-  const isLoadingByIdsRef = useRef(false);
-  const hasInitialLoad = useRef(false);
-  const lastOptRef = useRef({}); // Guardar el último opt usado para recargar
 
   // Filtrar la información actual localmente (según lo solicitado por el usuario)
   const filteredDb = useMemo(() => {
@@ -327,25 +326,26 @@ const Home = ({
       });
     }
 
-    // Aplicar filtro ?tipo= de año/década solo si los sliders no están activos, no hay query activa
-    // y no se cargó desde una lista (loadedByList)
+    // Aplicar filtro ?tipo= de año/década localmente si no hay otros filtros activos
     const isOptActive = opt && Object.keys(opt).length > 0;
     if (!isYearFilterActive && !isDecadeFilterActive && !isOptActive && !loadedByList) {
       if (tipoYear) {
-        filtered = filtered.filter((item) => parseInt(item.production_year, 10) === tipoYear);
+        const matches = filtered.filter((item) => parseInt(item.production_year, 10) === tipoYear);
+        if (matches.length > 0) filtered = matches;
       } else if (tipoDecade) {
-        filtered = filtered.filter((item) => {
+        const matches = filtered.filter((item) => {
           const y = parseInt(item.production_year, 10);
           return y >= tipoDecade && y <= tipoDecade + 9;
         });
+        if (matches.length > 0) filtered = matches;
       }
+
       if (tipoYear || tipoDecade) {
         filtered.sort((a, b) => {
           const rankA = parseInt(a.production_ranking_number, 10) || 999999;
           const rankB = parseInt(b.production_ranking_number, 10) || 999999;
-          return rankA !== rankB
-            ? rankA - rankB
-            : (parseInt(b.production_year, 10) || 0) - (parseInt(a.production_year, 10) || 0);
+          if (rankA !== rankB) return rankA - rankB;
+          return (parseInt(b.production_year, 10) || 0) - (parseInt(a.production_year, 10) || 0);
         });
       }
     }
