@@ -1,4 +1,4 @@
-const VERSION = '3.2.1';
+const VERSION = '3.2.3';
 const CACHE_NAME = `animecream-${VERSION}`;
 const appfiles = ['./img/icon/android-icon-192x192.png'];
 

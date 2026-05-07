@@ -758,32 +758,62 @@ const Home = ({
 
   const errorMessage = errorPayload ? resolveAppError(errorPayload, translate) : null;
 
+  // Lógica para SEO dinámico
+  const baseUrl = 'https://animecream.com';
+  const canonicalUrl = tipoParam ? `${baseUrl}/producciones/${tipoParam}` : baseUrl;
+  
+  // Título dinámico basado en el contexto
+  const dynamicTitle = useMemo(() => {
+    if (tipoYear) return `Animes de ${tipoYear} | AnimeCream`;
+    if (tipoDecade) return `Animes de la década ${tipoDecade}s | AnimeCream`;
+    if (tipoParam) {
+      const displayParam = tipoParam.charAt(0).toUpperCase() + tipoParam.slice(1);
+      return `Animes de ${displayParam} | AnimeCream`;
+    }
+    if (filteredDb && filteredDb.length > 0) return `${filteredDb[0].production_name} | AnimeCream`;
+    return 'AnimeCream - Tu portal de Anime y Series';
+  }, [tipoYear, tipoDecade, tipoParam, filteredDb]);
+
+  // Descripción dinámica
+  const dynamicDescription = useMemo(() => {
+    if (tipoYear) return `Explora la lista completa de animes estrenados en el año ${tipoYear}. Reseñas, rankings y recomendaciones en AnimeCream.`;
+    if (tipoDecade) return `Descubre los mejores animes de la década de los ${tipoDecade}s. Un viaje por los clásicos y joyas ocultas de esta época.`;
+    if (filteredDb && filteredDb.length > 0) {
+      return language === 'en' ? filteredDb[0].production_description_en : filteredDb[0].production_description;
+    }
+    return 'Explora las mejores series de anime, reseñas y recomendaciones en AnimeCream. Tu enciclopedia de anime definitiva.';
+  }, [tipoYear, tipoDecade, filteredDb, language]);
+
   return (
     <article className="grid-1-2">
       <Helmet>
-        <title>
-          {filteredDb && filteredDb.length > 0
-            ? `${filteredDb[0].production_name} | AnimeCream`
-            : 'AnimeCream - Tu portal de Anime y Series'}
-        </title>
-        <meta
-          name="description"
-          content={
-            filteredDb && filteredDb.length > 0
-              ? language === 'en'
-                ? filteredDb[0].production_description_en
-                : filteredDb[0].production_description
-              : 'Explora las mejores series de anime, reseñas y recomendaciones en AnimeCream.'
-          }
-        />
-        {/* Open Graph para redes sociales */}
-        <meta
-          property="og:title"
-          content={filteredDb && filteredDb.length > 0 ? filteredDb[0].production_name : 'AnimeCream'}
-        />
+        <title>{dynamicTitle}</title>
+        <meta name="description" content={dynamicDescription} />
+        <link rel="canonical" href={canonicalUrl} />
+        
+        {/* SEO Internacional */}
+        <link rel="alternate" hrefLang="es" href={canonicalUrl} />
+        <link rel="alternate" hrefLang="en" href={canonicalUrl} />
+        <link rel="alternate" hrefLang="x-default" href={canonicalUrl} />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:title" content={dynamicTitle} />
+        <meta property="og:description" content={dynamicDescription} />
         <meta
           property="og:image"
-          content={filteredDb && filteredDb.length > 0 ? filteredDb[0].production_image_path : '/logo.png'}
+          content={filteredDb && filteredDb.length > 0 ? filteredDb[0].production_image_path : `${baseUrl}/logo.png`}
+        />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content={canonicalUrl} />
+        <meta name="twitter:title" content={dynamicTitle} />
+        <meta name="twitter:description" content={dynamicDescription} />
+        <meta
+          name="twitter:image"
+          content={filteredDb && filteredDb.length > 0 ? filteredDb[0].production_image_path : `${baseUrl}/logo.png`}
         />
       </Helmet>
 
