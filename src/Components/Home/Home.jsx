@@ -916,8 +916,8 @@ const Home = ({
           {isRangesExpanded ? '︽' : '︾'}
         </button>
       </section>
-      {/* Mostrar Loader siempre que esté cargando, ahora es flotante y no ocupa espacio */}
-      {loading && <Loader />}
+      {/* Mostrar Loader siempre que esté cargando, ahora es flotante y se puede cerrar al hacer clic */}
+      {loading && <Loader onClick={() => setLoading(false)} />}
 
       {errorMessage && (
         <Message

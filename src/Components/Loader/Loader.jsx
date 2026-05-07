@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './Loader.css';
 
-const Loader = () => {
+const Loader = ({ onClick }) => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (onClick) onClick();
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [onClick]);
+
   return (
     <div className="loader-container">
       <div className="lds-ring">
