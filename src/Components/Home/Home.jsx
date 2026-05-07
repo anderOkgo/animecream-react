@@ -9,6 +9,8 @@ import './Home.css';
 import set from '../../helpers/set.json';
 import RangeFilter from '../SearchMethod/RangeFilter';
 import '../SearchMethod/RangeFilter.css';
+import initialData from '../../helpers/initialData';
+import { Helmet } from 'react-helmet-async';
 
 const formatHttpErrMessage = (err, translate) => {
   if (!err) {
@@ -60,12 +62,26 @@ const Home = ({
   isAtTop,
 }) => {
   const { t: translate, language: activeLanguage } = useLanguage();
-  const [db, setDb] = useState(null);
+  const initialSeed = useMemo(() => {
+    try {
+      const cached = localStorage.getItem('storage_initial') || localStorage.getItem('storage');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {}
+
+    // Si no hay cache (SEO o primera visita), barajamos los 50 y tomamos 10
+    return [...initialData].sort(() => Math.random() - 0.5).slice(0, 10);
+  }, []);
+
+  const [db, setDb] = useState(initialSeed);
   const [errorPayload, setErrorPayload] = useState(null);
   const [loading, setLoading] = useState(false);
   const [opt, setOpt] = useState({});
   const isRestoringRef = useRef(false);
-  const initialDbRef = useRef(null);
+  const initialDbRef = useRef(initialSeed);
+
   const hasCleanedUrlRef = useRef(false);
 
   // Calcular límites de años dinámicamente basados en la data
@@ -105,7 +121,6 @@ const Home = ({
     return raw ? raw.trim().toLowerCase() : null;
   }, []);
 
-
   const tipoYear = useMemo(() => {
     if (!tipoParam || !/^\d{4}$/.test(tipoParam)) return null;
     return parseInt(tipoParam, 10);
@@ -123,7 +138,10 @@ const Home = ({
     if (!tipoParam) return null;
     const parts = tipoParam.split(',');
     if (parts[0] !== 'lista' || parts.length < 2) return null;
-    const ids = parts.slice(1).map((s) => parseInt(s, 10)).filter((n) => !isNaN(n) && n > 0);
+    const ids = parts
+      .slice(1)
+      .map((s) => parseInt(s, 10))
+      .filter((n) => !isNaN(n) && n > 0);
     return ids.length > 0 ? ids : null;
   }, [tipoParam]);
 
@@ -248,7 +266,13 @@ const Home = ({
               initialDbRef.current = data;
               if (onSeriesDataChange) onSeriesDataChange(data);
             } else {
-              setDb(null); // Fallback si no hay nada
+              // Si no hay nada en cache, mantener initialData en lugar de poner null
+              if (!db || db === initialData) {
+                // No hacemos nada, mantenemos el estado actual
+              } else {
+                setDb(null);
+              }
+
             }
           } catch (e) {
             setDb(null);
@@ -319,7 +343,9 @@ const Home = ({
         filtered.sort((a, b) => {
           const rankA = parseInt(a.production_ranking_number, 10) || 999999;
           const rankB = parseInt(b.production_ranking_number, 10) || 999999;
-          return rankA !== rankB ? rankA - rankB : (parseInt(b.production_year, 10) || 0) - (parseInt(a.production_year, 10) || 0);
+          return rankA !== rankB
+            ? rankA - rankB
+            : (parseInt(b.production_year, 10) || 0) - (parseInt(a.production_year, 10) || 0);
         });
       }
     }
@@ -603,12 +629,20 @@ const Home = ({
 
     const resolveSlug = async () => {
       const slugify = (str) =>
-        str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-');
+        str
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/\s+/g, '-');
 
       let genres = [];
       let demos = [];
-      try { genres = JSON.parse(localStorage.getItem('options_genres') || '[]'); } catch {}
-      try { demos = JSON.parse(localStorage.getItem('options_demographics') || '[]'); } catch {}
+      try {
+        genres = JSON.parse(localStorage.getItem('options_genres') || '[]');
+      } catch {}
+      try {
+        demos = JSON.parse(localStorage.getItem('options_demographics') || '[]');
+      } catch {}
 
       if (genres.length === 0 || demos.length === 0) {
         const [gRes, dRes] = await Promise.all([
@@ -619,7 +653,9 @@ const Home = ({
         if (!dRes?.err) demos = dRes.demographics || dRes.data || [];
       }
 
-      const genre = genres.find((g) => slugify(g.name) === tipoParam || slugify(translateEN(g.name)) === tipoParam);
+      const genre = genres.find(
+        (g) => slugify(g.name) === tipoParam || slugify(translateEN(g.name)) === tipoParam
+      );
       if (genre) {
         setOptWithHistory({ method: 'POST', body: { genre_names: genre.name, production_ranking_number: 'ASC' } });
         cleanUrlParam();
@@ -628,7 +664,10 @@ const Home = ({
 
       const demo = demos.find((d) => slugify(d.name) === tipoParam || slugify(translateEN(d.name)) === tipoParam);
       if (demo) {
-        setOptWithHistory({ method: 'POST', body: { demographic_name: demo.name, production_ranking_number: 'ASC' } });
+        setOptWithHistory({
+          method: 'POST',
+          body: { demographic_name: demo.name, production_ranking_number: 'ASC' },
+        });
         cleanUrlParam();
         return;
       }
@@ -660,9 +699,7 @@ const Home = ({
             : productionsInfo.data || productionsInfo;
 
           // Preserve the exact order of IDs from the URL param
-          const ordered = tipoLista
-            .map((id) => allData.find((s) => Number(s.id) === id))
-            .filter(Boolean);
+          const ordered = tipoLista.map((id) => allData.find((s) => Number(s.id) === id)).filter(Boolean);
           const result = ordered.length > 0 ? ordered : allData;
 
           localStorage.setItem('storage', JSON.stringify(result));
@@ -693,46 +730,73 @@ const Home = ({
 
   return (
     <article className="grid-1-2">
+      <Helmet>
+        <title>
+          {filteredDb && filteredDb.length > 0
+            ? `${filteredDb[0].production_name} | AnimeCream`
+            : 'AnimeCream - Tu portal de Anime y Series'}
+        </title>
+        <meta
+          name="description"
+          content={
+            filteredDb && filteredDb.length > 0
+              ? language === 'en'
+                ? filteredDb[0].production_description_en
+                : filteredDb[0].production_description
+              : 'Explora las mejores series de anime, reseñas y recomendaciones en AnimeCream.'
+          }
+        />
+        {/* Open Graph para redes sociales */}
+        <meta
+          property="og:title"
+          content={filteredDb && filteredDb.length > 0 ? filteredDb[0].production_name : 'AnimeCream'}
+        />
+        <meta
+          property="og:image"
+          content={filteredDb && filteredDb.length > 0 ? filteredDb[0].production_image_path : '/logo.png'}
+        />
+      </Helmet>
+
       {isToolbarVisible && (
         <div className="home-toolbar" onDoubleClick={() => setIsToolbarVisible(false)}>
           <button
             className="toolbar-btn"
-          onClick={toggleLanguage}
-          onDoubleClick={onLanguageDoubleClick}
-          title={language === 'en' ? translate('switchToSpanish') : translate('switchToEnglish')}
-        >
-          {language === 'en' ? 'EN' : 'ES'}
-        </button>
-        <button
-          className="toolbar-btn"
-          onClick={() => setShowRealNumbers(!showRealNumbers)}
-          title={translate('index')}
-        >
-          IX
-        </button>
-        <button
-          className={`toolbar-btn ${isAdvancedSearchVisible ? 'active' : ''}`}
-          onClick={() => {
-            setIsAdvancedSearchVisible(!isAdvancedSearchVisible);
-            if (!isAdvancedSearchVisible) {
-              const scrollContainer = document.querySelector('.section-tab') || window;
-              scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-          }}
-          title={isAdvancedSearchVisible ? translate('closeAdvancedSearch') || 'Cerrar' : translate('search')}
-        >
-          {isAdvancedSearchVisible ? '✕' : '🔍'}
-        </button>
-        <button className="toolbar-btn" onClick={handleSortCycle} title={translate('rankingOrder')}>
-          {sortOrder === null ? '⇄' : sortOrder === 'asc' ? '▲' : '▼'} {translate('sort')}
-        </button>
+            onClick={toggleLanguage}
+            onDoubleClick={onLanguageDoubleClick}
+            title={language === 'en' ? translate('switchToSpanish') : translate('switchToEnglish')}
+          >
+            {language === 'en' ? 'EN' : 'ES'}
+          </button>
+          <button
+            className="toolbar-btn"
+            onClick={() => setShowRealNumbers(!showRealNumbers)}
+            title={translate('index')}
+          >
+            IX
+          </button>
+          <button
+            className={`toolbar-btn ${isAdvancedSearchVisible ? 'active' : ''}`}
+            onClick={() => {
+              setIsAdvancedSearchVisible(!isAdvancedSearchVisible);
+              if (!isAdvancedSearchVisible) {
+                const scrollContainer = document.querySelector('.section-tab') || window;
+                scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
+            title={isAdvancedSearchVisible ? translate('closeAdvancedSearch') || 'Cerrar' : translate('search')}
+          >
+            {isAdvancedSearchVisible ? '✕' : '🔍'}
+          </button>
+          <button className="toolbar-btn" onClick={handleSortCycle} title={translate('rankingOrder')}>
+            {sortOrder === null ? '⇄' : sortOrder === 'asc' ? '▲' : '▼'} {translate('sort')}
+          </button>
 
-        <button className="toolbar-btn" onClick={onShowListManager} title={translate('myLists')}>
-          ☰ {translate('myLists')}
-        </button>
-        <button className="toolbar-btn top250-btn" onClick={handleTop250} title="Top 250">
-          Top 250
-        </button>
+          <button className="toolbar-btn" onClick={onShowListManager} title={translate('myLists')}>
+            ☰ {translate('myLists')}
+          </button>
+          <button className="toolbar-btn top250-btn" onClick={handleTop250} title="Top 250">
+            Top 250
+          </button>
         </div>
       )}
 
@@ -767,15 +831,17 @@ const Home = ({
             />
           </div>
         )}
-        <button 
-          className="ranges-toggle-btn-bottom" 
+        <button
+          className="ranges-toggle-btn-bottom"
           onClick={() => setIsRangesExpanded(!isRangesExpanded)}
           title={isRangesExpanded ? 'Ocultar Filtros' : 'Mostrar Filtros'}
         >
           {isRangesExpanded ? '︽' : '︾'}
         </button>
       </section>
-      {loading && !db && <Loader />}
+      {/* Solo mostrar Loader si está cargando Y no hay absolutamente nada en db (ni siquiera initialData) */}
+      {loading && (!db || db.length === 0) && <Loader />}
+
       {errorMessage && (
         <Message
           key={activeLanguage}
@@ -784,7 +850,8 @@ const Home = ({
           onDoubleClick={handleErrorDoubleClick}
         />
       )}
-      {filteredDb && (
+      {/* Renderizar siempre que haya datos, sin importar si está cargando o no */}
+      {filteredDb && filteredDb.length > 0 && (
         <Card
           data={filteredDb}
           t={t}
