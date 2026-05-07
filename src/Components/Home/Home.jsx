@@ -762,26 +762,42 @@ const Home = ({
   const baseUrl = 'https://animecream.com';
   const canonicalUrl = tipoParam ? `${baseUrl}/producciones/${tipoParam}` : baseUrl;
   
-  // Título dinámico basado en el contexto
+  // Título dinámico basado en el contexto e idioma
   const dynamicTitle = useMemo(() => {
-    if (tipoYear) return `Animes de ${tipoYear} | AnimeCream`;
-    if (tipoDecade) return `Animes de la década ${tipoDecade}s | AnimeCream`;
+    const isEn = language === 'en';
+    if (tipoYear) {
+      return isEn ? `Anime from ${tipoYear} | AnimeCream` : `Animes de ${tipoYear} | AnimeCream`;
+    }
+    if (tipoDecade) {
+      return isEn ? `Anime from the ${tipoDecade}s | AnimeCream` : `Animes de la década ${tipoDecade}s | AnimeCream`;
+    }
     if (tipoParam) {
       const displayParam = tipoParam.charAt(0).toUpperCase() + tipoParam.slice(1);
-      return `Animes de ${displayParam} | AnimeCream`;
+      return isEn ? `${displayParam} Anime | AnimeCream` : `Animes de ${displayParam} | AnimeCream`;
     }
     if (filteredDb && filteredDb.length > 0) return `${filteredDb[0].production_name} | AnimeCream`;
-    return 'AnimeCream - Tu portal de Anime y Series';
-  }, [tipoYear, tipoDecade, tipoParam, filteredDb]);
+    return 'AnimeCream';
+  }, [tipoYear, tipoDecade, tipoParam, filteredDb, language]);
 
-  // Descripción dinámica
+  // Descripción dinámica basada en el contexto e idioma
   const dynamicDescription = useMemo(() => {
-    if (tipoYear) return `Explora la lista completa de animes estrenados en el año ${tipoYear}. Reseñas, rankings y recomendaciones en AnimeCream.`;
-    if (tipoDecade) return `Descubre los mejores animes de la década de los ${tipoDecade}s. Un viaje por los clásicos y joyas ocultas de esta época.`;
-    if (filteredDb && filteredDb.length > 0) {
-      return language === 'en' ? filteredDb[0].production_description_en : filteredDb[0].production_description;
+    const isEn = language === 'en';
+    if (tipoYear) {
+      return isEn 
+        ? `Explore the complete list of anime released in ${tipoYear}. Reviews, rankings, and recommendations on AnimeCream.`
+        : `Explora la lista completa de animes estrenados en el año ${tipoYear}. Reseñas, rankings y recomendaciones en AnimeCream.`;
     }
-    return 'Explora las mejores series de anime, reseñas y recomendaciones en AnimeCream. Tu enciclopedia de anime definitiva.';
+    if (tipoDecade) {
+      return isEn
+        ? `Discover the best anime from the ${tipoDecade}s. A journey through the classics and hidden gems of this era.`
+        : `Descubre los mejores animes de la década de los ${tipoDecade}s. Un viaje por los clásicos y joyas ocultas de esta época.`;
+    }
+    if (filteredDb && filteredDb.length > 0) {
+      return isEn ? filteredDb[0].production_description_en : filteredDb[0].production_description;
+    }
+    return isEn 
+      ? 'Explore the best anime series, reviews, and recommendations on AnimeCream. Your ultimate anime encyclopedia.'
+      : 'Explora las mejores series de anime, reseñas y recomendaciones en AnimeCream. Tu enciclopedia de anime definitiva.';
   }, [tipoYear, tipoDecade, filteredDb, language]);
 
   return (
@@ -795,6 +811,7 @@ const Home = ({
         <link rel="alternate" hrefLang="es" href={canonicalUrl} />
         <link rel="alternate" hrefLang="en" href={canonicalUrl} />
         <link rel="alternate" hrefLang="x-default" href={canonicalUrl} />
+        <meta property="og:locale" content={language === 'en' ? 'en_US' : 'es_ES'} />
 
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
