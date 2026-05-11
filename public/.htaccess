@@ -1,10 +1,19 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    
+    # 1. Force HTTPS
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-    # Serve existing files and directories as-is (assets, sitemap, robots, etc.)
+    # 2. Force non-www (e.g., www.animecream.com -> animecream.com)
+    RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+    RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+    # 3. Serve existing files and directories as-is
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
 
-    # All other routes (including /producciones/*) → index.html (SPA fallback, no redirect)
+    # 4. All other routes (including /producciones/*) → index.html (SPA fallback)
+    # This ensures that when a user/bot hits /producciones/accion, they stay on that URL
     RewriteRule ^ index.html [L]
 </IfModule>

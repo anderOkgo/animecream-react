@@ -75,13 +75,12 @@ const Home = ({
     const pathname = window.location.pathname;
     const prodMatch = pathname.match(/^\/producciones\/([^/]+)\/?$/);
     if (prodMatch) {
-      // Reemplazar la ruta limpia por / internamente (sin recargar)
-      window.history.replaceState(null, '', '/');
+      // KEEP the clean URL so it can be indexed! Do NOT replaceState to '/'
       return prodMatch[1].trim().toLowerCase();
     }
 
     // Limpiar cualquier otra ruta que no sea la raíz (evita errores de rutas relativas y limpia rutas random)
-    if (pathname !== '/') {
+    if (pathname !== '/' && !pathname.startsWith('/producciones/')) {
       window.history.replaceState(null, '', '/');
     }
 
@@ -201,7 +200,8 @@ const Home = ({
   const cleanUrlParam = () => {
     if (tipoParam && !hasCleanedUrlRef.current) {
       hasCleanedUrlRef.current = true;
-      window.history.replaceState(null, '', '/');
+      // Do NOT clear the URL if it's an SEO-friendly parameter
+      // window.history.replaceState(null, '', '/');
     }
   };
 
@@ -766,6 +766,7 @@ const Home = ({
 
   // Lógica para SEO dinámico
   const baseUrl = 'https://animecream.com';
+  // Canonical URL always points to the clean /producciones/ path for filtered pages
   const canonicalUrl = tipoParam ? `${baseUrl}/producciones/${tipoParam}` : baseUrl;
   
   // Título dinámico basado en el contexto e idioma
