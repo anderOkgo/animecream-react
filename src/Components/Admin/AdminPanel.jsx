@@ -2,15 +2,15 @@ import { useState, useEffect } from 'react';
 import helpHttp from '../../helpers/helpHttp';
 import set from '../../helpers/set.json';
 import AuthService from '../../services/auth.service';
+import Message from '../Message/Message';
 import './AdminPanel.css';
 
-const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc }) => {
+const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, setGlobalMessage }) => {
   const isEditMode = !!seriesToEdit;
   const [jsonData, setJsonData] = useState('');
   const [useForm, setUseForm] = useState(isEditMode); // Default to form in edit mode
   const [imageFile, setImageFile] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState(null);
   const [seriesId, setSeriesId] = useState(null);
   const [loadingSeries, setLoadingSeries] = useState(false);
 
@@ -355,14 +355,15 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc }) 
     e.preventDefault();
     setLoading(true);
     if (setProc) setProc(true);
-    setMessage(null);
+    if (setGlobalMessage) setGlobalMessage(null);
 
-    // In edit mode, image is optional (only if user wants to change it)
     if (!isEditMode && !imageFile) {
-      setMessage({
-        type: 'error',
-        text: t('imageRequired') || 'Image is required',
-      });
+      if (setGlobalMessage) {
+        setGlobalMessage({
+          type: 'error',
+          text: t('imageRequired') || 'Image is required',
+        });
+      }
       setLoading(false);
       return;
     }
@@ -373,10 +374,12 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc }) 
       try {
         seriesData = getSeriesDataForSubmit();
       } catch (parseError) {
-        setMessage({
-          type: 'error',
-          text: 'Invalid data format: ' + parseError.message,
-        });
+        if (setGlobalMessage) {
+          setGlobalMessage({
+            type: 'error',
+            text: 'Invalid data format: ' + parseError.message,
+          });
+        }
         setLoading(false);
         return;
       }
@@ -394,10 +397,12 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc }) 
         });
 
         if (updateResponse?.err) {
-          setMessage({
-            type: 'error',
-            text: updateResponse.err.message || 'Error updating series',
-          });
+          if (setGlobalMessage) {
+            setGlobalMessage({
+              type: 'error',
+              text: updateResponse.err.message || 'Error updating series',
+            });
+          }
           setLoading(false);
           return;
         }
@@ -416,10 +421,12 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc }) 
           });
 
           if (genresResponse?.err) {
-            setMessage({
-              type: 'warning',
-              text: `Series updated but genres update failed: ${genresResponse.err.message || 'Unknown error'}`,
-            });
+            if (setGlobalMessage) {
+              setGlobalMessage({
+                type: 'warning',
+                text: `Series updated but genres update failed: ${genresResponse.err.message || 'Unknown error'}`,
+              });
+            }
             setLoading(false);
             return;
           }
@@ -440,12 +447,14 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc }) 
             });
 
             if (removeResponse?.err) {
-              setMessage({
-                type: 'warning',
-                text: `Series updated but failed to remove old titles: ${
-                  removeResponse.err.message || 'Unknown error'
-                }`,
-              });
+              if (setGlobalMessage) {
+                setGlobalMessage({
+                  type: 'warning',
+                  text: `Series updated but failed to remove old titles: ${
+                    removeResponse.err.message || 'Unknown error'
+                  }`,
+                });
+              }
               setLoading(false);
               return;
             }
@@ -460,10 +469,12 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc }) 
             });
 
             if (addResponse?.err) {
-              setMessage({
-                type: 'warning',
-                text: `Series updated but failed to add new titles: ${addResponse.err.message || 'Unknown error'}`,
-              });
+              if (setGlobalMessage) {
+                setGlobalMessage({
+                  type: 'warning',
+                  text: `Series updated but failed to add new titles: ${addResponse.err.message || 'Unknown error'}`,
+                });
+              }
               setLoading(false);
               return;
             }
@@ -487,21 +498,25 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc }) 
           const imageResult = await imageResponse.json();
 
           if (!imageResponse.ok || imageResult?.err) {
-            setMessage({
-              type: 'warning',
-              text: `Series updated but image upload failed: ${
-                imageResult?.err?.message || imageResult?.message || 'Unknown error'
-              }`,
-            });
+            if (setGlobalMessage) {
+              setGlobalMessage({
+                type: 'warning',
+                text: `Series updated but image upload failed: ${
+                  imageResult?.err?.message || imageResult?.message || 'Unknown error'
+                }`,
+              });
+            }
             setLoading(false);
             return;
           }
         }
 
-        setMessage({
-          type: 'success',
-          text: `Series updated successfully! ID: ${seriesId}`,
-        });
+        if (setGlobalMessage) {
+          setGlobalMessage({
+            type: 'success',
+            text: `Series updated successfully! ID: ${seriesId}`,
+          });
+        }
 
         if (onEditComplete) {
           setTimeout(() => {
@@ -511,10 +526,12 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc }) 
       } else {
         // Create new series
         if (!imageFile) {
-          setMessage({
-            type: 'error',
-            text: t('imageRequired') || 'Image is required',
-          });
+          if (setGlobalMessage) {
+            setGlobalMessage({
+              type: 'error',
+              text: t('imageRequired') || 'Image is required',
+            });
+          }
           setLoading(false);
           return;
         }
@@ -526,10 +543,12 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc }) 
         });
 
         if (createResponse?.err) {
-          setMessage({
-            type: 'error',
-            text: createResponse.err.message || 'Error creating series',
-          });
+          if (setGlobalMessage) {
+            setGlobalMessage({
+              type: 'error',
+              text: createResponse.err.message || 'Error creating series',
+            });
+          }
           setLoading(false);
           return;
         }
@@ -537,10 +556,12 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc }) 
         const newSeriesId = createResponse.id;
 
         if (!newSeriesId) {
-          setMessage({
-            type: 'error',
-            text: 'Series created but no ID returned',
-          });
+          if (setGlobalMessage) {
+            setGlobalMessage({
+              type: 'error',
+              text: 'Series created but no ID returned',
+            });
+          }
           setLoading(false);
           return;
         }
@@ -561,20 +582,24 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc }) 
         const imageResult = await imageResponse.json();
 
         if (!imageResponse.ok || imageResult?.err) {
-          setMessage({
-            type: 'warning',
-            text: `Series created (ID: ${newSeriesId}) but image upload failed: ${
-              imageResult?.err?.message || imageResult?.message || 'Unknown error'
-            }`,
-          });
+          if (setGlobalMessage) {
+            setGlobalMessage({
+              type: 'warning',
+              text: `Series created (ID: ${newSeriesId}) but image upload failed: ${
+                imageResult?.err?.message || imageResult?.message || 'Unknown error'
+              }`,
+            });
+          }
           setLoading(false);
           return;
         }
 
-        setMessage({
-          type: 'success',
-          text: `Series created successfully! ID: ${newSeriesId} (Image uploaded)`,
-        });
+        if (setGlobalMessage) {
+          setGlobalMessage({
+            type: 'success',
+            text: `Series created successfully! ID: ${newSeriesId} (Image uploaded)`,
+          });
+        }
 
         // Reset form
         setJsonData('');
@@ -593,10 +618,12 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc }) 
         }
       }
     } catch (error) {
-      setMessage({
-        type: 'error',
-        text: `Error: ${error.message || 'Unknown error'}`,
-      });
+      if (setGlobalMessage) {
+        setGlobalMessage({
+          type: 'error',
+          text: `Error: ${error.message || 'Unknown error'}`,
+        });
+      }
     } finally {
       setLoading(false);
       if (setProc) setProc(false);
@@ -613,11 +640,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc }) 
         </button>
       )}
 
-      {loadingSeries && (
-        <div className="admin-message admin-message-info">{t('loadingSeries') || 'Loading series data...'}</div>
-      )}
 
-      {message && <div className={`admin-message admin-message-${message.type}`}>{message.text}</div>}
 
       <form onSubmit={handleSubmit} className="admin-form">
         {/* Toggle between Form and JSON */}

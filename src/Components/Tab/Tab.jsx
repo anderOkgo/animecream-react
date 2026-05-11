@@ -15,6 +15,7 @@ function Tab({
   init,
   role,
   navigation,
+  setGlobalMessage,
 }) {
   const [nTab, setnTab] = useState(2);
   const { selectedOption, setSelectedOption, handleTouchStart, handleTouchEnd } = useSwipeableTabs(1, nTab, 170);
@@ -242,6 +243,7 @@ function Tab({
             setSelectedOption(1); // Switch to Series tab
           }}
           setProc={setProc}
+          setGlobalMessage={setGlobalMessage}
         />
       ),
     });

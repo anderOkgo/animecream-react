@@ -4,6 +4,7 @@ import Menu from './Components/Menu/Menu';
 import Jumbotron from './Components/Jumbotron/Jumbotron';
 import Login from './Components/Auth/Login/Login';
 import Loader from './Components/Loader/Loader';
+import Message from './Components/Message/Message';
 import { useAlive } from './hooks/useAlive';
 import { useTheme } from './hooks/useTheme';
 import { useLanguage } from './hooks/useLanguage';
@@ -25,6 +26,7 @@ const App = () => {
   const [username, setUsername] = useState(null);
   const [role, setRole] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
+  const [globalMessage, setGlobalMessage] = useState(null);
 
   const updateUserInfo = () => {
     const user = AuthService.getCurrentUser();
@@ -68,6 +70,16 @@ const App = () => {
     updateUserInfo();
   };
 
+  // Auto-dismiss global message after 10 seconds
+  useEffect(() => {
+    if (globalMessage) {
+      const timer = setTimeout(() => {
+        setGlobalMessage(null);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [globalMessage]);
+
   return (
     <div className="app">
       <Menu
@@ -95,6 +107,7 @@ const App = () => {
             init,
             role,
             navigation,
+            setGlobalMessage,
           }}
         />
         {showLogin && (
@@ -117,6 +130,21 @@ const App = () => {
         )}
       </div>
       {proc && <Loader onClick={() => setProc(false)} />}
+      {globalMessage && (
+        <Message
+          msg={globalMessage.text}
+          bgColor={
+            globalMessage.type === 'success'
+              ? 'var(--color-success)'
+              : globalMessage.type === 'error'
+                ? 'var(--color-danger)'
+                : globalMessage.type === 'warning'
+                  ? 'var(--color-warning)'
+                  : 'var(--brand-primary)'
+          }
+          onDoubleClick={() => setGlobalMessage(null)}
+        />
+      )}
     </div>
   );
 };
