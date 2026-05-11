@@ -40,6 +40,7 @@ function Tab({
   };
 
   const handleEditSeries = (seriesData) => {
+    setProc(true);
     setSeriesToEdit(seriesData);
     if (role === 'admin') {
       setSelectedOption(2);
@@ -240,6 +241,7 @@ function Tab({
             handleRefreshSeries();
             setSelectedOption(1); // Switch to Series tab
           }}
+          setProc={setProc}
         />
       ),
     });

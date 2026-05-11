@@ -4,7 +4,7 @@ import set from '../../helpers/set.json';
 import AuthService from '../../services/auth.service';
 import './AdminPanel.css';
 
-const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete }) => {
+const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc }) => {
   const isEditMode = !!seriesToEdit;
   const [jsonData, setJsonData] = useState('');
   const [useForm, setUseForm] = useState(isEditMode); // Default to form in edit mode
@@ -62,6 +62,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete }) => {
 
   const loadOptions = async () => {
     setLoadingOptions(true);
+    if (setProc) setProc(true);
 
     // Load from cache immediately so options are available offline
     try {
@@ -102,6 +103,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete }) => {
       // Silent error handling
     } finally {
       setLoadingOptions(false);
+      if (setProc) setProc(false);
     }
   };
 
@@ -144,6 +146,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete }) => {
       loadFormFromSeriesData(seriesToEdit);
     } finally {
       setLoadingSeries(false);
+      if (setProc) setProc(false);
     }
   };
 
@@ -351,6 +354,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    if (setProc) setProc(true);
     setMessage(null);
 
     // In edit mode, image is optional (only if user wants to change it)
@@ -595,6 +599,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete }) => {
       });
     } finally {
       setLoading(false);
+      if (setProc) setProc(false);
     }
   };
 

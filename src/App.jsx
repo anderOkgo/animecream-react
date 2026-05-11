@@ -3,6 +3,7 @@ import Tab from './Components/Tab/Tab';
 import Menu from './Components/Menu/Menu';
 import Jumbotron from './Components/Jumbotron/Jumbotron';
 import Login from './Components/Auth/Login/Login';
+import Loader from './Components/Loader/Loader';
 import { useAlive } from './hooks/useAlive';
 import { useTheme } from './hooks/useTheme';
 import { useLanguage } from './hooks/useLanguage';
@@ -115,6 +116,7 @@ const App = () => {
           </div>
         )}
       </div>
+      {proc && <Loader onClick={() => setProc(false)} />}
     </div>
   );
 };
