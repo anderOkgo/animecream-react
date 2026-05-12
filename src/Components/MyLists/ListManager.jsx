@@ -313,7 +313,7 @@ const ListManager = ({
       <div className="list-manager-modal" onClick={(e) => e.stopPropagation()}>
         <div className="list-manager-header">
           <h3>{t('myLists') || 'My Lists'}</h3>
-          <button className="close-btn" onClick={onClose}>
+          <button className="close-btn" onClick={onClose} title={t('close')}>
             ×
           </button>
         </div>
@@ -331,7 +331,7 @@ const ListManager = ({
               </select>
 
               {!showAddForm ? (
-                <button className="btn-add-list" onClick={() => setShowAddForm(true)}>
+                <button className="btn-add-list" onClick={() => setShowAddForm(true)} title={t('addList')}>
                   + {t('addList') || 'Add List'}
                 </button>
               ) : (
@@ -340,6 +340,8 @@ const ListManager = ({
                     type="text"
                     value={newListName}
                     onChange={(e) => setNewListName(e.target.value)}
+                    onInvalid={(e) => e.target.setCustomValidity(t('pleaseFillThisField'))}
+                    onInput={(e) => e.target.setCustomValidity('')}
                     placeholder={t('listName') || 'List name'}
                     onKeyPress={(e) => {
                       if (e.key === 'Enter') {
@@ -347,13 +349,15 @@ const ListManager = ({
                       }
                     }}
                     autoFocus
+                    required
                   />
-                  <button onClick={handleAddList}>{t('create') || 'Create'}</button>
+                  <button onClick={handleAddList} title={t('create')}>{t('create') || 'Create'}</button>
                   <button
                     onClick={() => {
                       setShowAddForm(false);
                       setNewListName('');
                     }}
+                    title={t('cancel')}
                   >
                     {t('cancel') || 'Cancel'}
                   </button>

@@ -185,11 +185,11 @@ const ListView = ({ listId, onBack, onLoadSeries }) => {
   return (
     <div className="list-view-container">
       <div className="list-view-header">
-        <button className="back-btn" onClick={onBack}>
+        <button className="back-btn" onClick={onBack} title={t('back')}>
           ← {t('back') || 'Back'}
         </button>
         <h3>{listData.name}</h3>
-        <button className="load-series-btn" onClick={handleLoadSeries} disabled={listData.items.length === 0}>
+        <button className="load-series-btn" onClick={handleLoadSeries} disabled={listData.items.length === 0} title={t('loadSeries')}>
           {t('loadSeries') || 'Load Series'}
         </button>
       </div>

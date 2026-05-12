@@ -92,7 +92,7 @@ const App = () => {
       ) {
         setGlobalMessage({
           type: 'warning',
-          text: '¿Error de carga? Doble clic para limpiar caché y reparar.',
+          text: t('loadingErrorRepair'),
           isEmergency: true,
         });
       }
@@ -120,7 +120,7 @@ const App = () => {
       window.location.reload(true);
     } catch (err) {
       setProc(false);
-      setGlobalMessage({ type: 'error', text: 'Error al intentar reparar.' });
+      setGlobalMessage({ type: 'error', text: t('repairError') });
     }
   };
 
@@ -164,7 +164,7 @@ const App = () => {
             }}
           >
             <div className="login-container">
-              <button className="login-close" onClick={() => setShowLogin(false)} title="Cerrar">
+              <button className="login-close" onClick={() => setShowLogin(false)} title={t('close')}>
                 ×
               </button>
               <h2 className="title">{t('login')}</h2>

@@ -328,7 +328,7 @@ function Tab({
                     className="sidebar-toggle scroll-toggle-tab"
                     onClick={handleScrollToEnd}
                     onDoubleClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                    title={`${isAtTop ? t('goToBottom') || 'Go to bottom' : t('goToTop') || 'Go to top'} · ${isSidebarOpen ? t('close') || 'Close' : t('open') || 'Open'} (${t('doubleClick') || 'dbl-click'})`}
+                    title={`${isAtTop ? t('goToBottom') : t('goToTop')} · ${isSidebarOpen ? t('close') : t('open')} (${t('doubleClick')})`}
                   >
                     {isAtTop ? '↓' : '↑'}
                   </div>

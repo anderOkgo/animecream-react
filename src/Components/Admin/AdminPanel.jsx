@@ -377,7 +377,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
         if (setGlobalMessage) {
           setGlobalMessage({
             type: 'error',
-            text: 'Invalid data format: ' + parseError.message,
+            text: `${t('invalidDataFormat')}: ${parseError.message}`,
           });
         }
         setLoading(false);
@@ -400,7 +400,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
           if (setGlobalMessage) {
             setGlobalMessage({
               type: 'error',
-              text: updateResponse.err.message || 'Error updating series',
+              text: updateResponse.err.message || t('errorUpdatingSeries'),
             });
           }
           setLoading(false);
@@ -424,7 +424,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
             if (setGlobalMessage) {
               setGlobalMessage({
                 type: 'warning',
-                text: `Series updated but genres update failed: ${genresResponse.err.message || 'Unknown error'}`,
+                text: `${t('genresUpdateFailed')}: ${genresResponse.err.message || t('errorUnknown')}`,
               });
             }
             setLoading(false);
@@ -450,8 +450,8 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
               if (setGlobalMessage) {
                 setGlobalMessage({
                   type: 'warning',
-                  text: `Series updated but failed to remove old titles: ${
-                    removeResponse.err.message || 'Unknown error'
+                  text: `${t('titlesRemoveFailed')}: ${
+                    removeResponse.err.message || t('errorUnknown')
                   }`,
                 });
               }
@@ -472,7 +472,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
               if (setGlobalMessage) {
                 setGlobalMessage({
                   type: 'warning',
-                  text: `Series updated but failed to add new titles: ${addResponse.err.message || 'Unknown error'}`,
+                  text: `${t('titlesAddFailed')}: ${addResponse.err.message || t('errorUnknown')}`,
                 });
               }
               setLoading(false);
@@ -501,8 +501,8 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
             if (setGlobalMessage) {
               setGlobalMessage({
                 type: 'warning',
-                text: `Series updated but image upload failed: ${
-                  imageResult?.err?.message || imageResult?.message || 'Unknown error'
+                text: `${t('imageUploadFailed')}: ${
+                  imageResult?.err?.message || imageResult?.message || t('errorUnknown')
                 }`,
               });
             }
@@ -514,7 +514,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
         if (setGlobalMessage) {
           setGlobalMessage({
             type: 'success',
-            text: `Series updated successfully! ID: ${seriesId}`,
+            text: `${t('seriesUpdated')} ID: ${seriesId}`,
           });
         }
 
@@ -546,7 +546,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
           if (setGlobalMessage) {
             setGlobalMessage({
               type: 'error',
-              text: createResponse.err.message || 'Error creating series',
+              text: createResponse.err.message || t('errorCreatingSeries'),
             });
           }
           setLoading(false);
@@ -559,7 +559,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
           if (setGlobalMessage) {
             setGlobalMessage({
               type: 'error',
-              text: 'Series created but no ID returned',
+              text: t('noIdReturned'),
             });
           }
           setLoading(false);
@@ -585,8 +585,8 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
           if (setGlobalMessage) {
             setGlobalMessage({
               type: 'warning',
-              text: `Series created (ID: ${newSeriesId}) but image upload failed: ${
-                imageResult?.err?.message || imageResult?.message || 'Unknown error'
+              text: `${t('seriesCreated')} (ID: ${newSeriesId}) ${t('imageUploadFailed')}: ${
+                imageResult?.err?.message || imageResult?.message || t('errorUnknown')
               }`,
             });
           }
@@ -597,7 +597,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
         if (setGlobalMessage) {
           setGlobalMessage({
             type: 'success',
-            text: `Series created successfully! ID: ${newSeriesId} (Image uploaded)`,
+            text: `${t('seriesCreated')} ID: ${newSeriesId}`,
           });
         }
 
@@ -621,7 +621,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
       if (setGlobalMessage) {
         setGlobalMessage({
           type: 'error',
-          text: `Error: ${error.message || 'Unknown error'}`,
+          text: `${t('errorPrefix')} ${error.message || t('errorUnknown')}`,
         });
       }
     } finally {
@@ -635,7 +635,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
       <h2>{isEditMode ? t('editSeries') || 'Edit Series' : t('createSeries') || 'Create Series'}</h2>
 
       {isEditMode && (
-        <button type="button" className="btn-cancel" onClick={onEditCancel} disabled={loading}>
+        <button type="button" className="btn-cancel" onClick={onEditCancel} disabled={loading} title={t('cancel')}>
           {t('cancel') || 'Cancel'}
         </button>
       )}
@@ -645,11 +645,11 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
       <form onSubmit={handleSubmit} className="admin-form">
         {/* Toggle between Form and JSON */}
         <div className="form-toggle">
-          <label>
+          <label title={t('useJSON') || 'Use JSON'}>
             <input type="radio" name="inputMode" checked={!useForm} onChange={() => setUseForm(false)} />
             {t('useJSON') || 'Use JSON'}
           </label>
-          <label>
+          <label title={t('useForm') || 'Use Form'}>
             <input type="radio" name="inputMode" checked={useForm} onChange={() => setUseForm(true)} />
             {t('useForm') || 'Use Form'}
           </label>
@@ -668,6 +668,8 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
                 name="name"
                 value={formData.name}
                 onChange={handleFormChange}
+                onInvalid={(e) => e.target.setCustomValidity(t('pleaseFillThisField'))}
+                onInput={(e) => e.target.setCustomValidity('')}
                 required
                 disabled={loadingSeries}
               />
@@ -676,7 +678,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
             <div className="form-group">
               <div className="form-group-header">
                 <label>{t('titles') || 'Alternative Titles'}</label>
-                <button type="button" onClick={handleAddTitle} disabled={loadingSeries} className="btn-add">
+                <button type="button" onClick={handleAddTitle} disabled={loadingSeries} className="btn-add" title={t('addTitle')}>
                   + {t('addTitle') || 'Add Title'}
                 </button>
               </div>
@@ -694,6 +696,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
                     onClick={() => handleRemoveTitle(index)}
                     disabled={loadingSeries}
                     className="btn-remove"
+                    title={t('remove')}
                   >
                     ×
                   </button>
@@ -712,6 +715,8 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
                   name="year"
                   value={formData.year}
                   onChange={handleFormChange}
+                  onInvalid={(e) => e.target.setCustomValidity(t('pleaseFillThisField'))}
+                  onInput={(e) => e.target.setCustomValidity('')}
                   required
                   disabled={loadingSeries}
                 />
@@ -780,6 +785,8 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
                   name="demography_id"
                   value={formData.demography_id}
                   onChange={handleFormChange}
+                  onInvalid={(e) => e.target.setCustomValidity(t('pleaseFillThisField'))}
+                  onInput={(e) => e.target.setCustomValidity('')}
                   required
                   disabled={loadingSeries || loadingOptions}
                 >
@@ -819,7 +826,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
                         onChange={() => handleGenreChange(Number(genre.id))}
                         disabled={loadingSeries}
                       />
-                      {t(genre.name)}
+                      <span title={t(genre.name)}>{t(genre.name)}</span>
                     </label>
                   ))}
                 </div>
@@ -837,6 +844,8 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
               name="jsonData"
               value={jsonData}
               onChange={handleJsonChange}
+              onInvalid={(e) => e.target.setCustomValidity(t('pleaseFillThisField'))}
+              onInput={(e) => e.target.setCustomValidity('')}
               rows="15"
               placeholder='{"name": "Series Name", "year": 2024, "chapter_number": 0, "description": "", "description_en": "", "qualification": 0, "demography_id": 1, "visible": true, "genres": [1, 2], "titles": ["Title1", "Title2"]}'
               required
@@ -855,6 +864,8 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
             name="image"
             accept="image/*"
             onChange={handleImageChange}
+            onInvalid={(e) => e.target.setCustomValidity(t('pleaseFillThisField'))}
+            onInput={(e) => e.target.setCustomValidity('')}
             required={!isEditMode}
             disabled={loadingSeries}
           />
@@ -869,11 +880,22 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
             <p className="form-hint">{t('imageOptional') || 'Leave empty to keep current image'}</p>
           )}
           {!isEditMode && !imageFile && (
-            <p className="form-hint">{t('imageRequired') || 'Image is required to create a series'}</p>
+            <p className="form-hint">{t('imageRequiredToCreate')}</p>
           )}
         </div>
 
-        <button type="submit" className="btn-submit" disabled={loading || loadingSeries}>
+        <button 
+          type="submit" 
+          className="btn-submit" 
+          disabled={loading || loadingSeries}
+          title={loading
+            ? isEditMode
+              ? t('updating') || 'Updating...'
+              : t('creating') || 'Creating...'
+            : isEditMode
+              ? t('updateSeries') || 'Update Series'
+              : t('createSeries') || 'Create Series'}
+        >
           {loading
             ? isEditMode
               ? t('updating') || 'Updating...'

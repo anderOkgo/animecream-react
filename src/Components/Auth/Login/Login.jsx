@@ -59,6 +59,8 @@ const Login = ({ t, init, setInit, setProc, onLoginSuccess }) => {
               name="username"
               value={username}
               onChange={onChangeUsername}
+              onInvalid={(e) => e.target.setCustomValidity(t('pleaseFillThisField'))}
+              onInput={(e) => e.target.setCustomValidity('')}
               maxLength={20}
               autoComplete="username"
               required
@@ -76,6 +78,8 @@ const Login = ({ t, init, setInit, setProc, onLoginSuccess }) => {
               name="password"
               value={password}
               onChange={onChangePassword}
+              onInvalid={(e) => e.target.setCustomValidity(t('pleaseFillThisField'))}
+              onInput={(e) => e.target.setCustomValidity('')}
               maxLength={20}
               autoComplete="off"
               required

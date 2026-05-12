@@ -202,8 +202,8 @@ const SearchMethod = ({ setOpt, t, isFormVisible, setIsFormVisible }) => {
               />
             </div>
             <div className="form-group">
-              <input type="submit" value={t('search')} />
-              <input type="reset" value={t('reset')} onClick={handleReset} />
+              <input type="submit" value={t('search')} title={t('search')} />
+              <input type="reset" value={t('reset')} onClick={handleReset} title={t('reset')} />
             </div>
           </form>
         </div>
