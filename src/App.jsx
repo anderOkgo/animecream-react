@@ -70,15 +70,59 @@ const App = () => {
     updateUserInfo();
   };
 
-  // Auto-dismiss global message after 10 seconds
+  // Auto-dismiss global message after 5 seconds (unless it's an emergency)
   useEffect(() => {
-    if (globalMessage) {
+    if (globalMessage && !globalMessage.isEmergency) {
       const timer = setTimeout(() => {
         setGlobalMessage(null);
       }, 5000);
       return () => clearTimeout(timer);
     }
   }, [globalMessage]);
+
+  // Sistema de auto-reparación para errores críticos (Caché/Red)
+  useEffect(() => {
+    const handleCriticalError = (event) => {
+      const errorText = event.reason?.message || event.message || '';
+      // Detectar errores de Response, Red o Archivos de JS perdidos (Vite)
+      if (
+        errorText.includes('Response') ||
+        errorText.includes('Failed to fetch') ||
+        errorText.includes('Loading chunk')
+      ) {
+        setGlobalMessage({
+          type: 'warning',
+          text: '¿Error de carga? Doble clic para limpiar caché y reparar.',
+          isEmergency: true,
+        });
+      }
+    };
+
+    window.addEventListener('unhandledrejection', handleCriticalError);
+    window.addEventListener('error', handleCriticalError);
+    return () => {
+      window.removeEventListener('unhandledrejection', handleCriticalError);
+      window.removeEventListener('error', handleCriticalError);
+    };
+  }, []);
+
+  const handleEmergencyRepair = async () => {
+    setProc(true);
+    try {
+      if ('caches' in window) {
+        const names = await caches.keys();
+        await Promise.all(names.map((name) => caches.delete(name)));
+      }
+      if ('serviceWorker' in navigator) {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        for (let reg of regs) await reg.unregister();
+      }
+      window.location.reload(true);
+    } catch (err) {
+      setProc(false);
+      setGlobalMessage({ type: 'error', text: 'Error al intentar reparar.' });
+    }
+  };
 
   return (
     <div className="app">
@@ -142,7 +186,13 @@ const App = () => {
                   ? 'var(--color-warning)'
                   : 'var(--brand-primary)'
           }
-          onDoubleClick={() => setGlobalMessage(null)}
+          onDoubleClick={() => {
+            if (globalMessage.isEmergency) {
+              handleEmergencyRepair();
+            } else {
+              setGlobalMessage(null);
+            }
+          }}
         />
       )}
     </div>
