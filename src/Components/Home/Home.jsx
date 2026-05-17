@@ -827,7 +827,7 @@ const Home = ({
         <meta property="og:description" content={dynamicDescription} />
         <meta
           property="og:image"
-          content={filteredDb && filteredDb.length > 0 ? filteredDb[0].production_image_path : `${baseUrl}/logo.png`}
+          content={filteredDb && filteredDb.length > 0 ? filteredDb[0].production_image_path : `${baseUrl}/img/tarjeta/AnimecreamTargetaSEO.png`}
         />
 
         {/* Twitter */}
@@ -837,7 +837,7 @@ const Home = ({
         <meta name="twitter:description" content={dynamicDescription} />
         <meta
           name="twitter:image"
-          content={filteredDb && filteredDb.length > 0 ? filteredDb[0].production_image_path : `${baseUrl}/logo.png`}
+          content={filteredDb && filteredDb.length > 0 ? filteredDb[0].production_image_path : `${baseUrl}/img/tarjeta/AnimecreamTargetaSEO.png`}
         />
       </Helmet>
 
