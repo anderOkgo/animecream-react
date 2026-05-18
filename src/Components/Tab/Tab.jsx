@@ -193,7 +193,7 @@ function Tab({
     {
       id: 1,
       icon: '',
-      label: t('series') || 'Series',
+      label: t('seriesAndOvas') || 'Series & OVAs',
       component: true && (
         <Home
           {...{
@@ -294,7 +294,11 @@ function Tab({
   }, []);
 
   return (
-    <div className="area-tab" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+    <div
+      className="area-tab"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       {tabsData.map((tab) => (
         <React.Fragment key={tab.id}>
           <input
@@ -307,7 +311,11 @@ function Tab({
             type="radio"
             id={`tab-${tab.id}`}
           />
-          <label className="label-tab" style={{ width: width }} htmlFor={`tab-${tab.id}`}>
+          <label
+            className="label-tab"
+            style={{ width: width }}
+            htmlFor={`tab-${tab.id}`}
+          >
             <pre>
               <span dangerouslySetInnerHTML={{ __html: tab.icon }} />
               <p className="small-text">{tab.label}</p>

@@ -177,6 +177,7 @@ const translations = {
     seriesAddedWithSkipped: 'Series added, some already in list',
     allSeriesAlreadyInList: 'All series are already in the list',
     series: 'Series',
+    seriesAndOvas: 'Series & OVAs',
     seriesUnit: 'series',
     login: 'Login',
     username: 'Username',
@@ -378,6 +379,7 @@ const translations = {
     seriesAddedWithSkipped: 'Series agregadas, algunas ya estaban en la lista',
     allSeriesAlreadyInList: 'Todas las series ya están en la lista',
     series: 'Series',
+    seriesAndOvas: 'Series & OVAs',
     seriesUnit: 'series',
     login: 'Iniciar Sesión',
     username: 'Usuario',
@@ -489,10 +491,7 @@ export function LanguageProvider({ children }) {
     applyDocumentLanguage(browserLang);
   }, []);
 
-  const t = useCallback(
-    (key) => translations[language]?.[key] ?? translations.en[key] ?? key,
-    [language],
-  );
+  const t = useCallback((key) => translations[language]?.[key] ?? translations.en[key] ?? key, [language]);
 
   useEffect(() => {
     if (useSystemDefault) {
@@ -552,7 +551,7 @@ export function LanguageProvider({ children }) {
       restoreSystemDefault,
       t,
     }),
-    [language, toggleLanguage, saveLanguageAsDefault, restoreSystemDefault, t],
+    [language, toggleLanguage, saveLanguageAsDefault, restoreSystemDefault, t]
   );
 
   return createElement(LanguageContext.Provider, { value }, children);
