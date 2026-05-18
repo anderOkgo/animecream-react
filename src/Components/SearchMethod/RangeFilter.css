@@ -178,9 +178,10 @@
 
 input[type='range'] {
   -webkit-appearance: none;
+  appearance: none;
   width: 100%;
   height: 6px;
-  background: var(--white-alpha-20);
+  background: var(--range-track-bg, var(--white-alpha-20));
   border-radius: 10px;
   outline: none;
   cursor: pointer;
@@ -191,6 +192,7 @@ input[type='range']:disabled {
   cursor: pointer;
 }
 
+/* Chrome, Safari, Opera and Edge Webkit styles */
 input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 22px;
@@ -204,7 +206,7 @@ input[type='range']::-webkit-slider-thumb {
 
 input[type='range']:disabled::-webkit-slider-thumb {
   border-color: var(--border-subtle);
-  background: var(--white-alpha-20);
+  background: var(--range-thumb-disabled-bg, var(--white-alpha-20));
 }
 
 input[type='range']::-webkit-slider-thumb:hover {
@@ -214,5 +216,41 @@ input[type='range']::-webkit-slider-thumb:hover {
 }
 
 input[type='range']:active::-webkit-slider-thumb {
+  transform: scale(0.95);
+}
+
+/* Firefox styles */
+input[type='range']::-moz-range-track {
+  width: 100%;
+  height: 6px;
+  background: var(--range-track-bg, var(--white-alpha-20));
+  border-radius: 10px;
+  border: none;
+}
+
+input[type='range']::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: var(--white);
+  border: 4px solid var(--brand-primary);
+  border-radius: 50%;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-sizing: content-box;
+}
+
+input[type='range']:disabled::-moz-range-thumb {
+  border-color: var(--border-subtle);
+  background: var(--range-thumb-disabled-bg, var(--white-alpha-20));
+}
+
+input[type='range']::-moz-range-thumb:hover {
+  transform: scale(1.15);
+  background: var(--brand-primary);
+  border-color: var(--white);
+}
+
+input[type='range']:active::-moz-range-thumb {
   transform: scale(0.95);
 }

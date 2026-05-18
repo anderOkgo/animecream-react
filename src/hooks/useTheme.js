@@ -117,6 +117,10 @@ export const useTheme = () => {
       '--ts-inset': '-1px -1px 1px var(--brand-secondary), 2px 2px 1px var(--black)',
       '--bg-overlay-subtle': 'rgba(255, 255, 255, 0.05)',
       '--sidebar-shadow': '5px 0 15px rgba(0, 0, 0, 0.08)',
+      '--range-track-bg': 'rgba(10, 70, 86, 0.2)',
+      '--range-thumb-disabled-bg': '#e0e0e0',
+      '--text-body-shadow': 'none',
+      '--text-body-shadow-inset': 'none',
     };
 
     const darkModeColors = {
@@ -154,6 +158,10 @@ export const useTheme = () => {
       '--ts-inset': '-1px -1px 1px var(--brand-secondary), 2px 2px 1px var(--black)',
       '--bg-overlay-subtle': 'rgba(20, 20, 20, 0.05)',
       '--sidebar-shadow': '5px 0 25px rgba(0, 0, 0, 0.4)',
+      '--range-track-bg': 'rgba(255, 255, 255, 0.15)',
+      '--range-thumb-disabled-bg': 'rgba(255, 255, 255, 0.1)',
+      '--text-body-shadow': 'none',
+      '--text-body-shadow-inset': 'none',
     };
 
     const colors = isDarkMode ? darkModeColors : lightModeColors;
