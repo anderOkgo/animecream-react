@@ -12,6 +12,7 @@ function Tab({
   restoreLanguageDefault,
   language,
   setProc,
+  proc,
   init,
   role,
   navigation,
@@ -243,6 +244,8 @@ function Tab({
             setSelectedOption(1); // Switch to Series tab
           }}
           setProc={setProc}
+          proc={proc}
+          init={init}
           setGlobalMessage={setGlobalMessage}
         />
       ),

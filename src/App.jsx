@@ -148,6 +148,7 @@ const App = () => {
             restoreLanguageDefault,
             language,
             setProc,
+            proc,
             init,
             role,
             navigation,
@@ -168,7 +169,7 @@ const App = () => {
                 ×
               </button>
               <h2 className="title">{t('login')}</h2>
-              <Login {...{ t, init, setInit, setProc, onLoginSuccess: handleLoginSuccess }} />
+              <Login {...{ t, init, setInit, setProc, proc, onLoginSuccess: handleLoginSuccess }} />
             </div>
           </div>
         )}

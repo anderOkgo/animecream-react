@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import helpHttp from '../../helpers/helpHttp';
 import set from '../../helpers/set.json';
 import AuthService from '../../services/auth.service';
 import Message from '../Message/Message';
 import './AdminPanel.css';
 
-const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, setGlobalMessage }) => {
+const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, proc, init, setGlobalMessage }) => {
   const isEditMode = !!seriesToEdit;
   const [jsonData, setJsonData] = useState('');
   const [useForm, setUseForm] = useState(isEditMode); // Default to form in edit mode
@@ -13,6 +13,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
   const [loading, setLoading] = useState(false);
   const [seriesId, setSeriesId] = useState(null);
   const [loadingSeries, setLoadingSeries] = useState(false);
+  const isSubmitting = useRef(false);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -353,137 +354,253 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    if (setProc) setProc(true);
-    if (setGlobalMessage) setGlobalMessage(null);
+    if (init && !proc) {
+      if (isSubmitting.current) return;
+      isSubmitting.current = true;
 
-    if (!isEditMode && !imageFile) {
-      if (setGlobalMessage) {
-        setGlobalMessage({
-          type: 'error',
-          text: t('imageRequired') || 'Image is required',
-        });
-      }
-      setLoading(false);
-      return;
-    }
+      setLoading(true);
+      if (setProc) setProc(true);
+      if (setGlobalMessage) setGlobalMessage(null);
 
-    try {
-      // Get series data
-      let seriesData;
-      try {
-        seriesData = getSeriesDataForSubmit();
-      } catch (parseError) {
+      if (!isEditMode && !imageFile) {
         if (setGlobalMessage) {
           setGlobalMessage({
             type: 'error',
-            text: `${t('invalidDataFormat')}: ${parseError.message}`,
+            text: t('imageRequired') || 'Image is required',
           });
         }
         setLoading(false);
+        if (setProc) setProc(false);
+        isSubmitting.current = false;
         return;
       }
 
-      // Get token from current user
-      const currentUser = AuthService.getCurrentUser();
-      const token = currentUser?.token ? `Bearer ${currentUser.token}` : '';
-
-      if (isEditMode && seriesId) {
-        // Update existing series using PUT /api/series/{id}
-        const updateUrl = set.base_url + set.api_url + seriesId;
-        const updateResponse = await helpHttp.put(updateUrl, {
-          body: seriesData,
-          token: token,
-        });
-
-        if (updateResponse?.err) {
+      try {
+        // Get series data
+        let seriesData;
+        try {
+          seriesData = getSeriesDataForSubmit();
+        } catch (parseError) {
           if (setGlobalMessage) {
             setGlobalMessage({
               type: 'error',
-              text: updateResponse.err.message || t('errorUpdatingSeries'),
+              text: `${t('invalidDataFormat')}: ${parseError.message}`,
             });
           }
           setLoading(false);
+          if (setProc) setProc(false);
+          isSubmitting.current = false;
           return;
         }
 
-        // Update genres if they changed
-        const newGenreIds = seriesData.genres
-          ? seriesData.genres.map((id) => Number(id)).sort((a, b) => a - b)
-          : [];
-        const genresChanged = JSON.stringify(newGenreIds) !== JSON.stringify(originalGenres);
+        // Get token from current user
+        const currentUser = AuthService.getCurrentUser();
+        const token = currentUser?.token ? `Bearer ${currentUser.token}` : '';
 
-        if (genresChanged) {
-          const genresUrl = set.base_url + set.api_url + `${seriesId}/genres`;
-          const genresResponse = await helpHttp.post(genresUrl, {
-            body: { genreIds: newGenreIds },
+        if (isEditMode && seriesId) {
+          // Update existing series using PUT /api/series/{id}
+          const updateUrl = set.base_url + set.api_url + seriesId;
+          const updateResponse = await helpHttp.put(updateUrl, {
+            body: seriesData,
             token: token,
           });
 
-          if (genresResponse?.err) {
+          if (updateResponse?.err) {
             if (setGlobalMessage) {
               setGlobalMessage({
-                type: 'warning',
-                text: `${t('genresUpdateFailed')}: ${genresResponse.err.message || t('errorUnknown')}`,
+                type: 'error',
+                text: updateResponse.err.message || t('errorUpdatingSeries'),
               });
             }
             setLoading(false);
+            if (setProc) setProc(false);
+            isSubmitting.current = false;
             return;
           }
-        }
 
-        // Update titles if they changed
-        const newTitles = seriesData.titles ? seriesData.titles.filter((t) => t.trim() !== '') : [];
-        const newTitlesNormalized = newTitles.map((t) => t.toLowerCase().trim()).sort();
-        const titlesChanged = JSON.stringify(newTitlesNormalized) !== JSON.stringify(originalTitleNames);
+          // Update genres if they changed
+          const newGenreIds = seriesData.genres
+            ? seriesData.genres.map((id) => Number(id)).sort((a, b) => a - b)
+            : [];
+          const genresChanged = JSON.stringify(newGenreIds) !== JSON.stringify(originalGenres);
 
-        if (titlesChanged) {
-          // Remove all existing titles
-          if (originalTitles.length > 0) {
-            const removeTitlesUrl = set.base_url + set.api_url + `${seriesId}/titles`;
-            const removeResponse = await helpHttp.del(removeTitlesUrl, {
-              body: { titleIds: originalTitles },
+          if (genresChanged) {
+            const genresUrl = set.base_url + set.api_url + `${seriesId}/genres`;
+            const genresResponse = await helpHttp.post(genresUrl, {
+              body: { genreIds: newGenreIds },
               token: token,
             });
 
-            if (removeResponse?.err) {
+            if (genresResponse?.err) {
               if (setGlobalMessage) {
                 setGlobalMessage({
                   type: 'warning',
-                  text: `${t('titlesRemoveFailed')}: ${
-                    removeResponse.err.message || t('errorUnknown')
+                  text: `${t('genresUpdateFailed')}: ${genresResponse.err.message || t('errorUnknown')}`,
+                });
+              }
+              setLoading(false);
+              if (setProc) setProc(false);
+              isSubmitting.current = false;
+              return;
+            }
+          }
+
+          // Update titles if they changed
+          const newTitles = seriesData.titles ? seriesData.titles.filter((t) => t.trim() !== '') : [];
+          const newTitlesNormalized = newTitles.map((t) => t.toLowerCase().trim()).sort();
+          const titlesChanged = JSON.stringify(newTitlesNormalized) !== JSON.stringify(originalTitleNames);
+
+          if (titlesChanged) {
+            // Remove all existing titles
+            if (originalTitles.length > 0) {
+              const removeTitlesUrl = set.base_url + set.api_url + `${seriesId}/titles`;
+              const removeResponse = await helpHttp.del(removeTitlesUrl, {
+                body: { titleIds: originalTitles },
+                token: token,
+              });
+
+              if (removeResponse?.err) {
+                if (setGlobalMessage) {
+                  setGlobalMessage({
+                    type: 'warning',
+                    text: `${t('titlesRemoveFailed')}: ${
+                      removeResponse.err.message || t('errorUnknown')
+                    }`,
+                  });
+                }
+                setLoading(false);
+                if (setProc) setProc(false);
+                isSubmitting.current = false;
+                return;
+              }
+            }
+
+            // Add new titles if any
+            if (newTitles.length > 0) {
+              const addTitlesUrl = set.base_url + set.api_url + `${seriesId}/titles`;
+              const addResponse = await helpHttp.post(addTitlesUrl, {
+                body: { titles: newTitles },
+                token: token,
+              });
+
+              if (addResponse?.err) {
+                if (setGlobalMessage) {
+                  setGlobalMessage({
+                    type: 'warning',
+                    text: `${t('titlesAddFailed')}: ${addResponse.err.message || t('errorUnknown')}`,
+                  });
+                }
+                setLoading(false);
+                if (setProc) setProc(false);
+                isSubmitting.current = false;
+                return;
+              }
+            }
+          }
+
+          // Upload image if provided
+          if (imageFile) {
+            const imageUrl = set.base_url + set.api_url + `${seriesId}/image`;
+            const formDataImage = new FormData();
+            formDataImage.append('image', imageFile);
+
+            const imageResponse = await fetch(imageUrl, {
+              method: 'PUT',
+              body: formDataImage,
+              headers: {
+                Authorization: token,
+              },
+            });
+
+            const imageResult = await imageResponse.json();
+
+            if (!imageResponse.ok || imageResult?.err) {
+              if (setGlobalMessage) {
+                setGlobalMessage({
+                  type: 'warning',
+                  text: `${t('imageUploadFailed')}: ${
+                    imageResult?.err?.message || imageResult?.message || t('errorUnknown')
                   }`,
                 });
               }
               setLoading(false);
+              if (setProc) setProc(false);
+              isSubmitting.current = false;
               return;
             }
           }
 
-          // Add new titles if any
-          if (newTitles.length > 0) {
-            const addTitlesUrl = set.base_url + set.api_url + `${seriesId}/titles`;
-            const addResponse = await helpHttp.post(addTitlesUrl, {
-              body: { titles: newTitles },
-              token: token,
+          if (setGlobalMessage) {
+            setGlobalMessage({
+              type: 'success',
+              text: `${t('seriesUpdated')} ID: ${seriesId}`,
             });
-
-            if (addResponse?.err) {
-              if (setGlobalMessage) {
-                setGlobalMessage({
-                  type: 'warning',
-                  text: `${t('titlesAddFailed')}: ${addResponse.err.message || t('errorUnknown')}`,
-                });
-              }
-              setLoading(false);
-              return;
-            }
           }
-        }
 
-        // Upload image if provided
-        if (imageFile) {
-          const imageUrl = set.base_url + set.api_url + `${seriesId}/image`;
+          // Reset form immediately so it's empty during the transition
+          setJsonData('');
+          resetForm();
+          setImageFile(null);
+
+          if (onEditComplete) {
+            setTimeout(() => {
+              setLoading(false);
+              if (setProc) setProc(false);
+              isSubmitting.current = false;
+              onEditComplete();
+            }, 500);
+          }
+        } else {
+          // Create new series
+          if (!imageFile) {
+            if (setGlobalMessage) {
+              setGlobalMessage({
+                type: 'error',
+                text: t('imageRequired') || 'Image is required',
+              });
+            }
+            setLoading(false);
+            if (setProc) setProc(false);
+            isSubmitting.current = false;
+            return;
+          }
+
+          const url = set.base_url + set.api_url + 'create-complete';
+          const createResponse = await helpHttp.post(url, {
+            body: seriesData,
+            token: token,
+          });
+
+          if (createResponse?.err) {
+            if (setGlobalMessage) {
+              setGlobalMessage({
+                type: 'error',
+                text: createResponse.err.message || t('errorCreatingSeries'),
+              });
+            }
+            setLoading(false);
+            if (setProc) setProc(false);
+            isSubmitting.current = false;
+            return;
+          }
+
+          const newSeriesId = createResponse.id;
+
+          if (!newSeriesId) {
+            if (setGlobalMessage) {
+              setGlobalMessage({
+                type: 'error',
+                text: t('noIdReturned'),
+              });
+            }
+            setLoading(false);
+            if (setProc) setProc(false);
+            isSubmitting.current = false;
+            return;
+          }
+
+          // Upload image with the returned ID
+          const imageUrl = set.base_url + set.api_url + `${newSeriesId}/image`;
           const formDataImage = new FormData();
           formDataImage.append('image', imageFile);
 
@@ -501,132 +618,61 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
             if (setGlobalMessage) {
               setGlobalMessage({
                 type: 'warning',
-                text: `${t('imageUploadFailed')}: ${
+                text: `${t('seriesCreated')} (ID: ${newSeriesId}) ${t('imageUploadFailed')}: ${
                   imageResult?.err?.message || imageResult?.message || t('errorUnknown')
                 }`,
               });
             }
             setLoading(false);
+            if (setProc) setProc(false);
+            isSubmitting.current = false;
             return;
           }
-        }
 
+          if (setGlobalMessage) {
+            setGlobalMessage({
+              type: 'success',
+              text: `${t('seriesCreated')} ID: ${newSeriesId}`,
+            });
+          }
+
+          // Reset form
+          setJsonData('');
+          resetForm();
+          setImageFile(null);
+          const fileInput = document.getElementById('image');
+          if (fileInput) {
+            fileInput.value = '';
+          }
+
+          // Refresh series and switch to Series tab
+          if (onEditComplete) {
+            setTimeout(() => {
+              setLoading(false);
+              if (setProc) setProc(false);
+              isSubmitting.current = false;
+              onEditComplete();
+            }, 1500);
+          }
+        }
+      } catch (error) {
         if (setGlobalMessage) {
           setGlobalMessage({
-            type: 'success',
-            text: `${t('seriesUpdated')} ID: ${seriesId}`,
+            type: 'error',
+            text: `${t('errorPrefix')} ${error.message || t('errorUnknown')}`,
           });
         }
-
-        if (onEditComplete) {
-          setTimeout(() => {
-            onEditComplete();
-          }, 500);
-        }
-      } else {
-        // Create new series
-        if (!imageFile) {
-          if (setGlobalMessage) {
-            setGlobalMessage({
-              type: 'error',
-              text: t('imageRequired') || 'Image is required',
-            });
-          }
-          setLoading(false);
-          return;
-        }
-
-        const url = set.base_url + set.api_url + 'create-complete';
-        const createResponse = await helpHttp.post(url, {
-          body: seriesData,
-          token: token,
-        });
-
-        if (createResponse?.err) {
-          if (setGlobalMessage) {
-            setGlobalMessage({
-              type: 'error',
-              text: createResponse.err.message || t('errorCreatingSeries'),
-            });
-          }
-          setLoading(false);
-          return;
-        }
-
-        const newSeriesId = createResponse.id;
-
-        if (!newSeriesId) {
-          if (setGlobalMessage) {
-            setGlobalMessage({
-              type: 'error',
-              text: t('noIdReturned'),
-            });
-          }
-          setLoading(false);
-          return;
-        }
-
-        // Upload image with the returned ID
-        const imageUrl = set.base_url + set.api_url + `${newSeriesId}/image`;
-        const formDataImage = new FormData();
-        formDataImage.append('image', imageFile);
-
-        const imageResponse = await fetch(imageUrl, {
-          method: 'PUT',
-          body: formDataImage,
-          headers: {
-            Authorization: token,
-          },
-        });
-
-        const imageResult = await imageResponse.json();
-
-        if (!imageResponse.ok || imageResult?.err) {
-          if (setGlobalMessage) {
-            setGlobalMessage({
-              type: 'warning',
-              text: `${t('seriesCreated')} (ID: ${newSeriesId}) ${t('imageUploadFailed')}: ${
-                imageResult?.err?.message || imageResult?.message || t('errorUnknown')
-              }`,
-            });
-          }
-          setLoading(false);
-          return;
-        }
-
-        if (setGlobalMessage) {
-          setGlobalMessage({
-            type: 'success',
-            text: `${t('seriesCreated')} ID: ${newSeriesId}`,
-          });
-        }
-
-        // Reset form
-        setJsonData('');
-        resetForm();
-        setImageFile(null);
-        const fileInput = document.getElementById('image');
-        if (fileInput) {
-          fileInput.value = '';
-        }
-
-        // Refresh series and switch to Series tab
-        if (onEditComplete) {
-          setTimeout(() => {
-            onEditComplete();
-          }, 1500);
-        }
+        setLoading(false);
+        if (setProc) setProc(false);
+        isSubmitting.current = false;
       }
-    } catch (error) {
+    } else {
       if (setGlobalMessage) {
         setGlobalMessage({
-          type: 'error',
-          text: `${t('errorPrefix')} ${error.message || t('errorUnknown')}`,
+          type: 'warning',
+          text: t('transactionWaiting'),
         });
       }
-    } finally {
-      setLoading(false);
-      if (setProc) setProc(false);
     }
   };
 
@@ -887,7 +933,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, se
         <button 
           type="submit" 
           className="btn-submit" 
-          disabled={loading || loadingSeries}
+          disabled={loading || loadingSeries || proc}
           title={loading
             ? isEditMode
               ? t('updating') || 'Updating...'

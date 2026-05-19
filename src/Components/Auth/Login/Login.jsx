@@ -5,6 +5,7 @@ import './Login.css';
 
 const Login = ({ t, init, setInit, setProc, onLoginSuccess }) => {
   const form = useRef();
+  const isSubmitting = useRef(false);
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -21,25 +22,39 @@ const Login = ({ t, init, setInit, setProc, onLoginSuccess }) => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (init) {
+    if (init && !proc) {
+      if (isSubmitting.current) return;
+      isSubmitting.current = true;
+
       setProc(true);
-      let resp = await AuthService.login(username, password);
-      if (resp?.err) {
-        if (Array.isArray(resp?.err?.message)) {
-          resp.err.message.map((err) => alert(t(err)));
+      try {
+        let resp = await AuthService.login(username, password);
+        if (resp?.err) {
+          if (Array.isArray(resp?.err?.message)) {
+            resp.err.message.map((err) => alert(t(err)));
+          } else {
+            alert(t(resp?.err?.message || 'errorUnknown'));
+          }
+          setInit(false);
+          setProc(false);
+          isSubmitting.current = false;
         } else {
-          alert(t(resp?.err?.message || 'errorUnknown'));
+          setInit(Date.now());
+          if (onLoginSuccess) {
+            onLoginSuccess();
+          }
+          setProc(false);
+          isSubmitting.current = false;
         }
-        setInit(false);
-      } else {
-        setInit(Date.now());
-        if (onLoginSuccess) {
-          onLoginSuccess();
-        }
+      } catch (error) {
+        alert(t('errorUnknown'));
+        setProc(false);
+        isSubmitting.current = false;
       }
-      setProc(false);
-    } else {
+    } else if (!init) {
       alert(t('Offline'));
+    } else {
+      alert(t('transactionWaiting'));
     }
   };
 
@@ -87,7 +102,7 @@ const Login = ({ t, init, setInit, setProc, onLoginSuccess }) => {
           </div>
 
           <div className="form-group">
-            <button className="btn-primary btn-block">
+            <button className="btn-primary btn-block" disabled={proc}>
               <span>{t('login')}</span>
             </button>
           </div>
