@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import set from '../../helpers/set.json';
 import { generateUniqueId } from '../../helpers/operations';
@@ -24,16 +24,14 @@ function TableSearch({ setCurrentPage, setFilteredData, setItemsPerPage, dataset
     shouldShowSuggestions,
   } = useSearchSuggestions(dataset, searchTerm);
 
-  // Perform search and update filtered data
-  const performSearch = (searchValue) => {
-    setCurrentPage(1);
-
-    if (searchValue.trim() === '') {
+  // Perform search and update filtered data whenever dataset or searchTerm changes
+  useEffect(() => {
+    if (searchTerm.trim() === '') {
       // Si no hay búsqueda, restauramos los datos originales
       setFilteredData(dataset);
     } else {
       // Si hay búsqueda, filtramos y ordenamos por ranking
-      const filteredResults = filterDataset(dataset, searchValue);
+      const filteredResults = filterDataset(dataset, searchTerm);
 
       const sortedResults = [...filteredResults].sort((a, b) => {
         // Orden ascendente: 1, 2, 3...
@@ -42,21 +40,21 @@ function TableSearch({ setCurrentPage, setFilteredData, setItemsPerPage, dataset
 
       setFilteredData(sortedResults);
     }
-  };
+  }, [dataset, searchTerm, setFilteredData]);
 
   // Handle input change
   const handleInputChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
     setSelectedIndex(-1);
-    performSearch(value);
+    setCurrentPage(1);
     // The hook's useEffect will automatically handle showing/hiding suggestions
   };
 
   // Handle suggestion selection
   const handleSuggestionSelect = (suggestion) => {
     setSearchTerm(suggestion);
-    performSearch(suggestion);
+    setCurrentPage(1);
   };
 
   // Handle keyboard navigation for suggestions
