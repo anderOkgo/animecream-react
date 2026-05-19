@@ -1,5 +1,36 @@
 import set from '../helpers/set.json';
 
+const normalizeHttpErrorMessage = (responseBody) => {
+  if (responseBody == null) {
+    return 'Unknown error';
+  }
+  if (typeof responseBody === 'string') {
+    return responseBody;
+  }
+  if (Array.isArray(responseBody)) {
+    return responseBody;
+  }
+  if (typeof responseBody.message === 'string') {
+    return responseBody.message;
+  }
+  if (typeof responseBody.error === 'string') {
+    return responseBody.error;
+  }
+  if (Array.isArray(responseBody.errors)) {
+    return responseBody.errors;
+  }
+  if (typeof responseBody.message === 'object' && responseBody.message !== null) {
+    return normalizeHttpErrorMessage(responseBody.message);
+  }
+  if (typeof responseBody === 'object') {
+    const fieldErrors = Object.values(responseBody).filter((v) => typeof v === 'string');
+    if (fieldErrors.length > 0) {
+      return fieldErrors;
+    }
+  }
+  return 'Unknown error';
+};
+
 const customFetch = async (endpoint, options = {}) => {
   const defaultHeaders = {
     Authorization: options.token,
@@ -28,7 +59,7 @@ const customFetch = async (endpoint, options = {}) => {
         : Promise.reject({
             status: res.status || '00',
             statusText: res.statusText || 'An error has occurred',
-            message: responseBody || 'Unknown error',
+            message: normalizeHttpErrorMessage(responseBody),
           }));
     } catch (err) {
       console.log({ err });

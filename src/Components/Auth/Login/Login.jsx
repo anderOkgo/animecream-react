@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import AuthService from '../../../services/auth.service';
+import { translateAuthMessage } from '../../../hooks/useLanguage';
 import './Login.css';
 
 const Login = ({ t, init, setInit, onLoginSuccess }) => {
@@ -33,11 +34,7 @@ const Login = ({ t, init, setInit, onLoginSuccess }) => {
     try {
       let resp = await AuthService.login(username, password);
       if (resp?.err) {
-        if (Array.isArray(resp?.err?.message)) {
-          resp.err.message.map((err) => alert(t(err)));
-        } else {
-          alert(t(resp?.err?.message || 'errorUnknown'));
-        }
+        alert(translateAuthMessage(t, resp.err.message));
         // No llamar setInit(false) — password incorrecto ≠ servidor offline
       } else {
         setInit(Date.now());

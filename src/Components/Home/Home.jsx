@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
-import { useLanguage, translateEN } from '../../hooks/useLanguage';
+import { useLanguage, translateEN, translateApiMessage } from '../../hooks/useLanguage';
 import helpHttp from '../../helpers/helpHttp';
 import SearchMethod from '../SearchMethod/SearchMethod';
 import Card from '../Card/Card';
@@ -16,12 +16,7 @@ const formatHttpErrMessage = (err, translate) => {
   if (!err) {
     return '';
   }
-  if (typeof err.message === 'object' && err.message !== null) {
-    return Object.values(err.message)
-      .map((msg) => translate(msg))
-      .join(', ');
-  }
-  return translate(err.message ?? 'errorGeneric');
+  return translateApiMessage(translate, err.message ?? 'errorGeneric');
 };
 
 const resolveAppError = (payload, translate) => {

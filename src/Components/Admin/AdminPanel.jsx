@@ -3,7 +3,15 @@ import helpHttp from '../../helpers/helpHttp';
 import set from '../../helpers/set.json';
 import AuthService from '../../services/auth.service';
 import Message from '../Message/Message';
+import { translateApiMessage } from '../../hooks/useLanguage';
 import './AdminPanel.css';
+
+const resolveApiError = (t, message, fallbackKey) => {
+  if (message === undefined || message === null || message === '') {
+    return t(fallbackKey);
+  }
+  return translateApiMessage(t, message);
+};
 
 const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, proc, init, setGlobalMessage }) => {
   const isEditMode = !!seriesToEdit;
@@ -409,7 +417,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
             if (setGlobalMessage) {
               setGlobalMessage({
                 type: 'error',
-                text: updateResponse.err.message || t('errorUpdatingSeries'),
+                text: resolveApiError(t, updateResponse.err.message, 'errorUpdatingSeries'),
               });
             }
             setLoading(false);
@@ -435,7 +443,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
               if (setGlobalMessage) {
                 setGlobalMessage({
                   type: 'warning',
-                  text: `${t('genresUpdateFailed')}: ${genresResponse.err.message || t('errorUnknown')}`,
+                  text: `${t('genresUpdateFailed')}: ${resolveApiError(t, genresResponse.err.message, 'errorUnknown')}`,
                 });
               }
               setLoading(false);
@@ -463,9 +471,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
                 if (setGlobalMessage) {
                   setGlobalMessage({
                     type: 'warning',
-                    text: `${t('titlesRemoveFailed')}: ${
-                      removeResponse.err.message || t('errorUnknown')
-                    }`,
+                    text: `${t('titlesRemoveFailed')}: ${resolveApiError(t, removeResponse.err.message, 'errorUnknown')}`,
                   });
                 }
                 setLoading(false);
@@ -487,7 +493,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
                 if (setGlobalMessage) {
                   setGlobalMessage({
                     type: 'warning',
-                    text: `${t('titlesAddFailed')}: ${addResponse.err.message || t('errorUnknown')}`,
+                    text: `${t('titlesAddFailed')}: ${resolveApiError(t, addResponse.err.message, 'errorUnknown')}`,
                   });
                 }
                 setLoading(false);
@@ -518,9 +524,11 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
               if (setGlobalMessage) {
                 setGlobalMessage({
                   type: 'warning',
-                  text: `${t('imageUploadFailed')}: ${
-                    imageResult?.err?.message || imageResult?.message || t('errorUnknown')
-                  }`,
+                  text: `${t('imageUploadFailed')}: ${resolveApiError(
+                    t,
+                    imageResult?.message ?? imageResult?.error ?? imageResult?.err?.message,
+                    'errorUnknown'
+                  )}`,
                 });
               }
               setLoading(false);
@@ -575,7 +583,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
             if (setGlobalMessage) {
               setGlobalMessage({
                 type: 'error',
-                text: createResponse.err.message || t('errorCreatingSeries'),
+                text: resolveApiError(t, createResponse.err.message, 'errorCreatingSeries'),
               });
             }
             setLoading(false);
@@ -618,9 +626,11 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
             if (setGlobalMessage) {
               setGlobalMessage({
                 type: 'warning',
-                text: `${t('seriesCreated')} (ID: ${newSeriesId}) ${t('imageUploadFailed')}: ${
-                  imageResult?.err?.message || imageResult?.message || t('errorUnknown')
-                }`,
+                text: `${t('seriesCreated')} (ID: ${newSeriesId}) ${t('imageUploadFailed')}: ${resolveApiError(
+                  t,
+                  imageResult?.message ?? imageResult?.error ?? imageResult?.err?.message,
+                  'errorUnknown'
+                )}`,
               });
             }
             setLoading(false);
@@ -659,7 +669,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
         if (setGlobalMessage) {
           setGlobalMessage({
             type: 'error',
-            text: `${t('errorPrefix')} ${error.message || t('errorUnknown')}`,
+            text: `${t('errorPrefix')} ${resolveApiError(t, error.message, 'errorUnknown')}`,
           });
         }
         setLoading(false);

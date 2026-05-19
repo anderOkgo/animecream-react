@@ -6,6 +6,16 @@ import { formattedDate } from '../helpers/operations';
 const BASE_URL = set.base_url;
 const API_URL = BASE_URL + 'api/users/';
 
+const normalizeErrorMessage = (message, fallback) => {
+  if (typeof message === 'string' || Array.isArray(message)) {
+    return message;
+  }
+  if (message && typeof message === 'object' && typeof message.message === 'string') {
+    return message.message;
+  }
+  return fallback;
+};
+
 const register = async (username, email, password, verificationCode) => {
   const loginPayload = {
     username,
@@ -35,7 +45,7 @@ const login = async (username, password) => {
 
   const response = await helpHttp.post(API_URL + 'login', options);
   if (response.token === undefined) {
-    return { err: { message: response.err?.message || 'Login failed' } };
+    return { err: { message: normalizeErrorMessage(response.err?.message, 'Login failed') } };
   } else {
     localStorage.setItem(cyfer().cy('user-in', formattedDate()), cyfer().cy(JSON.stringify(response), set.salt));
     return { message: response.message };
