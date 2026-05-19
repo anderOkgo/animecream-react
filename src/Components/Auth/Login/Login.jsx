@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import AuthService from '../../../services/auth.service';
 import './Login.css';
 
-const Login = ({ t, init, setInit, setProc, onLoginSuccess }) => {
+const Login = ({ t, init, setInit, onLoginSuccess }) => {
   const form = useRef();
   const isSubmitting = useRef(false);
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const onChangeUsername = (e) => {
     const username = e.target.value;
@@ -22,39 +23,33 @@ const Login = ({ t, init, setInit, setProc, onLoginSuccess }) => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (init && !proc) {
-      if (isSubmitting.current) return;
-      isSubmitting.current = true;
-
-      setProc(true);
-      try {
-        let resp = await AuthService.login(username, password);
-        if (resp?.err) {
-          if (Array.isArray(resp?.err?.message)) {
-            resp.err.message.map((err) => alert(t(err)));
-          } else {
-            alert(t(resp?.err?.message || 'errorUnknown'));
-          }
-          setInit(false);
-          setProc(false);
-          isSubmitting.current = false;
-        } else {
-          setInit(Date.now());
-          if (onLoginSuccess) {
-            onLoginSuccess();
-          }
-          setProc(false);
-          isSubmitting.current = false;
-        }
-      } catch (error) {
-        alert(t('errorUnknown'));
-        setProc(false);
-        isSubmitting.current = false;
-      }
-    } else if (!init) {
+    if (!init) {
       alert(t('Offline'));
-    } else {
-      alert(t('transactionWaiting'));
+      return;
+    }
+    if (isSubmitting.current) return;
+    isSubmitting.current = true;
+    setIsLoading(true);
+    try {
+      let resp = await AuthService.login(username, password);
+      if (resp?.err) {
+        if (Array.isArray(resp?.err?.message)) {
+          resp.err.message.map((err) => alert(t(err)));
+        } else {
+          alert(t(resp?.err?.message || 'errorUnknown'));
+        }
+        // No llamar setInit(false) — password incorrecto ≠ servidor offline
+      } else {
+        setInit(Date.now());
+        if (onLoginSuccess) {
+          onLoginSuccess();
+        }
+      }
+    } catch (error) {
+      alert(t('errorUnknown'));
+    } finally {
+      setIsLoading(false);
+      isSubmitting.current = false;
     }
   };
 
@@ -102,7 +97,7 @@ const Login = ({ t, init, setInit, setProc, onLoginSuccess }) => {
           </div>
 
           <div className="form-group">
-            <button className="btn-primary btn-block" disabled={proc}>
+            <button className="btn-primary btn-block" disabled={isLoading}>
               <span>{t('login')}</span>
             </button>
           </div>
