@@ -55,6 +55,7 @@ const login = async (username, password) => {
 const logout = () => {
   // Solo limpiar datos de autenticación, mantener otros datos como 'storage', listas, etc.
   const storageData = localStorage.getItem('storage');
+  const storageInitialData = localStorage.getItem('storage_initial');
   const langData = localStorage.getItem('lang');
   const selectedListId = localStorage.getItem('selectedListId');
 
@@ -72,6 +73,9 @@ const logout = () => {
   // Restaurar datos que no son de autenticación
   if (storageData) {
     localStorage.setItem('storage', storageData);
+  }
+  if (storageInitialData) {
+    localStorage.setItem('storage_initial', storageInitialData);
   }
   if (langData) {
     localStorage.setItem('lang', langData);

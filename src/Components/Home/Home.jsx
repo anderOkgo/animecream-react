@@ -10,6 +10,11 @@ import set from '../../helpers/set.json';
 import RangeFilter from '../SearchMethod/RangeFilter';
 import '../SearchMethod/RangeFilter.css';
 import initialData from '../../helpers/initialData';
+import {
+  getCachedFullCatalog,
+  persistFullCatalog,
+  isFullCatalogRequest,
+} from '../../helpers/catalogStorage';
 import { Helmet } from 'react-helmet-async';
 
 const formatHttpErrMessage = (err, translate) => {
@@ -98,13 +103,8 @@ const Home = ({
   }, [tipoParam]);
 
   const initialSeed = useMemo(() => {
-    try {
-      const cached = localStorage.getItem('storage_initial') || localStorage.getItem('storage');
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      }
-    } catch (e) {}
+    const cached = getCachedFullCatalog();
+    if (cached) return cached;
 
     let filtered = [...initialData];
 
@@ -295,9 +295,8 @@ const Home = ({
         } else {
           // Si por alguna razón no los tenemos (ej: refresh), los cargamos del localStorage
           try {
-            const localResp = localStorage.getItem('storage_initial');
-            if (localResp) {
-              const data = JSON.parse(localResp);
+            const data = getCachedFullCatalog();
+            if (data) {
               setDb(data);
               initialDbRef.current = data;
               if (onSeriesDataChange) onSeriesDataChange(data);
@@ -412,20 +411,6 @@ const Home = ({
       return;
     }
 
-    // Cargar datos del localStorage primero para mostrar contenido inmediatamente
-    try {
-      var localResp = localStorage.getItem('storage');
-      if (localResp) {
-        localResp = JSON.parse(localResp);
-        // Solo establecer si hay datos válidos
-        if (localResp && (Array.isArray(localResp) ? localResp.length > 0 : Object.keys(localResp).length > 0)) {
-          setDb(localResp);
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-
     const fetchDataByIds = async () => {
       isLoadingByIdsRef.current = true;
       setLoading(true);
@@ -470,7 +455,6 @@ const Home = ({
             });
           }
 
-          localStorage.setItem('storage', JSON.stringify(filtered));
           setDb(filtered);
           setLoadedByList(true);
           setErrorPayload(null);
@@ -508,37 +492,22 @@ const Home = ({
     // El efecto de resolución de slug hará la llamada API filtrada
     if (tipoParam && !tipoYear && !tipoDecade) {
       hasInitialLoad.current = true;
-      try {
-        const cached = localStorage.getItem('storage_initial') || localStorage.getItem('storage');
-        if (cached) {
-          const data = JSON.parse(cached);
-          if (Array.isArray(data) && data.length > 0) {
-            setDb(data);
-            initialDbRef.current = data;
-            if (onSeriesDataChange) onSeriesDataChange(data);
-          }
-        }
-      } catch {}
+      const cached = getCachedFullCatalog();
+      if (cached) {
+        setDb(cached);
+        initialDbRef.current = cached;
+        if (onSeriesDataChange) onSeriesDataChange(cached);
+      }
       return;
     }
 
-    // Cargar datos del localStorage primero (solo como preview mientras carga)
-    try {
-      var localResp = localStorage.getItem('storage_initial') || localStorage.getItem('storage');
-      if (localResp) {
-        localResp = JSON.parse(localResp);
-        if (localResp && (Array.isArray(localResp) ? localResp.length > 0 : Object.keys(localResp).length > 0)) {
-          // Mostrar datos del localStorage temporalmente
-          setDb(localResp);
-          initialDbRef.current = localResp;
-          // Notificar las series actuales desde localStorage
-          if (onSeriesDataChange) {
-            onSeriesDataChange(localResp);
-          }
-        }
+    const cachedFull = getCachedFullCatalog();
+    if (cachedFull) {
+      setDb(cachedFull);
+      initialDbRef.current = cachedFull;
+      if (onSeriesDataChange) {
+        onSeriesDataChange(cachedFull);
       }
-    } catch (error) {
-      console.log(error);
     }
 
     // Siempre hacer carga inicial completa del API al recargar
@@ -553,8 +522,7 @@ const Home = ({
 
         if (!productionsInfo?.err) {
           const data = Array.isArray(productionsInfo) ? productionsInfo : productionsInfo.data || productionsInfo;
-          localStorage.setItem('storage', JSON.stringify(data));
-          localStorage.setItem('storage_initial', JSON.stringify(data));
+          persistFullCatalog(data);
           setDb(data);
           initialDbRef.current = data;
           setErrorPayload(null);
@@ -597,20 +565,6 @@ const Home = ({
       lastOptRef.current = opt;
     }
 
-    // Cargar datos del localStorage primero para mostrar contenido inmediatamente
-    try {
-      var localResp = localStorage.getItem('storage');
-      if (localResp) {
-        localResp = JSON.parse(localResp);
-        // Solo establecer si hay datos válidos
-        if (localResp && (Array.isArray(localResp) ? localResp.length > 0 : Object.keys(localResp).length > 0)) {
-          setDb(localResp);
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-
     const fetchData = async () => {
       setLoading(true);
       setProc(true);
@@ -635,10 +589,12 @@ const Home = ({
 
       if (!productionsInfo?.err) {
         const data = Array.isArray(productionsInfo) ? productionsInfo : productionsInfo.data || productionsInfo;
-        localStorage.setItem('storage', JSON.stringify(data));
+        if (isFullCatalogRequest(requestOpt)) {
+          persistFullCatalog(data);
+          initialDbRef.current = data;
+        }
         setDb(data);
         setErrorPayload(null);
-        // Notificar cambios en los datos de series
         if (onSeriesDataChange) {
           onSeriesDataChange(data);
         }
@@ -733,7 +689,6 @@ const Home = ({
           const ordered = tipoLista.map((id) => allData.find((s) => Number(s.id) === id)).filter(Boolean);
           const result = ordered.length > 0 ? ordered : allData;
 
-          localStorage.setItem('storage', JSON.stringify(result));
           setDb(result);
           setErrorPayload(null);
           if (onSeriesDataChange) onSeriesDataChange(result);
