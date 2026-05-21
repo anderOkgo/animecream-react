@@ -82,15 +82,14 @@ const Menu = ({
     },
   ];
   const checkboxRef = useRef(null);
-  const spanRef = useRef(null);
 
   useEffect(() => {
     const handleClick = (e) => {
-      if (checkboxRef.current === e.target || spanRef.current === e.target) {
-        checkboxRef.current.checked = !checkboxRef.current.checked;
-      } else if (e.target.closest('.navbar') !== null) {
-        // Do nothing if clicked inside the navbar
-      } else {
+      // El label .hamburger ya alterna el checkbox; solo cerrar al clic fuera
+      if (e.target.closest('.hamburger') || e.target.closest('.navbar') !== null) {
+        return;
+      }
+      if (checkboxRef.current) {
         checkboxRef.current.checked = false;
       }
     };
@@ -106,8 +105,8 @@ const Menu = ({
     <nav className="navbar">
       <div className="nav-links">
         <input type="checkbox" id="checkbox_toggle" ref={checkboxRef} />
-        <label htmlFor="checkbox_toggle" className="hamburger">
-          <span ref={spanRef} className="hamb-line"></span>
+        <label htmlFor="checkbox_toggle" className="hamburger" aria-label="Menu">
+          <span className="hamb-line"></span>
         </label>
         <ul className="menu">
           {menuItems
