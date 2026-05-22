@@ -4,7 +4,7 @@ import DataService from '../services/data.service';
 // Custom hook for managing application initialization and online status
 export const useAlive = () => {
   const [init, setInitState] = useState(0); // Indicates if application received response of server
-  const [proc, setProc] = useState(1); // Indicates if initialization process is ongoing
+  const [proc, setProc] = useState(true); // Indicates if initialization process is ongoing
   const [online, setOnline] = useState(() => typeof navigator !== 'undefined' ? navigator.onLine : true); // Indicates if application is online
 
   const isOnlineRef = useRef(false);
@@ -19,7 +19,7 @@ export const useAlive = () => {
   const boot = useCallback(async (showLoader = false) => {
     if (isFetchingRef.current) return isOnlineRef.current;
     isFetchingRef.current = true;
-    if (showLoader) setProc(1);
+    if (showLoader) setProc(true);
     try {
       const resp = await DataService.boot();
       const success = !resp?.err;
@@ -32,7 +32,7 @@ export const useAlive = () => {
       return false;
     } finally {
       isFetchingRef.current = false;
-      if (showLoader) setProc(0);
+      if (showLoader) setProc(false);
     }
   }, [setInit]);
 

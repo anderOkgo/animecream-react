@@ -92,7 +92,7 @@ const App = () => {
       ) {
         setGlobalMessage({
           type: 'warning',
-          text: t('loadingErrorRepair'),
+          key: 'loadingErrorRepair',
           isEmergency: true,
         });
       }
@@ -120,7 +120,7 @@ const App = () => {
       window.location.reload(true);
     } catch (err) {
       setProc(false);
-      setGlobalMessage({ type: 'error', text: t('repairError') });
+      setGlobalMessage({ type: 'error', key: 'repairError' });
     }
   };
 
@@ -174,7 +174,7 @@ const App = () => {
           </div>
         )}
       </div>
-      {proc && <Loader onClick={() => setProc(false)} />}
+      {!!proc && <Loader onClick={() => setProc(false)} />}
       {globalMessage && (
         <Message
           msg={globalMessage.key ? t(globalMessage.key) : globalMessage.text}

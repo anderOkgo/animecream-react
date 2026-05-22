@@ -680,7 +680,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
       if (setGlobalMessage) {
         setGlobalMessage({
           type: 'warning',
-          text: t('transactionWaiting'),
+          key: 'transactionWaiting',
         });
       }
     }
