@@ -164,7 +164,11 @@ const SearchMethod = ({ setOpt, t, isFormVisible, setIsFormVisible }) => {
                 type="text"
                 name="genre_names"
                 placeholder={t('genreNames')}
-                value={form.genre_names}
+                value={form.genre_names
+                  .split(',')
+                  .map((g) => (g.trim() ? translate(g.trim()) : ''))
+                  .filter(Boolean)
+                  .join(', ')}
                 onChange={handleChange}
                 readOnly
               />

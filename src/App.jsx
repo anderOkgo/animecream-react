@@ -177,7 +177,7 @@ const App = () => {
       {proc && <Loader onClick={() => setProc(false)} />}
       {globalMessage && (
         <Message
-          msg={globalMessage.text}
+          msg={globalMessage.key ? t(globalMessage.key) : globalMessage.text}
           bgColor={
             globalMessage.type === 'success'
               ? 'var(--color-success)'
@@ -187,6 +187,7 @@ const App = () => {
                   ? 'var(--color-warning)'
                   : 'var(--brand-primary)'
           }
+          textColor={globalMessage.type === 'warning' ? '#1a1a1a' : undefined}
           onDoubleClick={() => {
             if (globalMessage.isEmergency) {
               handleEmergencyRepair();

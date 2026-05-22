@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Message = ({ msg, bgColor, onDoubleClick }) => {
+const Message = ({ msg, bgColor, textColor, onDoubleClick }) => {
   const styles = {
     position: 'fixed',
     top: '25px',
@@ -12,7 +12,7 @@ const Message = ({ msg, bgColor, onDoubleClick }) => {
     padding: '16px 24px',
     borderRadius: '12px',
     backgroundColor: bgColor || '#dc3545',
-    color: '#ffffff',
+    color: textColor || '#ffffff',
     fontWeight: '600',
     textAlign: 'center',
     boxShadow: '0 10px 40px rgba(0, 0, 0, 0.4)',

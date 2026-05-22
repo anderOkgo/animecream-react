@@ -183,7 +183,7 @@ const translations = {
     username: 'Username',
     password: 'Password',
     Offline: 'You are offline. Please check your internet connection.',
-    transactionWaiting: 'Transacción en espera',
+    transactionWaiting: 'Transaction pending',
     errorPrefix: 'Error:',
     errorLoadingSeriesByIds: 'Error loading series by IDs',
     errorLoadingData: 'Error loading data',

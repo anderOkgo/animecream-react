@@ -3,6 +3,8 @@ import useSwipeableTabs from '../../hooks/useSwipeableTabs';
 import Home from '../Home/Home';
 import AdminPanel from '../Admin/AdminPanel';
 import ListManager from '../MyLists/ListManager';
+
+import { isAppOffline } from '../../helpers/catalogStorage';
 import './Tab.css';
 
 function Tab({
@@ -42,6 +44,12 @@ function Tab({
   };
 
   const handleEditSeries = (seriesData) => {
+    if (isAppOffline()) {
+      if (setGlobalMessage) {
+        setGlobalMessage({ type: 'warning', key: 'Offline' });
+      }
+      return;
+    }
     setProc(true);
     setSeriesToEdit(seriesData);
     if (role === 'admin') {
@@ -297,11 +305,7 @@ function Tab({
   }, []);
 
   return (
-    <div
-      className="area-tab"
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-    >
+    <div className="area-tab" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       {tabsData.map((tab) => (
         <React.Fragment key={tab.id}>
           <input
@@ -314,11 +318,7 @@ function Tab({
             type="radio"
             id={`tab-${tab.id}`}
           />
-          <label
-            className="label-tab"
-            style={{ width: width }}
-            htmlFor={`tab-${tab.id}`}
-          >
+          <label className="label-tab" style={{ width: width }} htmlFor={`tab-${tab.id}`}>
             <pre>
               <span dangerouslySetInnerHTML={{ __html: tab.icon }} />
               <p className="small-text">{tab.label}</p>
