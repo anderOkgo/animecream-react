@@ -14,6 +14,10 @@ import {
   getCachedFullCatalog,
   persistFullCatalog,
   isFullCatalogRequest,
+  isAppOffline,
+  parseOptBody,
+  applyCatalogQuery,
+  isYearOnlyOptBody,
 } from '../../helpers/catalogStorage';
 import { Helmet } from 'react-helmet-async';
 
@@ -138,6 +142,9 @@ const Home = ({
   const [opt, setOpt] = useState({});
   const isRestoringRef = useRef(false);
   const initialDbRef = useRef(initialSeed);
+
+  const getFullCatalogSource = () =>
+    (initialDbRef.current?.length ? initialDbRef.current : null) ?? getCachedFullCatalog() ?? db;
 
   // Calcular límites de años dinámicamente basados en la data
   const { minYear, maxYear, minDecade, maxDecade } = useMemo(() => {
@@ -324,7 +331,24 @@ const Home = ({
   // Filtrar la información actual localmente (según lo solicitado por el usuario)
   const filteredDb = useMemo(() => {
     if (!db) return null;
-    let filtered = [...db];
+
+    const isOffline = isAppOffline();
+    const isOptActive = opt && Object.keys(opt).length > 0;
+    const optBody = isOptActive ? parseOptBody(opt) : {};
+    // Año por doble clic: offline usa el slider (mismo camino que RangeFilter), no applyCatalogQuery
+    const useOfflineYearSlider = isOffline && isOptActive && !loadedByList && isYearOnlyOptBody(optBody);
+    const useOfflineQuery =
+      isOffline && isOptActive && !loadedByList && !useOfflineYearSlider;
+
+    let filtered;
+    if (useOfflineQuery) {
+      const source = getFullCatalogSource();
+      filtered = source ? applyCatalogQuery(source, parseOptBody(opt)) : [];
+    } else if (isOffline && !loadedByList) {
+      filtered = [...(getFullCatalogSource() || db)];
+    } else {
+      filtered = [...db];
+    }
 
     const isYearFilterActive = yearFilter > allYearValue;
     const isDecadeFilterActive = decadeFilter > allDecadeValue;
@@ -357,7 +381,6 @@ const Home = ({
     }
 
     // Aplicar filtro ?tipo= de año/década localmente si no hay otros filtros activos
-    const isOptActive = opt && Object.keys(opt).length > 0;
     if (!isYearFilterActive && !isDecadeFilterActive && !isOptActive && !loadedByList) {
       if (tipoYear) {
         const matches = filtered.filter((item) => parseInt(item.production_year, 10) === tipoYear);
@@ -417,8 +440,6 @@ const Home = ({
       setProc(true);
 
       try {
-        const urlProduction = set.base_url + set.api_url;
-        // Asegurar que los IDs sean números
         const ids = loadByIds
           .filter(Boolean)
           .map((id) => (typeof id === 'string' ? parseInt(id, 10) : Number(id)))
@@ -430,6 +451,19 @@ const Home = ({
           throw new Error('No valid IDs to load');
         }
 
+        if (isAppOffline()) {
+          const source = getFullCatalogSource();
+          const filtered = source ? applyCatalogQuery(source, { id: ids }) : [];
+          setDb(filtered);
+          setLoadedByList(true);
+          setErrorPayload(null);
+          if (onSeriesDataChange) {
+            onSeriesDataChange(filtered);
+          }
+          return;
+        }
+
+        const urlProduction = set.base_url + set.api_url;
         // El API espera el parámetro "id" (no "ids") como array de números
         // Según series-read.mysql.ts línea 216: id: HDB.generateInCondition
         const productionsInfo = await helpHttp.post(urlProduction, {
@@ -513,6 +547,9 @@ const Home = ({
     // Siempre hacer carga inicial completa del API al recargar
     hasInitialLoad.current = true;
     const fetchInitialData = async () => {
+      if (isAppOffline()) {
+        return;
+      }
       setLoading(true);
       setProc(true);
       try {
@@ -563,6 +600,17 @@ const Home = ({
     // Guardar el opt actual si no está vacío
     if (opt && Object.keys(opt).length > 0) {
       lastOptRef.current = opt;
+    }
+
+    if (isAppOffline()) {
+      setLoadedByList(false);
+      setErrorPayload(null);
+      const full = getFullCatalogSource();
+      if (full?.length) {
+        setDb(full);
+        initialDbRef.current = full;
+      }
+      return;
     }
 
     const fetchData = async () => {
@@ -675,6 +723,16 @@ const Home = ({
       setProc(true);
 
       try {
+        if (isAppOffline()) {
+          const source = getFullCatalogSource();
+          const result = source ? applyCatalogQuery(source, { id: tipoLista }) : [];
+          setDb(result);
+          setLoadedByList(true);
+          setErrorPayload(null);
+          if (onSeriesDataChange) onSeriesDataChange(result);
+          return;
+        }
+
         const urlProduction = set.base_url + set.api_url;
         const productionsInfo = await helpHttp.post(urlProduction, {
           body: { id: tipoLista },
