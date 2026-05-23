@@ -17,7 +17,7 @@ const readCache = (key) => {
 };
 
 const SearchMethod = ({ setOpt, t, isFormVisible, setIsFormVisible }) => {
-  const { t: translate } = useLanguage();
+  const { t: translate, language } = useLanguage();
 
   const [genreOptions, setGenreOptions] = useState(() => readCache(CACHE_GENRES) || []);
   const [demographicOptions, setDemographicOptions] = useState(() => readCache(CACHE_DEMOGRAPHICS) || []);
@@ -81,7 +81,11 @@ const SearchMethod = ({ setOpt, t, isFormVisible, setIsFormVisible }) => {
     const conditions = {};
     Object.keys(form).forEach((key) => {
       if (form[key]) {
-        conditions[key] = key === 'limit' ? parseInt(form[key], 10) : form[key];
+        if (key === 'production_description' && language === 'en') {
+          conditions['production_description_en'] = form[key];
+        } else {
+          conditions[key] = key === 'limit' ? parseInt(form[key], 10) : form[key];
+        }
       }
     });
     setOpt({ method: 'POST', body: conditions });

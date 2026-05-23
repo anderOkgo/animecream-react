@@ -47,6 +47,7 @@ export const isYearOnlyOptBody = (body) => {
     'production_number_chapters',
     'production_name',
     'production_description',
+    'production_description_en',
     'limit',
     'id',
   ];
@@ -143,11 +144,12 @@ export const applyCatalogQuery = (catalog, body = {}) => {
 
   if (criteria.production_description) {
     const term = String(criteria.production_description).toLowerCase();
-    result = result.filter(
-      (item) =>
-        item.production_description?.toLowerCase().includes(term) ||
-        item.production_description_en?.toLowerCase().includes(term)
-    );
+    result = result.filter((item) => item.production_description?.toLowerCase().includes(term));
+  }
+
+  if (criteria.production_description_en) {
+    const term = String(criteria.production_description_en).toLowerCase();
+    result = result.filter((item) => item.production_description_en?.toLowerCase().includes(term));
   }
 
   if (criteria.demographic_name) {
