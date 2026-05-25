@@ -6,11 +6,13 @@
 <url><loc>https://animecream.com/</loc><changefreq>weekly</changefreq><priority>1.00</priority></url>
 
 <!-- Décadas -->
+<url><loc>https://animecream.com/producciones/60s</loc><changefreq>weekly</changefreq><priority>0.90</priority></url>
 <url><loc>https://animecream.com/producciones/70s</loc><changefreq>weekly</changefreq><priority>0.90</priority></url>
 <url><loc>https://animecream.com/producciones/80s</loc><changefreq>weekly</changefreq><priority>0.90</priority></url>
 <url><loc>https://animecream.com/producciones/90s</loc><changefreq>weekly</changefreq><priority>0.90</priority></url>
 <url><loc>https://animecream.com/producciones/00s</loc><changefreq>weekly</changefreq><priority>0.90</priority></url>
 <url><loc>https://animecream.com/producciones/10s</loc><changefreq>weekly</changefreq><priority>0.90</priority></url>
+<url><loc>https://animecream.com/producciones/20s</loc><changefreq>weekly</changefreq><priority>0.90</priority></url>
 
 <!-- Géneros -->
 <url><loc>https://animecream.com/producciones/accion</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
@@ -104,8 +106,4 @@
 <url><loc>https://animecream.com/producciones/2024</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
 <url><loc>https://animecream.com/producciones/2025</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
 <url><loc>https://animecream.com/producciones/2026</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/producciones/2027</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/producciones/2028</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/producciones/2029</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/producciones/2030</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
 </urlset>
