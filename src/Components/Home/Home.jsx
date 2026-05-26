@@ -437,7 +437,6 @@ const Home = ({
     const fetchDataByIds = async () => {
       isLoadingByIdsRef.current = true;
       setLoading(true);
-      setProc(true);
 
       try {
         const ids = loadByIds
@@ -504,7 +503,6 @@ const Home = ({
         setErrorPayload({ type: 'i18nKey', key: 'errorLoadingSeriesByIds' });
       } finally {
         setLoading(false);
-        setProc(false);
         isLoadingByIdsRef.current = false;
         // Limpiar loadByIds después de cargar (exitoso o con error)
         // Usar setTimeout para evitar que el cambio de estado cause re-ejecución inmediata
@@ -550,8 +548,6 @@ const Home = ({
       if (isAppOffline()) {
         return;
       }
-      setLoading(true);
-      setProc(true);
       try {
         const urlProduction = set.base_url + set.api_url;
         const response = await helpHttp.post(urlProduction, {});
@@ -574,8 +570,7 @@ const Home = ({
         console.error('Error loading initial data:', error);
         setErrorPayload({ type: 'i18nKey', key: 'errorLoadingData' });
       } finally {
-        setLoading(false);
-        setProc(false);
+        // no loader to dismiss; App Loader (proc) covers initial load
       }
     };
     fetchInitialData();
@@ -616,7 +611,6 @@ const Home = ({
     const isRestoring = isRestoringRef.current;
     const fetchData = async () => {
       setLoading(true);
-      if (!isRestoring) setProc(true);
       setLoadedByList(false);
 
       // Carga normal - asegurar que opt.body sea un objeto válido, no una string serializada
@@ -652,7 +646,6 @@ const Home = ({
         // No limpiar db si hay error, mantener los datos anteriores
       }
       setLoading(false);
-      if (!isRestoring) setProc(false);
     };
 
     fetchData();
@@ -721,7 +714,6 @@ const Home = ({
 
     const fetchDataByListaParam = async () => {
       setLoading(true);
-      setProc(true);
 
       try {
         if (isAppOffline()) {
@@ -759,7 +751,6 @@ const Home = ({
         setErrorPayload({ type: 'i18nKey', key: 'errorLoadingData' });
       } finally {
         setLoading(false);
-        setProc(false);
         cleanUrlParam();
       }
     };
