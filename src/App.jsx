@@ -10,7 +10,7 @@ import { useTheme } from './hooks/useTheme';
 import { useLanguage } from './hooks/useLanguage';
 import { useNavigationHistory } from './hooks/useNavigationHistory';
 import AuthService from './services/auth.service';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 const App = () => {
   const { init, setInit, proc, setProc, boot } = useAlive();
@@ -27,6 +27,8 @@ const App = () => {
   const [role, setRole] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
   const [globalMessage, setGlobalMessage] = useState(null);
+
+  const handleLoaderDone = useCallback(() => setProc(false), [setProc]);
 
   const updateUserInfo = () => {
     const user = AuthService.getCurrentUser();
@@ -174,7 +176,7 @@ const App = () => {
           </div>
         )}
       </div>
-      {!!proc && <Loader onClick={() => setProc(false)} />}
+      {!!proc && <Loader onClick={handleLoaderDone} />}
       {globalMessage && (
         <Message
           msg={globalMessage.key ? t(globalMessage.key) : globalMessage.text}

@@ -613,9 +613,10 @@ const Home = ({
       return;
     }
 
+    const isRestoring = isRestoringRef.current;
     const fetchData = async () => {
       setLoading(true);
-      setProc(true);
+      if (!isRestoring) setProc(true);
       setLoadedByList(false);
 
       // Carga normal - asegurar que opt.body sea un objeto válido, no una string serializada
@@ -651,7 +652,7 @@ const Home = ({
         // No limpiar db si hay error, mantener los datos anteriores
       }
       setLoading(false);
-      setProc(false);
+      if (!isRestoring) setProc(false);
     };
 
     fetchData();

@@ -71,7 +71,6 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
 
   const loadOptions = async () => {
     setLoadingOptions(true);
-    if (setProc) setProc(true);
 
     // Load from cache immediately so options are available offline
     try {
@@ -112,7 +111,6 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
       // Silent error handling
     } finally {
       setLoadingOptions(false);
-      if (setProc) setProc(false);
     }
   };
 
