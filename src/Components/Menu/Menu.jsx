@@ -71,7 +71,6 @@ const Menu = ({
   const menuItems = [
     { label: 'Finanz', url: 'https://finan.animecream.com/', isSessionNeeded: true },
     { label: 'Cyfer', url: 'https://cyfer.animecream.com/', isSessionNeeded: true },
-    { label: 'AI-Shield', url: 'https://shield.animecream.com/' },
     {
       label: 'Session',
       url: '#',
