@@ -100,6 +100,7 @@ export const applyCatalogQuery = (catalog, body = {}) => {
   delete criteria.limit;
 
   let result = [...catalog];
+  let orderedByIds = false;
 
   if (criteria.id != null) {
     const ids = Array.isArray(criteria.id)
@@ -110,6 +111,7 @@ export const applyCatalogQuery = (catalog, body = {}) => {
       .map((id) => result.find((s) => Number(s.id) === id))
       .filter(Boolean);
     result = ordered.length > 0 ? ordered : result.filter((s) => validIds.includes(Number(s.id)));
+    orderedByIds = ordered.length > 0;
     delete criteria.id;
   }
 
@@ -173,7 +175,9 @@ export const applyCatalogQuery = (catalog, body = {}) => {
     });
   }
 
-  result = sortByRanking(result, rankOrder);
+  if (!orderedByIds) {
+    result = sortByRanking(result, rankOrder);
+  }
 
   if (limit > 0) {
     result = result.slice(0, limit);

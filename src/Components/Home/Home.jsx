@@ -476,15 +476,14 @@ const Home = ({
             ? productionsInfo
             : productionsInfo.data || productionsInfo;
 
-          // Filtrar solo los que necesitamos
-          let filtered = allData;
-          if (allData.length > ids.length) {
-            console.log('Home: Filtering results from', allData.length, 'to', ids.length);
-            filtered = allData.filter((series) => {
-              const seriesId = Number(series.id || series.production_ranking_number);
-              return ids.includes(seriesId);
-            });
-          }
+          // Filtrar y reordenar según el orden de la lista
+          const seriesMap = new Map();
+          allData.forEach((series) => {
+            const seriesId = Number(series.id || series.production_ranking_number);
+            if (seriesId) seriesMap.set(seriesId, series);
+          });
+          const ordered = ids.map((id) => seriesMap.get(id)).filter(Boolean);
+          const filtered = ordered.length > 0 ? ordered : allData;
 
           setDb(filtered);
           setLoadedByList(true);
