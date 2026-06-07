@@ -206,21 +206,21 @@ export default function CardRow({
                 <div className="tags">
                   <span
                     className="tag year"
-                    onDoubleClick={handleYearClick}
+                    onClick={handleYearClick}
                     title={t('filterByYear') || 'Filter by year'}
                   >
                     {`${production_year}`}
                   </span>
                   <span
                     className="tag ep"
-                    onDoubleClick={handleEpisodesClick}
+                    onClick={handleEpisodesClick}
                     title={t('filterByEpisodes') || 'Filter by episodes'}
                   >
                     {`${production_number_chapters} Ep`}
                   </span>
                   <span
                     className="tag"
-                    onDoubleClick={handleDemographicClick}
+                    onClick={handleDemographicClick}
                     title={t('filterByDemographic') || 'Filter by demographic'}
                   >
                     {demographic_name}
@@ -230,7 +230,7 @@ export default function CardRow({
                       className="tag"
                       key={genre}
                       variant="text"
-                      onDoubleClick={(e) => handleGenreClick(e, genre)}
+                      onClick={(e) => handleGenreClick(e, genre)}
                       title={t('filterByGenre') || 'Filter by genre'}
                     >
                       {t(genre)}
