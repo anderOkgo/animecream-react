@@ -450,15 +450,13 @@ const Home = ({
           throw new Error('No valid IDs to load');
         }
 
-        if (isAppOffline()) {
-          const source = getFullCatalogSource();
-          const filtered = source ? applyCatalogQuery(source, { id: ids }) : [];
+        const cached = getCachedFullCatalog();
+        if (cached) {
+          const filtered = applyCatalogQuery(cached, { id: ids });
           setDb(filtered);
           setLoadedByList(true);
           setErrorPayload(null);
-          if (onSeriesDataChange) {
-            onSeriesDataChange(filtered);
-          }
+          if (onSeriesDataChange) onSeriesDataChange(filtered);
           return;
         }
 
@@ -597,14 +595,16 @@ const Home = ({
       lastOptRef.current = opt;
     }
 
-    if (isAppOffline()) {
+    const cached = getCachedFullCatalog();
+    if (cached && !refreshTrigger) {
       setLoadedByList(false);
       setErrorPayload(null);
-      const full = getFullCatalogSource();
-      if (full?.length) {
-        setDb(full);
-        initialDbRef.current = full;
-      }
+      const body = parseOptBody(optToUse);
+      const hasFilter = Object.keys(body).length > 0;
+      const result = hasFilter ? applyCatalogQuery(cached, body) : cached;
+      if (!hasFilter) initialDbRef.current = cached;
+      setDb(result);
+      if (onSeriesDataChange) onSeriesDataChange(result);
       return;
     }
 
