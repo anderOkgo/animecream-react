@@ -227,6 +227,8 @@ const translations = {
     'Series deleted successfully': 'Series deleted successfully',
     'At least one genre ID is required': 'At least one genre ID is required',
     'Invalid genre IDs:': 'Invalid genre IDs:',
+    'Demography ID': 'Demography ID',
+    'does not exist': 'does not exist',
     'At least one title is required': 'At least one title is required',
     'At least one title ID is required': 'At least one title ID is required',
     'No valid titles provided': 'No valid titles provided',
@@ -505,6 +507,8 @@ const translations = {
     'Series deleted successfully': 'Serie eliminada correctamente',
     'At least one genre ID is required': 'Se requiere al menos un ID de género',
     'Invalid genre IDs:': 'IDs de género inválidos:',
+    'Demography ID': 'ID demográfico',
+    'does not exist': 'no existe',
     'At least one title is required': 'Se requiere al menos un título',
     'At least one title ID is required': 'Se requiere al menos un ID de título',
     'No valid titles provided': 'No se proporcionaron títulos válidos',
@@ -720,6 +724,10 @@ const translateMessagePart = (t, part) => {
   const yearMatch = trimmed.match(/^Year must be between 1900 and (\d+)$/);
   if (yearMatch) {
     return `${t('Year must be between 1900 and')} ${yearMatch[1]}`;
+  }
+  const demogMatch = trimmed.match(/^Demography ID (\d+) does not exist$/);
+  if (demogMatch) {
+    return `${t('Demography ID')} ${demogMatch[1]} ${t('does not exist')}`;
   }
   if (trimmed.startsWith('Invalid genre IDs:')) {
     return `${t('Invalid genre IDs:')} ${trimmed.slice('Invalid genre IDs:'.length).trim()}`;
