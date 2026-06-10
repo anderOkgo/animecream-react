@@ -71,6 +71,7 @@ const Home = ({
   const isLoadingByIdsRef = useRef(false);
   const hasInitialLoad = useRef(false);
   const lastOptRef = useRef({});
+  const prevRefreshTriggerRef = useRef(refreshTrigger);
 
   const hasCleanedUrlRef = useRef(false);
 
@@ -584,8 +585,11 @@ const Home = ({
     // Si opt está vacío pero refreshTrigger cambió, usar el último opt guardado
     const optToUse = opt && Object.keys(opt).length > 0 ? opt : lastOptRef.current;
 
-    // Si no hay opt y no hay refreshTrigger, no hacer nada
-    if ((!opt || Object.keys(opt).length === 0) && (!refreshTrigger || refreshTrigger === 0)) {
+    const wasRefreshTriggered = refreshTrigger !== prevRefreshTriggerRef.current;
+    prevRefreshTriggerRef.current = refreshTrigger;
+
+    // Si no hay opt y no hubo refresh trigger, no hacer nada
+    if ((!opt || Object.keys(opt).length === 0) && !wasRefreshTriggered) {
       return;
     }
 
@@ -595,7 +599,7 @@ const Home = ({
     }
 
     const cached = getCachedFullCatalog();
-    if (cached && !refreshTrigger) {
+    if (cached && !wasRefreshTriggered) {
       setLoadedByList(false);
       setErrorPayload(null);
       const body = parseOptBody(optToUse);
