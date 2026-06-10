@@ -75,7 +75,7 @@ export const useAlive = () => {
     };
 
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
+      if (document.visibilityState === 'visible' && !isOnlineRef.current) {
         boot(false);
       }
     };

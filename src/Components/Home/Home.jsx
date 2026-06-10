@@ -607,6 +607,20 @@ const Home = ({
       return;
     }
 
+    if (isAppOffline()) {
+      const source = cached || getFullCatalogSource();
+      setLoadedByList(false);
+      setErrorPayload(null);
+      if (source) {
+        const body = parseOptBody(optToUse);
+        const hasFilter = Object.keys(body).length > 0;
+        const result = hasFilter ? applyCatalogQuery(source, body) : [...source];
+        setDb(result);
+        if (onSeriesDataChange) onSeriesDataChange(result);
+      }
+      return;
+    }
+
     const isRestoring = isRestoringRef.current;
     const fetchData = async () => {
       setLoading(true);
