@@ -67,8 +67,8 @@
 
 .top100-ranges-btn {
   position: absolute;
-  top: -17px;
-  right: 0;
+  top: -16px;
+  left: 3rem;
   z-index: 10;
 }
 
