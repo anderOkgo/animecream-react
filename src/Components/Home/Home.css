@@ -64,11 +64,56 @@
   border-color: var(--brand-primary);
 }
 
+@keyframes top250-heartbeat {
+  0%, 55%, 100% {
+    transform: scale(1);
+    box-shadow: var(--shadow-sm), inset 0 1px 0 var(--white-alpha-20);
+  }
+  8% {
+    transform: scale(1.08);
+    box-shadow:
+      0 0 18px 7px var(--highlight-shadow),
+      0 4px 14px var(--highlight-shadow),
+      inset 0 1px 0 var(--white-alpha-30);
+  }
+  22% {
+    transform: scale(1.01);
+    box-shadow: var(--shadow-sm), inset 0 1px 0 var(--white-alpha-20);
+  }
+  35% {
+    transform: scale(1.05);
+    box-shadow:
+      0 0 10px 4px var(--highlight-shadow),
+      0 2px 8px var(--highlight-shadow),
+      inset 0 1px 0 var(--white-alpha-30);
+  }
+}
+
+@keyframes top250-shine {
+  0% {
+    left: -65%;
+    opacity: 0;
+  }
+  4% {
+    opacity: 1;
+  }
+  20% {
+    left: 115%;
+    opacity: 0;
+  }
+  21%, 100% {
+    left: -65%;
+    opacity: 0;
+  }
+}
+
 /* Top 250 Button - Exact match with sidebar style */
 .top250-btn {
   margin-left: auto;
   width: 100%;
   justify-content: center;
+  position: relative !important;
+  overflow: hidden !important;
   background: linear-gradient(
     135deg,
     var(--color-highlight) 0%,
@@ -85,9 +130,29 @@
   box-shadow:
     var(--shadow-sm),
     inset 0 1px 0 var(--white-alpha-20) !important;
+  animation: top250-heartbeat 2.6s ease-in-out 1;
+}
+
+.top250-btn::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -65%;
+  width: 45%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 100%
+  );
+  transform: skewX(-18deg);
+  pointer-events: none;
+  animation: top250-shine 2.6s ease-in-out 1;
 }
 
 .top250-btn:hover {
+  animation-play-state: paused;
   color: var(--black) !important;
   text-shadow: var(--text-body-shadow) !important;
   transform: scale(1.05) !important;
@@ -95,6 +160,10 @@
     0 4px 8px var(--highlight-shadow),
     inset 0 1px 0 var(--white-alpha-30) !important;
   border-color: var(--color-highlight) !important;
+}
+
+.top250-btn:hover::after {
+  animation-play-state: paused;
 }
 
 /* Responsive adjustments */

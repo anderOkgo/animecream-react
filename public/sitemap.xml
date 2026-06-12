@@ -13,6 +13,14 @@
   <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/"/>
 </url>
 
+<!-- Top 100 -->
+<url>
+  <loc>https://animecream.com/top100</loc>
+  <changefreq>weekly</changefreq><priority>0.95</priority>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/top100"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/top100"/>
+</url>
+
 <!-- Top 250 -->
 <url>
   <loc>https://animecream.com/top250</loc>

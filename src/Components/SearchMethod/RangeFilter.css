@@ -65,6 +65,21 @@
   animation: none;
 }
 
+.top100-ranges-btn {
+  position: absolute;
+  top: -17px;
+  right: 0;
+  z-index: 10;
+}
+
+.top100-ranges-btn:hover,
+.top100-ranges-btn:focus {
+  background: var(--bg-overlay-subtle) !important;
+  color: var(--text-heading) !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
 .ranges-content {
   display: flex;
   flex-direction: column;

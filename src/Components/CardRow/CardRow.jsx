@@ -56,10 +56,14 @@ export default function CardRow({
   // Determine the language for speech synthesis
   const speechLanguage = language === 'en' ? 'en-US' : 'es-ES';
 
+  const slugify = (str) =>
+    str.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, '-');
+
   // Filter handlers
   const handleYearClick = (e) => {
     e.stopPropagation();
     if (onFilterChange && production_year) {
+      navigator.clipboard?.writeText(`${window.location.origin}/${production_year}`);
       const requestData = {
         method: 'POST',
         body: {
@@ -95,6 +99,7 @@ export default function CardRow({
         (d) => d.name && d.name.toLowerCase() === demographic_name.toLowerCase()
       );
       const slug = match?.slug || match?.name?.toLowerCase().replace(/\s+/g, '-') || demographic_name.toLowerCase().replace(/\s+/g, '-');
+      navigator.clipboard?.writeText(`${window.location.origin}/${slug}`);
       const requestData = {
         method: 'POST',
         body: {
@@ -109,6 +114,7 @@ export default function CardRow({
   const handleGenreClick = (e, genreName) => {
     e.stopPropagation();
     if (onFilterChange && genreName) {
+      navigator.clipboard?.writeText(`${window.location.origin}/${slugify(genreName.trim())}`);
       const requestData = {
         method: 'POST',
         body: {

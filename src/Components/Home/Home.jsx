@@ -122,6 +122,7 @@ const Home = ({
   }, [tipoParam]);
 
   const tipoTop250 = tipoParam === 'top250';
+  const tipoTop100 = tipoParam === 'top100';
 
   const initialSeed = useMemo(() => {
     const cached = getCachedFullCatalog();
@@ -287,8 +288,23 @@ const Home = ({
       body: {
         limit: 250,
         production_ranking_number: 'ASC',
+        _reverse: true,
       },
     };
+    navigator.clipboard?.writeText(`${window.location.origin}/top250`);
+    setOptWithHistory(requestData);
+  };
+
+  const handleTop100 = () => {
+    const requestData = {
+      method: 'POST',
+      body: {
+        limit: 100,
+        production_ranking_number: 'ASC',
+        _reverse: true,
+      },
+    };
+    navigator.clipboard?.writeText(`${window.location.origin}/top100`);
     setOptWithHistory(requestData);
   };
 
@@ -620,11 +636,14 @@ const Home = ({
       setLoadedByList(false);
       setErrorPayload(null);
       const body = parseOptBody(optToUse);
+      const reverseResults = body._reverse === true;
+      delete body._reverse;
       const hasFilter = Object.keys(body).length > 0;
       const result = hasFilter ? applyCatalogQuery(cached, body) : cached;
       if (!hasFilter) initialDbRef.current = cached;
-      setDb(result);
-      if (onSeriesDataChange) onSeriesDataChange(result);
+      const finalResult = reverseResults ? [...result].reverse() : result;
+      setDb(finalResult);
+      if (onSeriesDataChange) onSeriesDataChange(finalResult);
       return;
     }
 
@@ -634,10 +653,13 @@ const Home = ({
       setErrorPayload(null);
       if (source) {
         const body = parseOptBody(optToUse);
+        const reverseResults = body._reverse === true;
+        delete body._reverse;
         const hasFilter = Object.keys(body).length > 0;
         const result = hasFilter ? applyCatalogQuery(source, body) : [...source];
-        setDb(result);
-        if (onSeriesDataChange) onSeriesDataChange(result);
+        const finalResult = reverseResults ? [...result].reverse() : result;
+        setDb(finalResult);
+        if (onSeriesDataChange) onSeriesDataChange(finalResult);
       }
       return;
     }
@@ -661,6 +683,12 @@ const Home = ({
         }
       }
 
+      const reverseResults = requestOpt.body?._reverse === true;
+      if (reverseResults && requestOpt.body) {
+        const { _reverse, ...cleanBody } = requestOpt.body;
+        requestOpt.body = cleanBody;
+      }
+
       const [response] = await Promise.all([helpHttp.post(urlProduction, requestOpt)]);
       const productionsInfo = response;
 
@@ -670,10 +698,11 @@ const Home = ({
           persistFullCatalog(data);
           initialDbRef.current = data;
         }
-        setDb(data);
+        const finalData = reverseResults ? [...data].reverse() : data;
+        setDb(finalData);
         setErrorPayload(null);
         if (onSeriesDataChange) {
-          onSeriesDataChange(data);
+          onSeriesDataChange(finalData);
         }
       } else {
         setErrorPayload({ type: 'http', err: productionsInfo.err });
@@ -688,7 +717,7 @@ const Home = ({
 
   // Resolver ?tipo= como slug de género o demografía
   useEffect(() => {
-    if (!tipoParam || tipoYear !== null || tipoDecade !== null || tipoLista !== null || tipoTop250) return;
+    if (!tipoParam || tipoYear !== null || tipoDecade !== null || tipoLista !== null || tipoTop250 || tipoTop100) return;
 
     const resolveSlug = async () => {
       const slugify = (str) =>
@@ -797,7 +826,13 @@ const Home = ({
   // Handle /anime/top250 — loads top 250 ranked series
   useEffect(() => {
     if (!tipoTop250) return;
-    setOpt({ method: 'POST', body: { limit: 250, production_ranking_number: 'ASC' } });
+    setOpt({ method: 'POST', body: { limit: 250, production_ranking_number: 'ASC', _reverse: true } });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Handle /top100 — loads top 100 ranked series
+  useEffect(() => {
+    if (!tipoTop100) return;
+    setOpt({ method: 'POST', body: { limit: 100, production_ranking_number: 'ASC', _reverse: true } });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleErrorDoubleClick = () => {
@@ -820,6 +855,9 @@ const Home = ({
     if (tipoTop250) {
       return isEn ? 'Top 250 Anime | AnimeCream' : 'Top 250 Animes | AnimeCream';
     }
+    if (tipoTop100) {
+      return isEn ? 'Top 100 Anime | AnimeCream' : 'Top 100 Animes | AnimeCream';
+    }
     if (tipoYear) {
       return isEn ? `Anime from ${tipoYear} | AnimeCream` : `Animes de ${tipoYear} | AnimeCream`;
     }
@@ -832,7 +870,7 @@ const Home = ({
     }
     if (filteredDb && filteredDb.length > 0) return `${filteredDb[0].production_name} | AnimeCream`;
     return 'AnimeCream';
-  }, [tipoTop250, tipoYear, tipoDecade, tipoParam, filteredDb, language]);
+  }, [tipoTop250, tipoTop100, tipoYear, tipoDecade, tipoParam, filteredDb, language]);
 
   // Descripción dinámica basada en el contexto e idioma
   const dynamicDescription = useMemo(() => {
@@ -841,6 +879,11 @@ const Home = ({
       return isEn
         ? 'Discover the 250 highest-ranked anime of all time. Curated rankings, reviews, and recommendations on AnimeCream.'
         : 'Descubre los 250 animes mejor rankeados de todos los tiempos. Rankings, reseñas y recomendaciones en AnimeCream.';
+    }
+    if (tipoTop100) {
+      return isEn
+        ? 'Discover the 100 highest-ranked anime of all time. Curated rankings, reviews, and recommendations on AnimeCream.'
+        : 'Descubre los 100 animes mejor rankeados de todos los tiempos. Rankings, reseñas y recomendaciones en AnimeCream.';
     }
     if (tipoYear) {
       return isEn
@@ -858,7 +901,7 @@ const Home = ({
     return isEn
       ? 'Explore the best anime series, reviews, and recommendations on AnimeCream. Your ultimate anime encyclopedia.'
       : 'Explora las mejores series de anime, reseñas y recomendaciones en AnimeCream. Tu enciclopedia de anime definitiva.';
-  }, [tipoTop250, tipoYear, tipoDecade, filteredDb, language]);
+  }, [tipoTop250, tipoTop100, tipoYear, tipoDecade, filteredDb, language]);
 
   return (
     <article className="grid-1-2">
@@ -985,6 +1028,9 @@ const Home = ({
           title={isRangesExpanded ? 'Ocultar Filtros' : 'Mostrar Filtros'}
         >
           {isRangesExpanded ? '︽' : '︾'}
+        </button>
+        <button className="toolbar-btn top100-ranges-btn" onClick={handleTop100} title="Top 100">
+          Top 100
         </button>
       </section>
       {/* Mostrar Loader siempre que esté cargando, ahora es flotante y se puede cerrar al hacer clic */}

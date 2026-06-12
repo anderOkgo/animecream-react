@@ -190,9 +190,27 @@ function Tab({
         body: {
           limit: 250,
           production_ranking_number: 'ASC',
+          _reverse: true,
         },
       };
+      navigator.clipboard?.writeText(`${window.location.origin}/top250`);
       navigation?.pushHistory('request', { type: 'top250', data: requestData });
+      homeSetOptRef.current(requestData);
+      handleScrollToTop();
+    }
+  };
+
+  const handleTop100Click = () => {
+    if (homeSetOptRef.current) {
+      const requestData = {
+        method: 'POST',
+        body: {
+          limit: 100,
+          production_ranking_number: 'ASC',
+          _reverse: true,
+        },
+      };
+      navigation?.pushHistory('request', { type: 'top100', data: requestData });
       homeSetOptRef.current(requestData);
       handleScrollToTop();
     }
@@ -280,7 +298,7 @@ function Tab({
         case 'request':
           // Las peticiones se restauran en Home.jsx
           // Aquí solo manejamos el scroll si es necesario
-          if (currentState.data?.type === 'top250') {
+          if (currentState.data?.type === 'top250' || currentState.data?.type === 'top100') {
             handleScrollToTop();
           }
           break;
