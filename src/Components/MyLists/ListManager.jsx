@@ -225,7 +225,7 @@ const ListManager = ({
       .map((item) => item.id)
       .filter(Boolean)
       .join(',');
-    const url = `${window.location.origin}/?tipo=lista,${ids}`;
+    const url = `${window.location.origin}/list/${ids}`;
 
     try {
       await navigator.clipboard.writeText(url);

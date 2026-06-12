@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-<!-- animecream.com — Clean SEO URLs at root level (animecream.com/slug). Legacy /producciones/X and /anime/X redirect 301 to /X -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- animecream.com — Bilingual hreflang sitemap. English and Spanish genre slugs cross-referenced. Legacy /producciones/X and /anime/X redirect 301 to /X -->
 
 <!-- Home -->
-<url><loc>https://animecream.com/</loc><changefreq>weekly</changefreq><priority>1.00</priority></url>
+<url>
+  <loc>https://animecream.com/</loc>
+  <changefreq>weekly</changefreq><priority>1.00</priority>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/"/>
+</url>
 
 <!-- Top 250 -->
-<url><loc>https://animecream.com/top250</loc><changefreq>weekly</changefreq><priority>0.95</priority></url>
+<url>
+  <loc>https://animecream.com/top250</loc>
+  <changefreq>weekly</changefreq><priority>0.95</priority>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/top250"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/top250"/>
+</url>
 
-<!-- Décadas -->
+<!-- Décadas (misma URL en ambos idiomas) -->
 <url><loc>https://animecream.com/60s</loc><changefreq>weekly</changefreq><priority>0.90</priority></url>
 <url><loc>https://animecream.com/70s</loc><changefreq>weekly</changefreq><priority>0.90</priority></url>
 <url><loc>https://animecream.com/80s</loc><changefreq>weekly</changefreq><priority>0.90</priority></url>
@@ -17,33 +30,263 @@
 <url><loc>https://animecream.com/10s</loc><changefreq>weekly</changefreq><priority>0.90</priority></url>
 <url><loc>https://animecream.com/20s</loc><changefreq>weekly</changefreq><priority>0.90</priority></url>
 
-<!-- Géneros -->
-<url><loc>https://animecream.com/accion</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/psicologico</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/magia</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/drama</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/comedia</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/ciencia-ficcion</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/fantasia</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/romance</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/musical</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/suspenso</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/historico</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/aventura</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/samurais</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/space-opera</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/mecha</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/ciberpunk</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/otaku</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/deporte</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/post-apocaliptico</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/entretenimiento</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/realismo</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/sobrenatural</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/misterio</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-<url><loc>https://animecream.com/triller-sicologico</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+<!-- Géneros EN -->
+<url>
+  <loc>https://animecream.com/action</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/action"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/accion"/>
+</url>
+<url>
+  <loc>https://animecream.com/psychological</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/psychological"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/psicologico"/>
+</url>
+<url>
+  <loc>https://animecream.com/magic</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/magic"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/magia"/>
+</url>
+<url>
+  <loc>https://animecream.com/drama</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/drama"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/drama"/>
+</url>
+<url>
+  <loc>https://animecream.com/comedy</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/comedy"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/comedia"/>
+</url>
+<url>
+  <loc>https://animecream.com/science-fiction</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/science-fiction"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/ciencia-ficcion"/>
+</url>
+<url>
+  <loc>https://animecream.com/fantasy</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/fantasy"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/fantasia"/>
+</url>
+<url>
+  <loc>https://animecream.com/romance</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/romance"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/romance"/>
+</url>
+<url>
+  <loc>https://animecream.com/musical</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/musical"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/musical"/>
+</url>
+<url>
+  <loc>https://animecream.com/suspense</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/suspense"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/suspenso"/>
+</url>
+<url>
+  <loc>https://animecream.com/historical</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/historical"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/historico"/>
+</url>
+<url>
+  <loc>https://animecream.com/adventure</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/adventure"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/aventura"/>
+</url>
+<url>
+  <loc>https://animecream.com/samurai</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/samurai"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/samurais"/>
+</url>
+<url>
+  <loc>https://animecream.com/space-opera</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/space-opera"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/space-opera"/>
+</url>
+<url>
+  <loc>https://animecream.com/mecha</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/mecha"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/mecha"/>
+</url>
+<url>
+  <loc>https://animecream.com/cyberpunk</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/cyberpunk"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/ciberpunk"/>
+</url>
+<url>
+  <loc>https://animecream.com/otaku</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/otaku"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/otaku"/>
+</url>
+<url>
+  <loc>https://animecream.com/sports</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/sports"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/deporte"/>
+</url>
+<url>
+  <loc>https://animecream.com/post-apocalyptic</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/post-apocalyptic"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/post-apocaliptico"/>
+</url>
+<url>
+  <loc>https://animecream.com/entertainment</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/entertainment"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/entretenimiento"/>
+</url>
+<url>
+  <loc>https://animecream.com/realism</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/realism"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/realismo"/>
+</url>
+<url>
+  <loc>https://animecream.com/supernatural</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/supernatural"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/sobrenatural"/>
+</url>
+<url>
+  <loc>https://animecream.com/mystery</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/mystery"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/misterio"/>
+</url>
+<url>
+  <loc>https://animecream.com/psychological-thriller</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/psychological-thriller"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/triller-sicologico"/>
+</url>
 
-<!-- Demografías -->
+<!-- Géneros ES (alternates) -->
+<url>
+  <loc>https://animecream.com/accion</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/accion"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/action"/>
+</url>
+<url>
+  <loc>https://animecream.com/psicologico</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/psicologico"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/psychological"/>
+</url>
+<url>
+  <loc>https://animecream.com/magia</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/magia"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/magic"/>
+</url>
+<url>
+  <loc>https://animecream.com/comedia</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/comedia"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/comedy"/>
+</url>
+<url>
+  <loc>https://animecream.com/ciencia-ficcion</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/ciencia-ficcion"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/science-fiction"/>
+</url>
+<url>
+  <loc>https://animecream.com/fantasia</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/fantasia"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/fantasy"/>
+</url>
+<url>
+  <loc>https://animecream.com/suspenso</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/suspenso"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/suspense"/>
+</url>
+<url>
+  <loc>https://animecream.com/historico</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/historico"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/historical"/>
+</url>
+<url>
+  <loc>https://animecream.com/aventura</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/aventura"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/adventure"/>
+</url>
+<url>
+  <loc>https://animecream.com/samurais</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/samurais"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/samurai"/>
+</url>
+<url>
+  <loc>https://animecream.com/ciberpunk</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/ciberpunk"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/cyberpunk"/>
+</url>
+<url>
+  <loc>https://animecream.com/deporte</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/deporte"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/sports"/>
+</url>
+<url>
+  <loc>https://animecream.com/post-apocaliptico</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/post-apocaliptico"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/post-apocalyptic"/>
+</url>
+<url>
+  <loc>https://animecream.com/entretenimiento</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/entretenimiento"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/entertainment"/>
+</url>
+<url>
+  <loc>https://animecream.com/realismo</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/realismo"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/realism"/>
+</url>
+<url>
+  <loc>https://animecream.com/sobrenatural</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/sobrenatural"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/supernatural"/>
+</url>
+<url>
+  <loc>https://animecream.com/misterio</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/misterio"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/mystery"/>
+</url>
+<url>
+  <loc>https://animecream.com/triller-sicologico</loc>
+  <changefreq>weekly</changefreq><priority>0.85</priority>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/triller-sicologico"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/psychological-thriller"/>
+</url>
+
+<!-- Demografías (términos japoneses, misma URL en ambos idiomas) -->
 <url><loc>https://animecream.com/shonen</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
 <url><loc>https://animecream.com/shojo</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
 <url><loc>https://animecream.com/shonen-seinen</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
@@ -51,7 +294,7 @@
 <url><loc>https://animecream.com/kodomo</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
 <url><loc>https://animecream.com/josei</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
 
-<!-- Años individuales -->
+<!-- Años individuales (misma URL en ambos idiomas) -->
 <url><loc>https://animecream.com/1970</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
 <url><loc>https://animecream.com/1971</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
 <url><loc>https://animecream.com/1972</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>

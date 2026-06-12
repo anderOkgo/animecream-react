@@ -78,8 +78,8 @@ const Home = ({
   const tipoParam = useMemo(() => {
     const pathname = window.location.pathname;
 
-    // /lista/[id1,id2,...] — shared list route; normalized to "lista,id1,id2,..." for tipoLista
-    const listaMatch = pathname.match(/^\/lista\/([^/]+)\/?$/);
+    // /list/[id1,id2,...] — shared list route; normalized to "lista,id1,id2,..." for tipoLista
+    const listaMatch = pathname.match(/^\/list\/([^/]+)\/?$/);
     if (listaMatch) {
       return `lista,${listaMatch[1].trim()}`;
     }
@@ -207,6 +207,7 @@ const Home = ({
   }, [tipoParam]);
 
   const [isRangesExpanded, setIsRangesExpanded] = useState(false);
+  const [resolvedSlugs, setResolvedSlugs] = useState(null);
   const [isToolbarVisible, setIsToolbarVisible] = useState(true);
 
   const setOptWithHistory = (requestData) => {
@@ -719,6 +720,7 @@ const Home = ({
         (g) => slugify(g.name) === tipoParam || slugify(translateEN(g.name)) === tipoParam
       );
       if (genre) {
+        setResolvedSlugs({ es: slugify(genre.name), en: slugify(translateEN(genre.name)) });
         setOptWithHistory({ method: 'POST', body: { genre_names: genre.name, production_ranking_number: 'ASC' } });
         cleanUrlParam();
         return;
@@ -726,6 +728,7 @@ const Home = ({
 
       const demo = demos.find((d) => slugify(d.name) === tipoParam || slugify(translateEN(d.name)) === tipoParam);
       if (demo) {
+        setResolvedSlugs({ es: slugify(demo.name), en: slugify(translateEN(demo.name)) });
         setOptWithHistory({
           method: 'POST',
           body: { demographic_name: demo.name, production_ranking_number: 'ASC' },
@@ -806,7 +809,7 @@ const Home = ({
   // Lógica para SEO dinámico
   const baseUrl = 'https://animecream.com';
   const canonicalUrl = tipoLista
-    ? `${baseUrl}/lista/${tipoLista.join(',')}`
+    ? `${baseUrl}/list/${tipoLista.join(',')}`
     : tipoParam
     ? `${baseUrl}/${tipoParam}`
     : baseUrl;
@@ -866,9 +869,19 @@ const Home = ({
         {tipoLista && <meta name="robots" content="noindex, nofollow" />}
 
         {/* SEO Internacional */}
-        <link rel="alternate" hrefLang="es" href={canonicalUrl} />
-        <link rel="alternate" hrefLang="en" href={canonicalUrl} />
-        <link rel="alternate" hrefLang="x-default" href={canonicalUrl} />
+        {resolvedSlugs && resolvedSlugs.es !== resolvedSlugs.en ? (
+          <>
+            <link rel="alternate" hrefLang="es" href={`${baseUrl}/${resolvedSlugs.es}`} />
+            <link rel="alternate" hrefLang="en" href={`${baseUrl}/${resolvedSlugs.en}`} />
+            <link rel="alternate" hrefLang="x-default" href={`${baseUrl}/${resolvedSlugs.en}`} />
+          </>
+        ) : (
+          <>
+            <link rel="alternate" hrefLang="es" href={canonicalUrl} />
+            <link rel="alternate" hrefLang="en" href={canonicalUrl} />
+            <link rel="alternate" hrefLang="x-default" href={canonicalUrl} />
+          </>
+        )}
         <meta property="og:locale" content={language === 'en' ? 'en_US' : 'es_ES'} />
 
         {/* Open Graph / Facebook */}
