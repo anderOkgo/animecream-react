@@ -76,20 +76,34 @@ const Home = ({
   const hasCleanedUrlRef = useRef(false);
 
   const tipoParam = useMemo(() => {
-    // Soporte para rutas limpias tipo /producciones/accion → tipo=accion
     const pathname = window.location.pathname;
-    const prodMatch = pathname.match(/^\/producciones\/([^/]+)\/?$/);
-    if (prodMatch) {
-      // KEEP the clean URL so it can be indexed! Do NOT replaceState to '/'
-      return prodMatch[1].trim().toLowerCase();
+
+    // /lista/[id1,id2,...] — shared list route; normalized to "lista,id1,id2,..." for tipoLista
+    const listaMatch = pathname.match(/^\/lista\/([^/]+)\/?$/);
+    if (listaMatch) {
+      return `lista,${listaMatch[1].trim()}`;
     }
 
-    // Limpiar cualquier otra ruta que no sea la raíz (evita errores de rutas relativas y limpia rutas random)
-    if (pathname !== '/' && !pathname.startsWith('/producciones/')) {
+    // Legacy paths — server sends 301 but handle client-side as fallback
+    const legacyMatch = pathname.match(/^\/(?:producciones|anime)\/([^/]+)\/?$/);
+    if (legacyMatch) {
+      const slug = legacyMatch[1].trim().toLowerCase();
+      window.history.replaceState(null, '', `/${slug}`);
+      return slug;
+    }
+
+    // /[slug] — canonical root-level route
+    const rootMatch = pathname.match(/^\/([^/]+)\/?$/);
+    if (rootMatch) {
+      return rootMatch[1].trim().toLowerCase();
+    }
+
+    // Clean multi-segment unknown routes back to root
+    if (pathname !== '/') {
       window.history.replaceState(null, '', '/');
     }
 
-    // Fallback: query param ?tipo=
+    // Fallback: ?tipo= query param
     const raw = new URLSearchParams(window.location.search).get('tipo');
     return raw ? raw.trim().toLowerCase() : null;
   }, []);
@@ -106,6 +120,8 @@ const Home = ({
     const n = parseInt(m[1], 10);
     return n >= 100 ? Math.floor(n / 10) * 10 : n < 30 ? 2000 + n : 1900 + n;
   }, [tipoParam]);
+
+  const tipoTop250 = tipoParam === 'top250';
 
   const initialSeed = useMemo(() => {
     const cached = getCachedFullCatalog();
@@ -671,7 +687,7 @@ const Home = ({
 
   // Resolver ?tipo= como slug de género o demografía
   useEffect(() => {
-    if (!tipoParam || tipoYear !== null || tipoDecade !== null || tipoLista !== null) return;
+    if (!tipoParam || tipoYear !== null || tipoDecade !== null || tipoLista !== null || tipoTop250) return;
 
     const resolveSlug = async () => {
       const slugify = (str) =>
@@ -775,6 +791,12 @@ const Home = ({
     fetchDataByListaParam();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Handle /anime/top250 — loads top 250 ranked series
+  useEffect(() => {
+    if (!tipoTop250) return;
+    setOpt({ method: 'POST', body: { limit: 250, production_ranking_number: 'ASC' } });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const handleErrorDoubleClick = () => {
     setErrorPayload(null);
   };
@@ -783,12 +805,18 @@ const Home = ({
 
   // Lógica para SEO dinámico
   const baseUrl = 'https://animecream.com';
-  // Canonical URL always points to the clean /producciones/ path for filtered pages
-  const canonicalUrl = tipoParam ? `${baseUrl}/producciones/${tipoParam}` : baseUrl;
+  const canonicalUrl = tipoLista
+    ? `${baseUrl}/lista/${tipoLista.join(',')}`
+    : tipoParam
+    ? `${baseUrl}/${tipoParam}`
+    : baseUrl;
   
   // Título dinámico basado en el contexto e idioma
   const dynamicTitle = useMemo(() => {
     const isEn = language === 'en';
+    if (tipoTop250) {
+      return isEn ? 'Top 250 Anime | AnimeCream' : 'Top 250 Animes | AnimeCream';
+    }
     if (tipoYear) {
       return isEn ? `Anime from ${tipoYear} | AnimeCream` : `Animes de ${tipoYear} | AnimeCream`;
     }
@@ -801,13 +829,18 @@ const Home = ({
     }
     if (filteredDb && filteredDb.length > 0) return `${filteredDb[0].production_name} | AnimeCream`;
     return 'AnimeCream';
-  }, [tipoYear, tipoDecade, tipoParam, filteredDb, language]);
+  }, [tipoTop250, tipoYear, tipoDecade, tipoParam, filteredDb, language]);
 
   // Descripción dinámica basada en el contexto e idioma
   const dynamicDescription = useMemo(() => {
     const isEn = language === 'en';
+    if (tipoTop250) {
+      return isEn
+        ? 'Discover the 250 highest-ranked anime of all time. Curated rankings, reviews, and recommendations on AnimeCream.'
+        : 'Descubre los 250 animes mejor rankeados de todos los tiempos. Rankings, reseñas y recomendaciones en AnimeCream.';
+    }
     if (tipoYear) {
-      return isEn 
+      return isEn
         ? `Explore the complete list of anime released in ${tipoYear}. Reviews, rankings, and recommendations on AnimeCream.`
         : `Explora la lista completa de animes estrenados en el año ${tipoYear}. Reseñas, rankings y recomendaciones en AnimeCream.`;
     }
@@ -819,10 +852,10 @@ const Home = ({
     if (filteredDb && filteredDb.length > 0) {
       return isEn ? filteredDb[0].production_description_en : filteredDb[0].production_description;
     }
-    return isEn 
+    return isEn
       ? 'Explore the best anime series, reviews, and recommendations on AnimeCream. Your ultimate anime encyclopedia.'
       : 'Explora las mejores series de anime, reseñas y recomendaciones en AnimeCream. Tu enciclopedia de anime definitiva.';
-  }, [tipoYear, tipoDecade, filteredDb, language]);
+  }, [tipoTop250, tipoYear, tipoDecade, filteredDb, language]);
 
   return (
     <article className="grid-1-2">
@@ -830,7 +863,8 @@ const Home = ({
         <title>{dynamicTitle}</title>
         <meta name="description" content={dynamicDescription} />
         <link rel="canonical" href={canonicalUrl} />
-        
+        {tipoLista && <meta name="robots" content="noindex, nofollow" />}
+
         {/* SEO Internacional */}
         <link rel="alternate" hrefLang="es" href={canonicalUrl} />
         <link rel="alternate" hrefLang="en" href={canonicalUrl} />

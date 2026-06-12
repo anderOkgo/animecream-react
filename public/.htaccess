@@ -9,11 +9,14 @@
     RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
     RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
 
-    # 3. Serve existing files and directories as-is
+    # 3. Redirect legacy paths → root-level slug (301 permanent for SEO equity transfer)
+    RewriteRule ^producciones/(.+)$ /$1 [R=301,L]
+    RewriteRule ^anime/(.+)$ /$1 [R=301,L]
+
+    # 4. Serve existing files and directories as-is
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
 
-    # 4. All other routes (including /producciones/*) → index.html (SPA fallback)
-    # This ensures that when a user/bot hits /producciones/accion, they stay on that URL
+    # 5. All other routes (/anime/*, /lista/*) → index.html (SPA fallback)
     RewriteRule ^ index.html [L]
 </IfModule>
