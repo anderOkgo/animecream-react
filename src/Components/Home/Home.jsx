@@ -377,7 +377,11 @@ const Home = ({
     let filtered;
     if (useOfflineQuery) {
       const source = getFullCatalogSource();
-      filtered = source ? applyCatalogQuery(source, parseOptBody(opt)) : [];
+      const offlineBody = { ...parseOptBody(opt) };
+      const reverseOffline = offlineBody._reverse === true;
+      delete offlineBody._reverse;
+      const offlineResult = source ? applyCatalogQuery(source, offlineBody) : [];
+      filtered = reverseOffline ? [...offlineResult].reverse() : offlineResult;
     } else if (isOffline && !loadedByList) {
       filtered = [...(getFullCatalogSource() || db)];
     } else {
@@ -635,7 +639,7 @@ const Home = ({
     if (cached && !wasRefreshTriggered) {
       setLoadedByList(false);
       setErrorPayload(null);
-      const body = parseOptBody(optToUse);
+      const body = { ...parseOptBody(optToUse) };
       const reverseResults = body._reverse === true;
       delete body._reverse;
       const hasFilter = Object.keys(body).length > 0;
@@ -652,7 +656,7 @@ const Home = ({
       setLoadedByList(false);
       setErrorPayload(null);
       if (source) {
-        const body = parseOptBody(optToUse);
+        const body = { ...parseOptBody(optToUse) };
         const reverseResults = body._reverse === true;
         delete body._reverse;
         const hasFilter = Object.keys(body).length > 0;
