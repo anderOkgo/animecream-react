@@ -3,10 +3,7 @@ import './Loader.css';
 
 const Loader = ({ onClick }) => {
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (onClick) onClick();
-    }, 3000);
-    return () => clearTimeout(timer);
+    if (onClick) onClick();
   }, [onClick]);
 
   return (
