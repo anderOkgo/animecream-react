@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import './Status.css';
 
 function Status({ init, proc }) {
   Status.propTypes = {
