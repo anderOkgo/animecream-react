@@ -67,7 +67,7 @@ const Menu = ({
     }
   };
 
-  const title = '';
+  const title = 'Animecream'; // Updated menu title
   const menuItems = [
     { label: 'Finanz', url: 'https://finan.animecream.com/', isSessionNeeded: true },
     { label: 'Cyfer', url: 'https://cyfer.animecream.com/', isSessionNeeded: true },
