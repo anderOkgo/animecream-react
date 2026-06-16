@@ -24,26 +24,32 @@ const SearchMethod = ({ setOpt, t, isFormVisible, setIsFormVisible }) => {
 
   useEffect(() => {
     const base = set.base_url;
+    const cachedGenres = readCache(CACHE_GENRES);
+    const cachedDemos = readCache(CACHE_DEMOGRAPHICS);
 
-    helpHttp.get(`${base}api/series/genres`).then((res) => {
-      if (!res?.err) {
-        const list = res.genres || res.data || [];
-        if (list.length > 0) {
-          localStorage.setItem(CACHE_GENRES, JSON.stringify(list));
-          setGenreOptions(list);
+    if (!cachedGenres?.length) {
+      helpHttp.get(`${base}api/series/genres`).then((res) => {
+        if (!res?.err) {
+          const list = res.genres || res.data || [];
+          if (list.length > 0) {
+            localStorage.setItem(CACHE_GENRES, JSON.stringify(list));
+            setGenreOptions(list);
+          }
         }
-      }
-    });
+      });
+    }
 
-    helpHttp.get(`${base}api/series/demographics`).then((res) => {
-      if (!res?.err) {
-        const list = res.demographics || res.data || [];
-        if (list.length > 0) {
-          localStorage.setItem(CACHE_DEMOGRAPHICS, JSON.stringify(list));
-          setDemographicOptions(list);
+    if (!cachedDemos?.length) {
+      helpHttp.get(`${base}api/series/demographics`).then((res) => {
+        if (!res?.err) {
+          const list = res.demographics || res.data || [];
+          if (list.length > 0) {
+            localStorage.setItem(CACHE_DEMOGRAPHICS, JSON.stringify(list));
+            setDemographicOptions(list);
+          }
         }
-      }
-    });
+      });
+    }
   }, []);
 
   const [form, setForm] = useState({
