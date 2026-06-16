@@ -555,17 +555,17 @@ const Home = ({
   useEffect(() => {
     if (hasInitialLoad.current) return;
 
-    // Si ?tipo= es un slug de género/demografía, saltar carga completa
-    // El efecto de resolución de slug hará la llamada API filtrada
+    // Si hay caché y es un slug de género/demografía, resolveSlug lo filtra localmente
     if (tipoParam && !tipoYear && !tipoDecade) {
-      hasInitialLoad.current = true;
       const cached = getCachedFullCatalog();
       if (cached) {
+        hasInitialLoad.current = true;
         setDb(cached);
         initialDbRef.current = cached;
         if (onSeriesDataChange) onSeriesDataChange(cached);
+        return;
       }
-      return;
+      // Sin caché: cae al fetch completo que corre en paralelo con resolveSlug
     }
 
     const cachedFull = getCachedFullCatalog();
@@ -731,13 +731,48 @@ const Home = ({
           .replace(/[\u0300-\u036f]/g, '')
           .replace(/\s+/g, '-');
 
+      // Fast path: catalog already cached \u2192 extract genres/demographics locally, zero network calls
+      const cachedCatalog = getCachedFullCatalog();
+      if (cachedCatalog && cachedCatalog.length > 0) {
+        const genreNames = new Set();
+        const demoNames = new Set();
+        cachedCatalog.forEach((item) => {
+          item.genre_names?.split(',').forEach((g) => { const t = g.trim(); if (t) genreNames.add(t); });
+          if (item.demographic_name) demoNames.add(item.demographic_name);
+        });
+
+        const matchedGenre = [...genreNames].find((g) => slugify(g) === tipoParam || slugify(translateEN(g)) === tipoParam);
+        if (matchedGenre) {
+          setResolvedSlugs({ es: slugify(matchedGenre), en: slugify(translateEN(matchedGenre)) });
+          setOptWithHistory({ method: 'POST', body: { genre_names: matchedGenre, production_ranking_number: 'ASC' } });
+          cleanUrlParam();
+          return;
+        }
+
+        const matchedDemo = [...demoNames].find((d) => slugify(d) === tipoParam || slugify(translateEN(d)) === tipoParam);
+        if (matchedDemo) {
+          setResolvedSlugs({ es: slugify(matchedDemo), en: slugify(translateEN(matchedDemo)) });
+          setOptWithHistory({ method: 'POST', body: { demographic_name: matchedDemo, production_ranking_number: 'ASC' } });
+          cleanUrlParam();
+          return;
+        }
+      }
+
+      // Slow path: catalog not cached yet \u2014 fetch genres/demographics from API
+      const GENRES_DEMOS_TTL = 24 * 60 * 60 * 1000; // 24 hours
+      const now = Date.now();
+
       let genres = [];
       let demos = [];
+      const genreTs = parseInt(localStorage.getItem('options_genres_ts') || '0', 10);
+      const demoTs = parseInt(localStorage.getItem('options_demographics_ts') || '0', 10);
       try {
-        genres = JSON.parse(localStorage.getItem('options_genres') || '[]');
+        if (genreTs && now - genreTs < GENRES_DEMOS_TTL)
+          genres = JSON.parse(localStorage.getItem('options_genres') || '[]');
       } catch {}
       try {
-        demos = JSON.parse(localStorage.getItem('options_demographics') || '[]');
+        if (demoTs && now - demoTs < GENRES_DEMOS_TTL)
+          demos = JSON.parse(localStorage.getItem('options_demographics') || '[]');
       } catch {}
 
       if (genres.length === 0 || demos.length === 0) {
@@ -745,8 +780,16 @@ const Home = ({
           helpHttp.get(`${set.base_url}api/series/genres`),
           helpHttp.get(`${set.base_url}api/series/demographics`),
         ]);
-        if (!gRes?.err) genres = gRes.genres || gRes.data || [];
-        if (!dRes?.err) demos = dRes.demographics || dRes.data || [];
+        if (!gRes?.err) {
+          genres = gRes.genres || gRes.data || [];
+          localStorage.setItem('options_genres', JSON.stringify(genres));
+          localStorage.setItem('options_genres_ts', now.toString());
+        }
+        if (!dRes?.err) {
+          demos = dRes.demographics || dRes.data || [];
+          localStorage.setItem('options_demographics', JSON.stringify(demos));
+          localStorage.setItem('options_demographics_ts', now.toString());
+        }
       }
 
       const genre = genres.find(
