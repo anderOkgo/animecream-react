@@ -157,7 +157,7 @@ const Menu = ({
         <span className="icon-activity" onClick={handleStatusClick} onDoubleClick={handleThemeDoubleClick}>
           <Status {...{ init, proc }} />
         </span>
-        {title}
+        <a href="/" style={{ textDecoration: 'none', color: 'inherit' }}>{title}</a>
       </div>
     </nav>
   );
