@@ -9,24 +9,21 @@
 <url>
   <loc>https://animecream.com/</loc>
   <changefreq>weekly</changefreq><priority>1.00</priority>
-  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/"/>
-  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="https://animecream.com/"/>
 </url>
 
 <!-- Top 100 -->
 <url>
   <loc>https://animecream.com/top100</loc>
   <changefreq>weekly</changefreq><priority>0.95</priority>
-  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/top100"/>
-  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/top100"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="https://animecream.com/top100"/>
 </url>
 
 <!-- Top 250 -->
 <url>
   <loc>https://animecream.com/top250</loc>
   <changefreq>weekly</changefreq><priority>0.95</priority>
-  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/top250"/>
-  <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/top250"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="https://animecream.com/top250"/>
 </url>
 
 <!-- Décadas (misma URL en ambos idiomas) -->
@@ -181,7 +178,7 @@
   <loc>https://animecream.com/psychological-thriller</loc>
   <changefreq>weekly</changefreq><priority>0.85</priority>
   <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/psychological-thriller"/>
-  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/triller-sicologico"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/triller-psicologico"/>
 </url>
 
 <!-- Géneros ES (alternates) -->
@@ -288,9 +285,9 @@
   <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/mystery"/>
 </url>
 <url>
-  <loc>https://animecream.com/triller-sicologico</loc>
+  <loc>https://animecream.com/triller-psicologico</loc>
   <changefreq>weekly</changefreq><priority>0.85</priority>
-  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/triller-sicologico"/>
+  <xhtml:link rel="alternate" hreflang="es" href="https://animecream.com/triller-psicologico"/>
   <xhtml:link rel="alternate" hreflang="en" href="https://animecream.com/psychological-thriller"/>
 </url>
 
