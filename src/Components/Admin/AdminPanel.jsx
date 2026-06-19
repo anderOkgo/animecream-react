@@ -72,13 +72,19 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
   const loadOptions = async () => {
     setLoadingOptions(true);
 
-    // Load from cache immediately so options are available offline
+    let cachedGenres = [];
+    let cachedDemographics = [];
     try {
-      const cachedGenres = JSON.parse(localStorage.getItem('options_genres') || '[]');
-      const cachedDemographics = JSON.parse(localStorage.getItem('options_demographics') || '[]');
+      cachedGenres = JSON.parse(localStorage.getItem('options_genres') || '[]');
+      cachedDemographics = JSON.parse(localStorage.getItem('options_demographics') || '[]');
       if (cachedGenres.length > 0) setGenres(cachedGenres);
       if (cachedDemographics.length > 0) setDemographics(cachedDemographics);
     } catch {}
+
+    if (cachedGenres.length > 0 && cachedDemographics.length > 0) {
+      setLoadingOptions(false);
+      return;
+    }
 
     try {
       const currentUser = AuthService.getCurrentUser();
@@ -88,11 +94,11 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
       const demographicsUrl = set.base_url + 'api/series/demographics';
 
       const [genresResponse, demographicsResponse] = await Promise.all([
-        helpHttp.get(genresUrl, { token }),
-        helpHttp.get(demographicsUrl, { token }),
+        cachedGenres.length === 0 ? helpHttp.get(genresUrl, { token }) : Promise.resolve(null),
+        cachedDemographics.length === 0 ? helpHttp.get(demographicsUrl, { token }) : Promise.resolve(null),
       ]);
 
-      if (!genresResponse?.err) {
+      if (genresResponse && !genresResponse?.err) {
         const genresList = genresResponse.genres || genresResponse.data || [];
         if (genresList.length > 0) {
           localStorage.setItem('options_genres', JSON.stringify(genresList));
@@ -100,7 +106,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
         }
       }
 
-      if (!demographicsResponse?.err) {
+      if (demographicsResponse && !demographicsResponse?.err) {
         const demographicsList = demographicsResponse.demographics || demographicsResponse.data || [];
         if (demographicsList.length > 0) {
           localStorage.setItem('options_demographics', JSON.stringify(demographicsList));
