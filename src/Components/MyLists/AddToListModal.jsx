@@ -72,6 +72,7 @@ const AddToListModal = ({ seriesId, seriesName, onClose, onAdd }) => {
           items.push({ id: seriesId, name: seriesName });
           listData.items = items;
           localStorage.setItem(listId, JSON.stringify(listData));
+          loadLists();
 
           if (onAdd) {
             onAdd(listId, seriesId, seriesName);

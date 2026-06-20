@@ -297,6 +297,7 @@ const ListManager = ({
 
       localStorage.setItem(selectedListId, JSON.stringify(updatedList));
       setListData(updatedList);
+      loadLists();
 
       if (skippedCount > 0) {
         alert(t('seriesAddedWithSkipped') || `${addedCount} series added, ${skippedCount} already in list`);
