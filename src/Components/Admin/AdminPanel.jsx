@@ -22,6 +22,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
   const [seriesId, setSeriesId] = useState(null);
   const [loadingSeries, setLoadingSeries] = useState(false);
   const isSubmitting = useRef(false);
+  const activeEditIdRef = useRef(null);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -55,6 +56,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
   // Load series data when in edit mode
   useEffect(() => {
     if (isEditMode && seriesToEdit) {
+      activeEditIdRef.current = seriesToEdit;
       setLoadingSeries(true);
       loadSeriesData();
     } else {
@@ -121,11 +123,14 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
   };
 
   const loadSeriesData = async () => {
+    const myTarget = seriesToEdit;
     try {
       // Ensure options are loaded first
       if (demographics.length === 0 || genres.length === 0) {
         await loadOptions();
       }
+
+      if (activeEditIdRef.current !== myTarget) return;
 
       const seriesId = seriesToEdit.id;
 
@@ -142,6 +147,8 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
       const url = set.base_url + set.api_url + seriesId;
       const response = await helpHttp.get(url, { token: token });
 
+      if (activeEditIdRef.current !== myTarget) return;
+
       if (response?.err) {
         createJsonFromSeriesData(seriesToEdit);
         loadFormFromSeriesData(seriesToEdit);
@@ -155,9 +162,11 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
       createJsonFromSeriesData(seriesData);
       loadFormFromSeriesData(seriesData);
     } catch (error) {
+      if (activeEditIdRef.current !== myTarget) return;
       createJsonFromSeriesData(seriesToEdit);
       loadFormFromSeriesData(seriesToEdit);
     } finally {
+      if (activeEditIdRef.current !== myTarget) return;
       setLoadingSeries(false);
       if (setProc) setProc(false);
     }

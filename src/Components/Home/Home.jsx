@@ -72,6 +72,7 @@ const Home = ({
   const hasInitialLoad = useRef(false);
   const lastOptRef = useRef({});
   const prevRefreshTriggerRef = useRef(refreshTrigger);
+  const userNavigatedRef = useRef(false);
 
   const hasCleanedUrlRef = useRef(false);
 
@@ -472,6 +473,8 @@ const Home = ({
       return;
     }
 
+    userNavigatedRef.current = true;
+
     const fetchDataByIds = async () => {
       isLoadingByIdsRef.current = true;
       setLoading(true);
@@ -591,13 +594,13 @@ const Home = ({
         if (!productionsInfo?.err) {
           const data = Array.isArray(productionsInfo) ? productionsInfo : productionsInfo.data || productionsInfo;
           persistFullCatalog(data);
-          setDb(data);
-          initialDbRef.current = data;
-          setErrorPayload(null);
-          if (onSeriesDataChange) {
-            onSeriesDataChange(data);
+          if (!userNavigatedRef.current) {
+            setDb(data);
+            initialDbRef.current = data;
+            setErrorPayload(null);
+            if (onSeriesDataChange) onSeriesDataChange(data);
+            if (tipoParam) cleanUrlParam();
           }
-          if (tipoParam) cleanUrlParam();
         } else {
           setErrorPayload({ type: 'http', err: productionsInfo.err });
         }
@@ -629,6 +632,8 @@ const Home = ({
     if ((!opt || Object.keys(opt).length === 0) && !wasRefreshTriggered) {
       return;
     }
+
+    userNavigatedRef.current = true;
 
     // Guardar el opt actual si no está vacío
     if (opt && Object.keys(opt).length > 0) {
@@ -669,6 +674,7 @@ const Home = ({
     }
 
     const isRestoring = isRestoringRef.current;
+    let cancelled = false;
     const fetchData = async () => {
       setLoading(true);
       setLoadedByList(false);
@@ -694,6 +700,7 @@ const Home = ({
       }
 
       const [response] = await Promise.all([helpHttp.post(urlProduction, requestOpt)]);
+      if (cancelled) return;
       const productionsInfo = response;
 
       if (!productionsInfo?.err) {
@@ -716,6 +723,7 @@ const Home = ({
     };
 
     fetchData();
+    return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opt, refreshTrigger]);
 
