@@ -161,7 +161,7 @@ const SearchMethod = ({ setOpt, t, isFormVisible, setIsFormVisible }) => {
               <label>{t('genreNames')}</label>
               <select name="genre_names" value={''} onChange={handleChange}>
                 <option value="">{t('selectGenre')}</option>
-                {genreOptions.map((option) => (
+                {[...genreOptions].sort((a, b) => translate(a.name).localeCompare(translate(b.name))).map((option) => (
                   <option key={option.id} value={option.name}>
                     {translate(option.name)}
                   </option>

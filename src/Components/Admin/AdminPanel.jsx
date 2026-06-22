@@ -887,7 +887,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
                 <p>{t('loading') || 'Loading...'}</p>
               ) : (
                 <div className="checkbox-group">
-                  {genres.map((genre) => (
+                  {[...genres].sort((a, b) => t(a.name).localeCompare(t(b.name))).map((genre) => (
                     <label key={genre.id} className="checkbox-label">
                       <input
                         type="checkbox"
