@@ -1099,8 +1099,7 @@ const Home = ({
           onDoubleClick={handleErrorDoubleClick}
         />
       )}
-      {/* Renderizar siempre que haya datos, sin importar si está cargando o no */}
-      {filteredDb && filteredDb.length > 0 && (
+      {filteredDb && filteredDb.length > 0 ? (
         <Card
           data={filteredDb}
           t={t}
@@ -1114,6 +1113,10 @@ const Home = ({
           onAddToList={onAddToList}
           onFilteredDataChange={onSeriesDataChange}
         />
+      ) : (
+        filteredDb && !loading && (
+          <div style={{ textAlign: 'center', padding: '2em' }}>{translate('noDataFound')}</div>
+        )
       )}
     </article>
   );

@@ -81,7 +81,6 @@
   max-width: 900px;
   margin: auto;
   position: relative;
-  height: 100svh; /* Ocupa toda la pantalla siempre */
 }
 
 .small-text {

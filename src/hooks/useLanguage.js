@@ -288,6 +288,7 @@ const translations = {
     goToBottom: 'Go to bottom',
     doubleClick: 'Double click',
     pleaseFillThisField: 'Please fill out this field',
+    noDataFound: 'No Data Found',
   },
   es: {
     welcome: 'AnimeCream APP',
@@ -569,6 +570,7 @@ const translations = {
     goToBottom: 'Ir al final',
     doubleClick: 'Doble clic',
     pleaseFillThisField: 'Por favor, completa este campo',
+    noDataFound: 'No se encontraron resultados',
   },
 };
 

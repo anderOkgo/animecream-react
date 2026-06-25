@@ -109,7 +109,7 @@ const Card = ({
           </div>
         </>
       ) : (
-        <div style={{ textAlign: 'center' }}>No Data Found</div>
+        <div style={{ textAlign: 'center' }}>{t('noDataFound')}</div>
       )}
     </div>
   );
