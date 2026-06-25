@@ -1,9 +1,9 @@
 import React from 'react';
 import './Loader.css';
 
-const Loader = ({ onClick }) => {
+const Loader = () => {
   return (
-    <div className="loader-container" onClick={onClick}>
+    <div className="loader-container">
       <div className="lds-ring">
         <div></div>
         <div></div>
