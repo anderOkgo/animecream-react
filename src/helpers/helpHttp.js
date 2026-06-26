@@ -32,11 +32,10 @@ const normalizeHttpErrorMessage = (responseBody) => {
 };
 
 const customFetch = async (endpoint, options = {}) => {
-  const defaultHeaders = {
-    Authorization: options.token,
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
-  };
+  const isFormData = options.body instanceof FormData;
+  const defaultHeaders = isFormData
+    ? { Authorization: options.token }
+    : { Authorization: options.token, 'Content-Type': 'application/json', Accept: 'application/json' };
 
   const controller = new AbortController();
   const timeout = options.timeout || set.defaul_fetch_request;
@@ -45,8 +44,10 @@ const customFetch = async (endpoint, options = {}) => {
   options.method = options.method || 'GET';
   options.headers = { ...defaultHeaders, ...options.headers };
 
-  options.body = JSON.stringify(options.body) || false;
-  if (!options.body) delete options.body;
+  if (!isFormData) {
+    options.body = JSON.stringify(options.body) || false;
+    if (!options.body) delete options.body;
+  }
 
   setTimeout(() => controller.abort(), timeout);
 
@@ -63,7 +64,8 @@ const customFetch = async (endpoint, options = {}) => {
           }));
     } catch (err) {
       console.log({ err });
-      return { err };
+      const normalizedErr = err.name === 'AbortError' ? { ...err, message: 'Request timeout' } : err;
+      return { err: normalizedErr };
     }
   } else {
     return {

@@ -152,6 +152,10 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
       if (response?.err) {
         createJsonFromSeriesData(seriesToEdit);
         loadFormFromSeriesData(seriesToEdit);
+        setSeriesId(seriesId);
+        if (setGlobalMessage) {
+          setGlobalMessage({ type: 'warning', text: resolveApiError(t, response.err.message, 'errorLoadingData') });
+        }
         setLoadingSeries(false);
         return;
       }
@@ -418,6 +422,16 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
         const currentUser = AuthService.getCurrentUser();
         const token = currentUser?.token ? `Bearer ${currentUser.token}` : '';
 
+        if (isEditMode && !seriesId) {
+          if (setGlobalMessage) {
+            setGlobalMessage({ type: 'error', text: t('errorUpdatingSeries') });
+          }
+          setLoading(false);
+          if (setProc) setProc(false);
+          isSubmitting.current = false;
+          return;
+        }
+
         if (isEditMode && seriesId) {
           // Update existing series using PUT /api/series/{id}
           const updateUrl = set.base_url + set.api_url + seriesId;
@@ -523,23 +537,19 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
             const formDataImage = new FormData();
             formDataImage.append('image', imageFile);
 
-            const imageResponse = await fetch(imageUrl, {
-              method: 'PUT',
+            const imageResult = await helpHttp.put(imageUrl, {
               body: formDataImage,
-              headers: {
-                Authorization: token,
-              },
+              token,
+              timeout: 30000,
             });
 
-            const imageResult = await imageResponse.json();
-
-            if (!imageResponse.ok || imageResult?.err) {
+            if (imageResult?.err) {
               if (setGlobalMessage) {
                 setGlobalMessage({
                   type: 'warning',
                   text: `${t('imageUploadFailed')}: ${resolveApiError(
                     t,
-                    imageResult?.message ?? imageResult?.error ?? imageResult?.err?.message,
+                    imageResult.err.message,
                     'errorUnknown'
                   )}`,
                 });
@@ -570,6 +580,10 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
               isSubmitting.current = false;
               onEditComplete();
             }, 500);
+          } else {
+            setLoading(false);
+            if (setProc) setProc(false);
+            isSubmitting.current = false;
           }
         } else {
           // Create new series
@@ -625,23 +639,19 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
           const formDataImage = new FormData();
           formDataImage.append('image', imageFile);
 
-          const imageResponse = await fetch(imageUrl, {
-            method: 'PUT',
+          const imageResult = await helpHttp.put(imageUrl, {
             body: formDataImage,
-            headers: {
-              Authorization: token,
-            },
+            token,
+            timeout: 30000,
           });
 
-          const imageResult = await imageResponse.json();
-
-          if (!imageResponse.ok || imageResult?.err) {
+          if (imageResult?.err) {
             if (setGlobalMessage) {
               setGlobalMessage({
                 type: 'warning',
                 text: `${t('seriesCreated')} (ID: ${newSeriesId}) ${t('imageUploadFailed')}: ${resolveApiError(
                   t,
-                  imageResult?.message ?? imageResult?.error ?? imageResult?.err?.message,
+                  imageResult.err.message,
                   'errorUnknown'
                 )}`,
               });

@@ -247,6 +247,7 @@ const translations = {
     'Image size must not exceed': 'Image size must not exceed',
     'Error updating series image:': 'Error updating series image:',
     'Unknown error': 'Unknown error',
+    'Request timeout': 'Request timeout',
     'ID must contain valid numbers separated by commas.': 'ID must contain valid numbers separated by commas.',
     'ID must contain valid numbers.': 'ID must contain valid numbers.',
     'Production name must be a string with a maximum length of 50 characters.':
@@ -528,6 +529,7 @@ const translations = {
     'Image size must not exceed': 'El tamaño de la imagen no puede superar',
     'Error updating series image:': 'Error al actualizar la imagen de la serie:',
     'Unknown error': 'Error desconocido',
+    'Request timeout': 'Tiempo de espera agotado',
     'ID must contain valid numbers separated by commas.':
       'El ID debe contener números válidos separados por comas.',
     'ID must contain valid numbers.': 'El ID debe contener números válidos.',
