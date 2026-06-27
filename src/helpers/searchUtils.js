@@ -12,6 +12,14 @@
  * @param {string} searchTerm - Search term to filter by
  * @returns {Array} Filtered results
  */
+const EXCLUDED_SEARCH_FIELDS = ['production_image_path'];
+
+const getSearchString = (item) =>
+  Object.entries(item)
+    .filter(([key, val]) => !EXCLUDED_SEARCH_FIELDS.includes(key) && val !== null && val !== undefined)
+    .map(([, val]) => val.toString().toLowerCase())
+    .join(' ');
+
 export const filterDataset = (dataset, searchTerm) => {
   const trimmedTerm = searchTerm.trim().toLowerCase();
 
@@ -27,10 +35,7 @@ export const filterDataset = (dataset, searchTerm) => {
       .filter((term) => term.length > 0);
 
     return dataset.filter((item) => {
-      const itemString = Object.values(item)
-        .filter((val) => val !== null && val !== undefined)
-        .map((val) => val.toString().toLowerCase())
-        .join(' ');
+      const itemString = getSearchString(item);
       return terms.some((term) => itemString.includes(term));
     });
   } else {
@@ -41,10 +46,7 @@ export const filterDataset = (dataset, searchTerm) => {
       .filter((term) => term.length > 0);
 
     return dataset.filter((item) => {
-      const itemString = Object.values(item)
-        .filter((val) => val !== null && val !== undefined)
-        .map((val) => val.toString().toLowerCase())
-        .join(' ');
+      const itemString = getSearchString(item);
       return terms.every((term) => itemString.includes(term));
     });
   }
@@ -78,6 +80,16 @@ export const generateSuggestions = (dataset, searchTerm, maxSuggestions = 10) =>
         const genreTrimmed = genre.trim();
         if (genreTrimmed.toLowerCase().includes(trimmedTerm)) {
           suggestionsSet.add(genreTrimmed);
+        }
+      });
+    }
+
+    // Alternative titles
+    if (item.title_names) {
+      item.title_names.split(',').forEach((title) => {
+        const titleTrimmed = title.trim();
+        if (titleTrimmed.toLowerCase().includes(trimmedTerm)) {
+          suggestionsSet.add(titleTrimmed);
         }
       });
     }
