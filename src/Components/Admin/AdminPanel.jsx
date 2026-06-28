@@ -137,7 +137,6 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
       if (!seriesId) {
         createJsonFromSeriesData(seriesToEdit);
         loadFormFromSeriesData(seriesToEdit);
-        setLoadingSeries(false);
         return;
       }
 
@@ -156,7 +155,6 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
         if (setGlobalMessage) {
           setGlobalMessage({ type: 'warning', text: resolveApiError(t, response.err.message, 'errorLoadingData') });
         }
-        setLoadingSeries(false);
         return;
       }
 
@@ -170,7 +168,6 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
       createJsonFromSeriesData(seriesToEdit);
       loadFormFromSeriesData(seriesToEdit);
     } finally {
-      if (activeEditIdRef.current !== myTarget) return;
       setLoadingSeries(false);
       if (setProc) setProc(false);
     }

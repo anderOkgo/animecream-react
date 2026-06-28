@@ -51,7 +51,7 @@ function Tab({
       return;
     }
     setProc(true);
-    setSeriesToEdit(seriesData);
+    setSeriesToEdit({ ...seriesData });
     if (role === 'admin') {
       setSelectedOption(2);
     }
