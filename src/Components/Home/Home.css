@@ -44,6 +44,7 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  border-radius: 6px;
 }
 
 .toolbar-btn:not(.top250-btn):hover {
@@ -132,6 +133,7 @@
   width: 100%;
   min-width: 80px;
   max-width: 200px;
+  border-radius: 6px !important;
   justify-content: center;
   position: relative !important;
   overflow: hidden !important;
