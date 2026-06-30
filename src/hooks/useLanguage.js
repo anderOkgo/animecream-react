@@ -248,6 +248,9 @@ const translations = {
     'Error updating series image:': 'Error updating series image:',
     'Unknown error': 'Unknown error',
     'Request timeout': 'Request timeout',
+    'Request Timeout': 'Request timeout',
+    'Failed to fetch': 'Failed to fetch',
+    'Network Error': 'Network Error',
     'ID must contain valid numbers separated by commas.': 'ID must contain valid numbers separated by commas.',
     'ID must contain valid numbers.': 'ID must contain valid numbers.',
     'Production name must be a string with a maximum length of 50 characters.':
@@ -530,6 +533,9 @@ const translations = {
     'Error updating series image:': 'Error al actualizar la imagen de la serie:',
     'Unknown error': 'Error desconocido',
     'Request timeout': 'Tiempo de espera agotado',
+    'Request Timeout': 'Tiempo de espera agotado',
+    'Failed to fetch': 'Error al conectar con el servidor',
+    'Network Error': 'Error de red',
     'ID must contain valid numbers separated by commas.':
       'El ID debe contener números válidos separados por comas.',
     'ID must contain valid numbers.': 'El ID debe contener números válidos.',
@@ -652,7 +658,26 @@ export function LanguageProvider({ children }) {
     applyDocumentLanguage(browserLang);
   }, []);
 
-  const t = useCallback((key) => translations[language]?.[key] ?? translations.en[key] ?? key, [language]);
+  const t = useCallback((key) => {
+    if (key === undefined || key === null || key === '') return '';
+    const currentTranslations = translations[language];
+    if (currentTranslations?.[key]) return currentTranslations[key];
+    if (translations.en[key]) return translations.en[key];
+
+    // Case-insensitive fallback
+    const lowerKey = typeof key === 'string' ? key.toLowerCase() : String(key).toLowerCase();
+    const foundKey = Object.keys(currentTranslations || {}).find(
+      (k) => k.toLowerCase() === lowerKey
+    );
+    if (foundKey) return currentTranslations[foundKey];
+
+    const foundEnKey = Object.keys(translations.en).find(
+      (k) => k.toLowerCase() === lowerKey
+    );
+    if (foundEnKey) return translations.en[foundEnKey];
+
+    return key;
+  }, [language]);
 
   useEffect(() => {
     if (useSystemDefault) {
