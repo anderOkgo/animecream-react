@@ -3,7 +3,7 @@
   "base_url": "https://info.animecream.com/",
   "base_url_": "http://localhost:3001/",
   "boot_timeout": 20000,
-  "defaul_fetch_request": 10000,
+  "defaul_fetch_request": 15000,
   "pagination_max_buttons": 3,
   "pagination_default_items_per_page": 20,
   "table_select_row_numbers": [1, 5, 10, 20, 25, 50, 100, 150, 200, 250, 500, 1000],

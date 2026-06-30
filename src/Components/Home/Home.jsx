@@ -140,7 +140,11 @@ const Home = ({
       });
     } else if (tipoParam) {
       const slugify = (str) =>
-        str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '-');
+        str
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/\s+/g, '-');
       filtered = filtered.filter((item) => {
         const matchGenre = item.genre_names?.split(',').some((g) => slugify(g) === tipoParam);
         const matchDemo = slugify(item.demographic_name || '') === tipoParam;
@@ -211,6 +215,21 @@ const Home = ({
   const [isRangesExpanded, setIsRangesExpanded] = useState(false);
   const [resolvedSlugs, setResolvedSlugs] = useState(null);
   const [isToolbarVisible, setIsToolbarVisible] = useState(true);
+  const toolbarClickCountRef = useRef(0);
+  const toolbarClickTimerRef = useRef(null);
+
+  const handleToolbarClick = () => {
+    toolbarClickCountRef.current += 1;
+    if (toolbarClickTimerRef.current) clearTimeout(toolbarClickTimerRef.current);
+    toolbarClickTimerRef.current = setTimeout(() => {
+      toolbarClickCountRef.current = 0;
+    }, 1000);
+    if (toolbarClickCountRef.current >= 5) {
+      toolbarClickCountRef.current = 0;
+      clearTimeout(toolbarClickTimerRef.current);
+      setIsToolbarVisible(false);
+    }
+  };
 
   const setOptWithHistory = (requestData) => {
     if (navigation && !isRestoringRef.current) {
@@ -372,8 +391,7 @@ const Home = ({
     const optBody = isOptActive ? parseOptBody(opt) : {};
     // Año por doble clic: offline usa el slider (mismo camino que RangeFilter), no applyCatalogQuery
     const useOfflineYearSlider = isOffline && isOptActive && !loadedByList && isYearOnlyOptBody(optBody);
-    const useOfflineQuery =
-      isOffline && isOptActive && !loadedByList && !useOfflineYearSlider;
+    const useOfflineQuery = isOffline && isOptActive && !loadedByList && !useOfflineYearSlider;
 
     let filtered;
     if (useOfflineQuery) {
@@ -723,13 +741,16 @@ const Home = ({
     };
 
     fetchData();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opt, refreshTrigger]);
 
   // Resolver ?tipo= como slug de género o demografía
   useEffect(() => {
-    if (!tipoParam || tipoYear !== null || tipoDecade !== null || tipoLista !== null || tipoTop250 || tipoTop100) return;
+    if (!tipoParam || tipoYear !== null || tipoDecade !== null || tipoLista !== null || tipoTop250 || tipoTop100)
+      return;
 
     const resolveSlug = async () => {
       const slugify = (str) =>
@@ -745,22 +766,35 @@ const Home = ({
         const genreNames = new Set();
         const demoNames = new Set();
         cachedCatalog.forEach((item) => {
-          item.genre_names?.split(',').forEach((g) => { const t = g.trim(); if (t) genreNames.add(t); });
+          item.genre_names?.split(',').forEach((g) => {
+            const t = g.trim();
+            if (t) genreNames.add(t);
+          });
           if (item.demographic_name) demoNames.add(item.demographic_name);
         });
 
-        const matchedGenre = [...genreNames].find((g) => slugify(g) === tipoParam || slugify(translateEN(g)) === tipoParam);
+        const matchedGenre = [...genreNames].find(
+          (g) => slugify(g) === tipoParam || slugify(translateEN(g)) === tipoParam
+        );
         if (matchedGenre) {
           setResolvedSlugs({ es: slugify(matchedGenre), en: slugify(translateEN(matchedGenre)) });
-          setOptWithHistory({ method: 'POST', body: { genre_names: matchedGenre, production_ranking_number: 'ASC' } });
+          setOptWithHistory({
+            method: 'POST',
+            body: { genre_names: matchedGenre, production_ranking_number: 'ASC' },
+          });
           cleanUrlParam();
           return;
         }
 
-        const matchedDemo = [...demoNames].find((d) => slugify(d) === tipoParam || slugify(translateEN(d)) === tipoParam);
+        const matchedDemo = [...demoNames].find(
+          (d) => slugify(d) === tipoParam || slugify(translateEN(d)) === tipoParam
+        );
         if (matchedDemo) {
           setResolvedSlugs({ es: slugify(matchedDemo), en: slugify(translateEN(matchedDemo)) });
-          setOptWithHistory({ method: 'POST', body: { demographic_name: matchedDemo, production_ranking_number: 'ASC' } });
+          setOptWithHistory({
+            method: 'POST',
+            body: { demographic_name: matchedDemo, production_ranking_number: 'ASC' },
+          });
           cleanUrlParam();
           return;
         }
@@ -901,9 +935,9 @@ const Home = ({
   const canonicalUrl = tipoLista
     ? `${baseUrl}/list/${tipoLista.join(',')}`
     : tipoParam
-    ? `${baseUrl}/${tipoParam}`
-    : baseUrl;
-  
+      ? `${baseUrl}/${tipoParam}`
+      : baseUrl;
+
   // Título dinámico basado en el contexto e idioma
   const dynamicTitle = useMemo(() => {
     const isEn = language === 'en';
@@ -917,7 +951,9 @@ const Home = ({
       return isEn ? `Anime from ${tipoYear} | AnimeCream` : `Animes de ${tipoYear} | AnimeCream`;
     }
     if (tipoDecade) {
-      return isEn ? `Anime from the ${tipoDecade}s | AnimeCream` : `Animes de la década ${tipoDecade}s | AnimeCream`;
+      return isEn
+        ? `Anime from the ${tipoDecade}s | AnimeCream`
+        : `Animes de la década ${tipoDecade}s | AnimeCream`;
     }
     if (tipoParam) {
       const displayParam = tipoParam.charAt(0).toUpperCase() + tipoParam.slice(1);
@@ -989,7 +1025,11 @@ const Home = ({
         <meta property="og:description" content={dynamicDescription} />
         <meta
           property="og:image"
-          content={filteredDb && filteredDb.length > 0 ? filteredDb[0].production_image_path : `${baseUrl}/img/tarjeta/AnimecreamTargetaSEO.png`}
+          content={
+            filteredDb && filteredDb.length > 0
+              ? filteredDb[0].production_image_path
+              : `${baseUrl}/img/tarjeta/AnimecreamTargetaSEO.png`
+          }
         />
 
         {/* Twitter */}
@@ -999,12 +1039,16 @@ const Home = ({
         <meta name="twitter:description" content={dynamicDescription} />
         <meta
           name="twitter:image"
-          content={filteredDb && filteredDb.length > 0 ? filteredDb[0].production_image_path : `${baseUrl}/img/tarjeta/AnimecreamTargetaSEO.png`}
+          content={
+            filteredDb && filteredDb.length > 0
+              ? filteredDb[0].production_image_path
+              : `${baseUrl}/img/tarjeta/AnimecreamTargetaSEO.png`
+          }
         />
       </Helmet>
 
       {isToolbarVisible && (
-        <div className="home-toolbar" onDoubleClick={() => setIsToolbarVisible(false)}>
+        <div className="home-toolbar" onClick={handleToolbarClick}>
           <button
             className="toolbar-btn"
             onClick={toggleLanguage}
@@ -1114,9 +1158,8 @@ const Home = ({
           onFilteredDataChange={onSeriesDataChange}
         />
       ) : (
-        filteredDb && !loading && (
-          <div style={{ textAlign: 'center', padding: '2em' }}>{translate('noDataFound')}</div>
-        )
+        filteredDb &&
+        !loading && <div style={{ textAlign: 'center', padding: '2em' }}>{translate('noDataFound')}</div>
       )}
     </article>
   );
