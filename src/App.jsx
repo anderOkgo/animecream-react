@@ -7,7 +7,7 @@ import Loader from './Components/Loader/Loader';
 import Message from './Components/Message/Message';
 import { useAlive } from './hooks/useAlive';
 import { useTheme } from './hooks/useTheme';
-import { useLanguage } from './hooks/useLanguage';
+import { useLanguage, translateApiMessage } from './hooks/useLanguage';
 import { useNavigationHistory } from './hooks/useNavigationHistory';
 import AuthService from './services/auth.service';
 import { useState, useEffect } from 'react';
@@ -178,7 +178,35 @@ const App = () => {
       {!!proc && <Loader />}
       {globalMessage && (
         <Message
-          msg={globalMessage.key ? t(globalMessage.key) : globalMessage.text}
+          msg={
+            globalMessage.key
+              ? t(globalMessage.key)
+              : globalMessage.error !== undefined
+                ? (() => {
+                    const resolveApiError = (t, message, fallbackKey) => {
+                      if (message === undefined || message === null || message === '') {
+                        return t(fallbackKey);
+                      }
+                      return translateApiMessage(t, message);
+                    };
+                    let msg = '';
+                    if (globalMessage.prefixKey) {
+                      msg += t(globalMessage.prefixKey);
+                      if (globalMessage.prefixParams?.id) {
+                        msg += globalMessage.prefixParams.useParentheses
+                          ? ` (ID: ${globalMessage.prefixParams.id})`
+                          : ` ID: ${globalMessage.prefixParams.id}`;
+                      }
+                      msg += ' ';
+                    }
+                    if (globalMessage.suffixKey) {
+                      msg += `${t(globalMessage.suffixKey)}: `;
+                    }
+                    msg += resolveApiError(t, globalMessage.error, globalMessage.fallbackKey);
+                    return msg;
+                  })()
+                : globalMessage.text
+          }
           bgColor={
             globalMessage.type === 'success'
               ? 'var(--color-success)'

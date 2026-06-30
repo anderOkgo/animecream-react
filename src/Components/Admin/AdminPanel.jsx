@@ -156,7 +156,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
         loadFormFromSeriesData(seriesToEdit);
         setSeriesId(seriesId);
         if (setGlobalMessage) {
-          setGlobalMessage({ type: 'warning', text: resolveApiError(t, response.err.message, 'errorLoadingData') });
+          setGlobalMessage({ type: 'warning', error: response.err.message, fallbackKey: 'errorLoadingData' });
         }
         return;
       }
@@ -393,7 +393,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
         if (setGlobalMessage) {
           setGlobalMessage({
             type: 'error',
-            text: t('imageRequired') || 'Image is required',
+            key: 'imageRequiredToCreate',
           });
         }
         setLoading(false);
@@ -411,7 +411,9 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
           if (setGlobalMessage) {
             setGlobalMessage({
               type: 'error',
-              text: `${t('invalidDataFormat')}: ${parseError.message}`,
+              prefixKey: 'invalidDataFormat',
+              error: parseError.message,
+              fallbackKey: 'errorUnknown',
             });
           }
           setLoading(false);
@@ -426,7 +428,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
 
         if (isEditMode && !seriesId) {
           if (setGlobalMessage) {
-            setGlobalMessage({ type: 'error', text: t('errorUpdatingSeries') });
+            setGlobalMessage({ type: 'error', key: 'errorUpdatingSeries' });
           }
           setLoading(false);
           if (setProc) setProc(false);
@@ -447,7 +449,8 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
             if (setGlobalMessage) {
               setGlobalMessage({
                 type: 'error',
-                text: resolveApiError(t, updateResponse.err.message, 'errorUpdatingSeries'),
+                error: updateResponse.err.message,
+                fallbackKey: 'errorUpdatingSeries',
               });
             }
             setLoading(false);
@@ -474,7 +477,9 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
               if (setGlobalMessage) {
                 setGlobalMessage({
                   type: 'warning',
-                  text: `${t('genresUpdateFailed')}: ${resolveApiError(t, genresResponse.err.message, 'errorUnknown')}`,
+                  prefixKey: 'genresUpdateFailed',
+                  error: genresResponse.err.message,
+                  fallbackKey: 'errorUnknown',
                 });
               }
               setLoading(false);
@@ -503,7 +508,9 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
                 if (setGlobalMessage) {
                   setGlobalMessage({
                     type: 'warning',
-                    text: `${t('titlesRemoveFailed')}: ${resolveApiError(t, removeResponse.err.message, 'errorUnknown')}`,
+                    prefixKey: 'titlesRemoveFailed',
+                    error: removeResponse.err.message,
+                    fallbackKey: 'errorUnknown',
                   });
                 }
                 setLoading(false);
@@ -526,7 +533,9 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
                 if (setGlobalMessage) {
                   setGlobalMessage({
                     type: 'warning',
-                    text: `${t('titlesAddFailed')}: ${resolveApiError(t, addResponse.err.message, 'errorUnknown')}`,
+                    prefixKey: 'titlesAddFailed',
+                    error: addResponse.err.message,
+                    fallbackKey: 'errorUnknown',
                   });
                 }
                 setLoading(false);
@@ -554,11 +563,9 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
               if (setGlobalMessage) {
                 setGlobalMessage({
                   type: 'warning',
-                  text: `${t('imageUploadFailed')}: ${resolveApiError(
-                    t,
-                    imageResult.err.message,
-                    'errorUnknown'
-                  )}`,
+                  prefixKey: 'imageUploadFailed',
+                  error: imageResult.err.message,
+                  fallbackKey: 'errorUnknown',
                 });
               }
               setLoading(false);
@@ -571,7 +578,9 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
           if (setGlobalMessage) {
             setGlobalMessage({
               type: 'success',
-              text: `${t('seriesUpdated')} ID: ${seriesId}`,
+              prefixKey: 'seriesUpdated',
+              prefixParams: { id: seriesId, useParentheses: false },
+              error: null, // triggers Dynamic Formatter
             });
           }
 
@@ -600,7 +609,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
             if (setGlobalMessage) {
               setGlobalMessage({
                 type: 'error',
-                text: t('imageRequired') || 'Image is required',
+                key: 'imageRequiredToCreate',
               });
             }
             setLoading(false);
@@ -620,7 +629,8 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
             if (setGlobalMessage) {
               setGlobalMessage({
                 type: 'error',
-                text: resolveApiError(t, createResponse.err.message, 'errorCreatingSeries'),
+                error: createResponse.err.message,
+                fallbackKey: 'errorCreatingSeries',
               });
             }
             setLoading(false);
@@ -635,7 +645,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
             if (setGlobalMessage) {
               setGlobalMessage({
                 type: 'error',
-                text: t('noIdReturned'),
+                key: 'noIdReturned',
               });
             }
             setLoading(false);
@@ -660,11 +670,11 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
             if (setGlobalMessage) {
               setGlobalMessage({
                 type: 'warning',
-                text: `${t('seriesCreated')} (ID: ${newSeriesId}) ${t('imageUploadFailed')}: ${resolveApiError(
-                  t,
-                  imageResult.err.message,
-                  'errorUnknown'
-                )}`,
+                prefixKey: 'seriesCreated',
+                prefixParams: { id: newSeriesId, useParentheses: true },
+                suffixKey: 'imageUploadFailed',
+                error: imageResult.err.message,
+                fallbackKey: 'errorUnknown',
               });
             }
             setLoading(false);
@@ -676,7 +686,9 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
           if (setGlobalMessage) {
             setGlobalMessage({
               type: 'success',
-              text: `${t('seriesCreated')} ID: ${newSeriesId}`,
+              prefixKey: 'seriesCreated',
+              prefixParams: { id: newSeriesId, useParentheses: false },
+              error: null,
             });
           }
 
@@ -705,7 +717,9 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
         if (setGlobalMessage) {
           setGlobalMessage({
             type: 'error',
-            text: `${t('errorPrefix')} ${resolveApiError(t, error.message, 'errorUnknown')}`,
+            prefixKey: 'errorPrefix',
+            error: error.message,
+            fallbackKey: 'errorUnknown',
           });
         }
         setLoading(false);
