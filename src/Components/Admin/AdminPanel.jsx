@@ -22,7 +22,8 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
   const [seriesId, setSeriesId] = useState(null);
   const [loadingSeries, setLoadingSeries] = useState(false);
   const isSubmitting = useRef(false);
-  const activeEditIdRef = useRef(null);
+  const activeEditIdRef = useRef(0);
+  const submitGenerationRef = useRef(0);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -56,10 +57,13 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
   // Load series data when in edit mode
   useEffect(() => {
     if (isEditMode && seriesToEdit) {
-      activeEditIdRef.current = seriesToEdit;
+      submitGenerationRef.current += 1; // cancel any in-flight submit
+      activeEditIdRef.current += 1;
+      const myGeneration = activeEditIdRef.current;
       setLoadingSeries(true);
-      loadSeriesData();
+      loadSeriesData(myGeneration);
     } else {
+      submitGenerationRef.current += 1; // cancel any in-flight submit
       // Reset form when not in edit mode
       setJsonData('');
       setImageFile(null);
@@ -122,15 +126,14 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
     }
   };
 
-  const loadSeriesData = async () => {
-    const myTarget = seriesToEdit;
+  const loadSeriesData = async (myGeneration) => {
     try {
       // Ensure options are loaded first
       if (demographics.length === 0 || genres.length === 0) {
         await loadOptions();
       }
 
-      if (activeEditIdRef.current !== myTarget) return;
+      if (activeEditIdRef.current !== myGeneration) return;
 
       const seriesId = seriesToEdit.id;
 
@@ -146,7 +149,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
       const url = set.base_url + set.api_url + seriesId;
       const response = await helpHttp.get(url, { token: token });
 
-      if (activeEditIdRef.current !== myTarget) return;
+      if (activeEditIdRef.current !== myGeneration) return;
 
       if (response?.err) {
         createJsonFromSeriesData(seriesToEdit);
@@ -164,7 +167,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
       createJsonFromSeriesData(seriesData);
       loadFormFromSeriesData(seriesData);
     } catch (error) {
-      if (activeEditIdRef.current !== myTarget) return;
+      if (activeEditIdRef.current !== myGeneration) return;
       createJsonFromSeriesData(seriesToEdit);
       loadFormFromSeriesData(seriesToEdit);
     } finally {
@@ -379,6 +382,8 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
     if (init && !proc) {
       if (isSubmitting.current) return;
       isSubmitting.current = true;
+      submitGenerationRef.current += 1;
+      const mySubmitGen = submitGenerationRef.current;
 
       setLoading(true);
       if (setProc) setProc(true);
@@ -437,6 +442,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
             token: token,
           });
 
+          if (submitGenerationRef.current !== mySubmitGen) { setLoading(false); if (setProc) setProc(false); isSubmitting.current = false; return; }
           if (updateResponse?.err) {
             if (setGlobalMessage) {
               setGlobalMessage({
@@ -463,6 +469,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
               token: token,
             });
 
+            if (submitGenerationRef.current !== mySubmitGen) { setLoading(false); if (setProc) setProc(false); isSubmitting.current = false; return; }
             if (genresResponse?.err) {
               if (setGlobalMessage) {
                 setGlobalMessage({
@@ -491,6 +498,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
                 token: token,
               });
 
+              if (submitGenerationRef.current !== mySubmitGen) { setLoading(false); if (setProc) setProc(false); isSubmitting.current = false; return; }
               if (removeResponse?.err) {
                 if (setGlobalMessage) {
                   setGlobalMessage({
@@ -513,6 +521,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
                 token: token,
               });
 
+              if (submitGenerationRef.current !== mySubmitGen) { setLoading(false); if (setProc) setProc(false); isSubmitting.current = false; return; }
               if (addResponse?.err) {
                 if (setGlobalMessage) {
                   setGlobalMessage({
@@ -540,6 +549,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
               timeout: 30000,
             });
 
+            if (submitGenerationRef.current !== mySubmitGen) { setLoading(false); if (setProc) setProc(false); isSubmitting.current = false; return; }
             if (imageResult?.err) {
               if (setGlobalMessage) {
                 setGlobalMessage({
@@ -571,7 +581,9 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
           setImageFile(null);
 
           if (onEditComplete) {
+            const capturedGen = mySubmitGen;
             setTimeout(() => {
+              if (submitGenerationRef.current !== capturedGen) return;
               setLoading(false);
               if (setProc) setProc(false);
               isSubmitting.current = false;
@@ -603,6 +615,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
             token: token,
           });
 
+          if (submitGenerationRef.current !== mySubmitGen) { setLoading(false); if (setProc) setProc(false); isSubmitting.current = false; return; }
           if (createResponse?.err) {
             if (setGlobalMessage) {
               setGlobalMessage({
@@ -642,6 +655,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
             timeout: 30000,
           });
 
+          if (submitGenerationRef.current !== mySubmitGen) { setLoading(false); if (setProc) setProc(false); isSubmitting.current = false; return; }
           if (imageResult?.err) {
             if (setGlobalMessage) {
               setGlobalMessage({
@@ -677,7 +691,9 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
 
           // Refresh series and switch to Series tab
           if (onEditComplete) {
+            const capturedGen = mySubmitGen;
             setTimeout(() => {
+              if (submitGenerationRef.current !== capturedGen) return;
               setLoading(false);
               if (setProc) setProc(false);
               isSubmitting.current = false;
