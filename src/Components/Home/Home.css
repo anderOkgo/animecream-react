@@ -65,9 +65,13 @@
 }
 
 @keyframes top250-heartbeat {
-  0%, 88%, 100% {
+  0%,
+  88%,
+  100% {
     transform: scale(1);
-    box-shadow: var(--shadow-sm), inset 0 1px 0 var(--white-alpha-20);
+    box-shadow:
+      var(--shadow-sm),
+      inset 0 1px 0 var(--white-alpha-20);
   }
   12% {
     transform: scale(1.08);
@@ -78,7 +82,9 @@
   }
   28% {
     transform: scale(1.01);
-    box-shadow: var(--shadow-sm), inset 0 1px 0 var(--white-alpha-20);
+    box-shadow:
+      var(--shadow-sm),
+      inset 0 1px 0 var(--white-alpha-20);
   }
   50% {
     transform: scale(1.05);
@@ -101,7 +107,8 @@
     left: 115%;
     opacity: 0;
   }
-  23%, 47% {
+  23%,
+  47% {
     left: -65%;
     opacity: 0;
   }
@@ -112,7 +119,8 @@
     left: 115%;
     opacity: 0;
   }
-  70%, 100% {
+  70%,
+  100% {
     left: -65%;
     opacity: 0;
   }
@@ -122,6 +130,8 @@
 .top250-btn {
   margin-left: auto;
   width: 100%;
+  min-width: 80px;
+  max-width: 200px;
   justify-content: center;
   position: relative !important;
   overflow: hidden !important;
@@ -151,12 +161,7 @@
   left: -65%;
   width: 45%;
   height: 200%;
-  background: linear-gradient(
-    to right,
-    transparent 0%,
-    rgba(255, 255, 255, 0.55) 50%,
-    transparent 100%
-  );
+  background: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.55) 50%, transparent 100%);
   transform: skewX(-18deg);
   pointer-events: none;
   animation: top250-shine 9s ease-in-out 1;
