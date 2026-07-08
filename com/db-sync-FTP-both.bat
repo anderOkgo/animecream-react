@@ -30,4 +30,4 @@ IF EXIST setter.bat (CD.. & CALL com\setter.bat) ELSE ( CALL com\setter.bat )
 
 :END
 IF %ERRORLEVEL% EQU 0 (Echo No error found) ELSE (Echo An error was found)
-PAUSE
+TIMEOUT /T 5
