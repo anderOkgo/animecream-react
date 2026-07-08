@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import CardRow from '../CardRow/CardRow';
+import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import './Card.css';
 import TablePagination from '../Table/TablePagination';
 import TableSearch from '../Table/TableSearch';
@@ -88,19 +89,20 @@ const Card = ({
           {currentData.map((el, index) => {
             const realNumber = showRealNumbers ? startNumber + index : null;
             return (
-              <CardRow
-                key={el.production_ranking_number}
-                el={el}
-                t={t}
-                language={language}
-                realNumber={realNumber}
-                onFilterChange={onFilterChange}
-                onDelete={() => handleDeleteCard(el.production_ranking_number)}
-                role={role}
-                onEdit={onEditSeries}
-                onAddToList={onAddToList}
-                navigation={navigation}
-              />
+              <ErrorBoundary key={el.production_ranking_number} resetKey={el}>
+                <CardRow
+                  el={el}
+                  t={t}
+                  language={language}
+                  realNumber={realNumber}
+                  onFilterChange={onFilterChange}
+                  onDelete={() => handleDeleteCard(el.production_ranking_number)}
+                  role={role}
+                  onEdit={onEditSeries}
+                  onAddToList={onAddToList}
+                  navigation={navigation}
+                />
+              </ErrorBoundary>
             );
           })}
           <div className="pagination-container">

@@ -231,7 +231,7 @@ export default function CardRow({
                   >
                     {demographic_name}
                   </span>
-                  {genre_names.split(',').map((genre) => (
+                  {(genre_names || '').split(',').filter(Boolean).map((genre) => (
                     <span
                       className="tag"
                       key={genre}

@@ -76,7 +76,7 @@ export const generateSuggestions = (dataset, searchTerm, maxSuggestions = 10) =>
 
     // Genres
     if (item.genre_names) {
-      item.genre_names.split(',').forEach((genre) => {
+      String(item.genre_names).split(',').forEach((genre) => {
         const genreTrimmed = genre.trim();
         if (genreTrimmed.toLowerCase().includes(trimmedTerm)) {
           suggestionsSet.add(genreTrimmed);
@@ -86,7 +86,7 @@ export const generateSuggestions = (dataset, searchTerm, maxSuggestions = 10) =>
 
     // Alternative titles
     if (item.title_names) {
-      item.title_names.split(',').forEach((title) => {
+      String(item.title_names).split(',').forEach((title) => {
         const titleTrimmed = title.trim();
         if (titleTrimmed.toLowerCase().includes(trimmedTerm)) {
           suggestionsSet.add(titleTrimmed);
