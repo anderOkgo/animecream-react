@@ -1,0 +1,34 @@
+.app-crash-fallback {
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+  text-align: center;
+  padding: 1em;
+  font-family: 'Roboto', Arial, sans-serif;
+  background-color: #f1f0f7;
+  color: #000;
+}
+
+.app-crash-fallback button {
+  padding: 0.5em 1.5em;
+  border: none;
+  border-radius: 4px;
+  background-color: #0a4656;
+  color: #fff;
+  cursor: pointer;
+}
+
+@media (prefers-color-scheme: dark) {
+  .app-crash-fallback {
+    background-color: #121212;
+    color: #fff;
+  }
+
+  .app-crash-fallback button {
+    background-color: #0a4656;
+  }
+}

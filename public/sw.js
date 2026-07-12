@@ -1,4 +1,4 @@
-const VERSION = '3.3.15';
+const VERSION = '3.3.16';
 const CACHE_NAME = `animecream-${VERSION}`;
 const appfiles = ['./img/icon/android-icon-192x192.png'];
 
@@ -24,11 +24,13 @@ self.addEventListener('fetch', (e) => {
       return fetch(e.request)
         .then((response) => {
           const responseClone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            if (e.request.method === 'GET' && e.request.url.startsWith('http') && e.request.mode !== 'cors') {
-              cache.put(e.request, responseClone);
-            }
-          });
+          if (response.ok) {
+            caches.open(CACHE_NAME).then((cache) => {
+              if (e.request.method === 'GET' && e.request.url.startsWith('http') && e.request.mode !== 'cors') {
+                cache.put(e.request, responseClone);
+              }
+            });
+          }
           return response;
         })
         .catch(() => {

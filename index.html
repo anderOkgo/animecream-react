@@ -47,6 +47,76 @@
 
 <body>
   <div id="root"></div>
+  <script>
+    // Recovers from a stale deploy: if a script/stylesheet 404s (e.g. an old
+    // chunk referenced by a cached index.html was deleted by a newer deploy),
+    // this runs outside the React tree so no ErrorBoundary can catch it.
+    // Purge the service worker cache once and reload; if it still fails after
+    // that, show a manual recovery message instead of a blank page.
+    (function () {
+      var RELOAD_FLAG = 'animecream-recovered-from-load-error';
+
+      function showManualRecoveryMessage() {
+        var root = document.getElementById('root');
+        if (!root) return;
+        root.innerHTML =
+          '<div style="height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1em;text-align:center;padding:1em;font-family:Arial,sans-serif;">' +
+          '<p>The app failed to load a required file. Please reload the page.</p>' +
+          '<button type="button" onclick="window.location.reload()" style="padding:0.5em 1.5em;border:none;border-radius:4px;background-color:#0a4656;color:#fff;cursor:pointer;">Reload</button>' +
+          '</div>';
+      }
+
+      function recoverAndReload() {
+        if (sessionStorage.getItem(RELOAD_FLAG)) {
+          showManualRecoveryMessage();
+          return;
+        }
+        sessionStorage.setItem(RELOAD_FLAG, '1');
+
+        var cleanup = [];
+        if ('serviceWorker' in navigator) {
+          cleanup.push(
+            navigator.serviceWorker.getRegistrations().then(function (regs) {
+              return Promise.all(regs.map(function (reg) { return reg.unregister(); }));
+            })
+          );
+        }
+        if ('caches' in window) {
+          cleanup.push(
+            caches.keys().then(function (names) {
+              return Promise.all(names.map(function (name) { return caches.delete(name); }));
+            })
+          );
+        }
+        Promise.all(cleanup).catch(function () {}).finally(function () {
+          window.location.reload();
+        });
+      }
+
+      window.addEventListener(
+        'error',
+        function (event) {
+          var target = event.target;
+          if (target && (target.tagName === 'SCRIPT' || target.tagName === 'LINK')) {
+            recoverAndReload();
+          }
+        },
+        true
+      );
+
+      // If this load followed a recovery reload and nothing failed for a few
+      // seconds, the fix worked (or the page differs) — clear the flag so a
+      // future, unrelated failure can still get one automatic retry. Do not
+      // clear it from main.jsx: a missing CSS file doesn't stop the JS module
+      // from loading, so that would clear the flag on the very reload that
+      // hasn't fixed anything yet, causing an infinite reload loop.
+      if (sessionStorage.getItem(RELOAD_FLAG)) {
+        setTimeout(function () {
+          sessionStorage.removeItem(RELOAD_FLAG);
+        }, 5000);
+      }
+    })();
+  </script>
   <script type="module" src="/src/main.jsx"></script>
   <script>
     if ('serviceWorker' in navigator) {
