@@ -5,7 +5,10 @@ import DataService from '../services/data.service';
 export const useAlive = () => {
   const [init, setInitState] = useState(0); // Indicates if application received response of server
   const [proc, setProc] = useState(true); // Indicates if initialization process is ongoing
-  const [online, setOnline] = useState(() => typeof navigator !== 'undefined' ? navigator.onLine : true); // Indicates if application is online
+  // Tracked but not currently exposed by this hook's return value -- kept
+  // as internal state (not deleted) since `setOnline` is called throughout
+  // the online/offline/visibility handling below.
+  const [_online, setOnline] = useState(() => typeof navigator !== 'undefined' ? navigator.onLine : true);
 
   const isOnlineRef = useRef(false);
   const isFetchingRef = useRef(false);

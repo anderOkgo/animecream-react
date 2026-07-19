@@ -45,6 +45,10 @@ function TablePagination({
       navigation.pushHistory('pagination', { page: currentPage, id: element });
     }
     isInternalChangeRef.current = false;
+    // `navigation` itself excluded: a new object identity every render
+    // would re-run this on every render; `navigation.pushHistory` is
+    // already the tracked dependency.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, navigation.pushHistory, element]);
 
   useEffect(() => {
@@ -64,6 +68,9 @@ function TablePagination({
       isInternalChangeRef.current = true;
       setCurrentPage(1);
     }
+    // Same reasoning as above: `navigation` itself excluded, only its
+    // `currentState` field is the actual tracked dependency.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation.currentState, element, currentPage, setCurrentPage, filteredData, itemsPerPage]);
 
   const renderPaginationButtons = () => {

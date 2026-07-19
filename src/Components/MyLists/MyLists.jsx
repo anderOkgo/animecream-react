@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './MyLists.css';
 import { useLanguage } from '../../hooks/useLanguage';
 

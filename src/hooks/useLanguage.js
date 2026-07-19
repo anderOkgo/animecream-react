@@ -30,7 +30,6 @@ const translations = {
     ascending: 'Ascending',
     descending: 'Descending',
     limit: 'Limit',
-    search: 'Search',
     reset: 'Reset',
     prev: 'Prev',
     next: 'Next',
@@ -44,23 +43,6 @@ const translations = {
     info: 'Information',
     switchToSpanish: 'ESP',
     switchToEnglish: 'ENG',
-    'ID must contain valid numbers separated by commas.': 'ID must contain valid numbers separated by commas.',
-    'Production name must be a string with a maximum length of 50 characters.':
-      'Production name must be a string with a maximum length of 50 characters.',
-    'Production chapters must contain valid numbers separated by commas.':
-      'Production chapters must contain valid numbers separated by commas.',
-    'The first chapter number cannot be higher than the second one.':
-      'The first chapter number cannot be higher than the second one.',
-    'Production description must be a string with a maximum length of 50 characters.':
-      'Production description must be a string with a maximum length of 50 characters.',
-    'Production years must contain valid numbers separated by commas.':
-      'Production years must contain valid numbers separated by commas.',
-    'The first year cannot be higher than the second one.': 'The first year cannot be higher than the second one.',
-    'Demographic name must be a string with a maximum length of 50 characters.':
-      'Demographic name must be a string with a maximum length of 50 characters.',
-    'Genre names must be strings with a maximum length of 50 characters separated by commas.':
-      'Genre names must be strings with a maximum length of 50 characters separated by commas.',
-    'Limit cannot exceed 10,000.': 'Limit cannot exceed 10,000.',
     Acción: 'Action',
     Psicologico: 'Psychological',
     Magia: 'Magic',
@@ -314,7 +296,6 @@ const translations = {
     ascending: 'Ascendente',
     descending: 'Descendente',
     limit: 'Límite',
-    search: 'Buscar',
     reset: 'Reiniciar',
     prev: 'Anterior',
     next: 'Siguiente',
@@ -328,24 +309,6 @@ const translations = {
     info: 'Información',
     switchToSpanish: 'ESP',
     switchToEnglish: 'ENG',
-    'ID must contain valid numbers separated by commas.':
-      'El ID debe contener números válidos separados por comas.',
-    'Production name must be a string with a maximum length of 50 characters.':
-      'El nombre de la producción debe ser una cadena de texto con una longitud máxima de 50 caracteres.',
-    'Production chapters must contain valid numbers separated by commas.':
-      'Los capítulos de producción deben contener números válidos separados por comas.',
-    'The first chapter number cannot be higher than the second one.':
-      'El primer número de capítulo no puede ser mayor que el segundo.',
-    'Production description must be a string with a maximum length of 50 characters.':
-      'La descripción de la producción debe ser una cadena de texto con una longitud máxima de 50 caracteres.',
-    'Production years must contain valid numbers separated by commas.':
-      'Los años de producción deben contener números válidos separados por comas.',
-    'The first year cannot be higher than the second one.': 'El primer año no puede ser mayor que el segundo.',
-    'Demographic name must be a string with a maximum length of 50 characters.':
-      'El nombre demográfico debe ser una cadena de texto con una longitud máxima de 50 caracteres.',
-    'Genre names must be strings with a maximum length of 50 characters separated by commas.':
-      'Los nombres de los géneros deben ser cadenas de texto con una longitud máxima de 50 caracteres separados por comas.',
-    'Limit cannot exceed 10,000.': 'El límite no puede exceder los 10,000.',
     Acción: 'Acción',
     Psicologico: 'Psicológico',
     Magia: 'Magia',
@@ -685,7 +648,6 @@ export function LanguageProvider({ children }) {
       setLanguageState(browserLang);
       applyDocumentLanguage(browserLang);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [useSystemDefault]);
 
   useEffect(() => {

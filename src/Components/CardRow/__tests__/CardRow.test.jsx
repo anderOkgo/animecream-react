@@ -1,28 +1,13 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { vi } from 'vitest';
+import { render, screen } from '@testing-library/react';
 import CardRow from '../CardRow';
 
-// Mock the useTextToSpeech hook
-jest.mock('../../../hooks/useTextToSpeech', () => ({
+// Mock the useTextToSpeech hook (the only hook CardRow itself imports and
+// calls directly -- language/translation come in as props, not from a hook).
+vi.mock('../../../hooks/useTextToSpeech', () => ({
   useTextToSpeech: () => ({
     isSpeaking: false,
-    toggle: jest.fn(),
-  }),
-}));
-
-// Mock the useLanguage hook
-jest.mock('../../../hooks/useLanguage', () => ({
-  useLanguage: () => ({
-    language: 'en',
-    t: (key) => {
-      const translations = {
-        readAloud: 'Read Aloud',
-        stopReading: 'Stop Reading',
-        info: 'Info',
-        cardDescription: 'Description',
-      };
-      return translations[key] || key;
-    },
+    toggle: vi.fn(),
   }),
 }));
 
@@ -51,17 +36,20 @@ describe('CardRow Component', () => {
     return translations[key] || key;
   };
 
+  // Note: the read-aloud control renders as an icon button ("▶"/"⏸"),
+  // with the translated label only in its `title`/tooltip, not as visible
+  // text -- so these assertions target the title, not getByText.
   it('renders the read aloud button', () => {
     render(<CardRow el={mockElement} t={mockT} language="en" />);
 
-    const readAloudButton = screen.getByText('Read Aloud');
+    const readAloudButton = screen.getByTitle('Read Aloud');
     expect(readAloudButton).toBeInTheDocument();
   });
 
-  it('shows correct button text based on language', () => {
+  it('shows correct button title based on language', () => {
     const { rerender } = render(<CardRow el={mockElement} t={mockT} language="en" />);
 
-    expect(screen.getByText('Read Aloud')).toBeInTheDocument();
+    expect(screen.getByTitle('Read Aloud')).toBeInTheDocument();
 
     // Test Spanish version
     const spanishT = (key) => {
@@ -77,7 +65,7 @@ describe('CardRow Component', () => {
     };
 
     rerender(<CardRow el={mockElement} t={spanishT} language="es" />);
-    expect(screen.getByText('Leer en voz alta')).toBeInTheDocument();
+    expect(screen.getByTitle('Leer en voz alta')).toBeInTheDocument();
   });
 
   it('displays anime information correctly', () => {
@@ -92,14 +80,16 @@ describe('CardRow Component', () => {
   it('uses English description when language is en', () => {
     render(<CardRow el={mockElement} t={mockT} language="en" />);
 
-    // The description should be in the DOM (though hidden on small screens)
-    expect(screen.getByText('This is a test anime description in English')).toBeInTheDocument();
+    // The description is rendered twice (once per tab panel), so assert
+    // both instances rather than a single unique match.
+    const matches = screen.getAllByText('This is a test anime description in English');
+    expect(matches).toHaveLength(2);
   });
 
   it('uses Spanish description when language is es', () => {
     render(<CardRow el={mockElement} t={mockT} language="es" />);
 
-    // The description should be in the DOM (though hidden on small screens)
-    expect(screen.getByText('This is a test anime description')).toBeInTheDocument();
+    const matches = screen.getAllByText('This is a test anime description');
+    expect(matches).toHaveLength(2);
   });
 });

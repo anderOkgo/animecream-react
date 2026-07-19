@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './searchMethod.css';
 import helpHttp from '../../helpers/helpHttp';
 import set from '../../helpers/set.json';

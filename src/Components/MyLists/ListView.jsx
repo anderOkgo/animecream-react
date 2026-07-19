@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import helpHttp from '../../helpers/helpHttp';
 import set from '../../helpers/set.json';
 import './ListView.css';
@@ -15,6 +15,9 @@ const ListView = ({ listId, onBack, onLoadSeries }) => {
     if (listId) {
       loadListData();
     }
+    // `loadListData` is redefined every render (reads `listId` from the
+    // closure) -- re-running only when `listId` itself changes is intended.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listId]);
 
   useEffect(() => {
@@ -23,6 +26,9 @@ const ListView = ({ listId, onBack, onLoadSeries }) => {
     } else {
       setSeriesData([]);
     }
+    // Same as above: `loadSeriesData` is redefined every render from the
+    // same closure as `listData`, which is already the tracked dependency.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listData]);
 
   const loadListData = () => {

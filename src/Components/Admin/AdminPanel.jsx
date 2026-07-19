@@ -2,16 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import helpHttp from '../../helpers/helpHttp';
 import set from '../../helpers/set.json';
 import AuthService from '../../services/auth.service';
-import Message from '../Message/Message';
-import { translateApiMessage } from '../../hooks/useLanguage';
 import './AdminPanel.css';
-
-const resolveApiError = (t, message, fallbackKey) => {
-  if (message === undefined || message === null || message === '') {
-    return t(fallbackKey);
-  }
-  return translateApiMessage(t, message);
-};
 
 const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, proc, init, setGlobalMessage }) => {
   const isEditMode = !!seriesToEdit;
@@ -73,6 +64,9 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
       setOriginalTitles([]);
       setOriginalTitleNames([]);
     }
+    // Intentionally re-runs only when the edited series changes, not on
+    // every re-creation of `isEditMode`/`loadSeriesData`.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [seriesToEdit]);
 
   const loadOptions = async () => {
@@ -85,7 +79,10 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
       cachedDemographics = JSON.parse(localStorage.getItem('options_demographics') || '[]');
       if (cachedGenres.length > 0) setGenres(cachedGenres);
       if (cachedDemographics.length > 0) setDemographics(cachedDemographics);
-    } catch {}
+    } catch {
+      // Malformed/missing cache entry -- the pre-declared empty-array
+      // defaults above already cover this, so there's nothing to do here.
+    }
 
     if (cachedGenres.length > 0 && cachedDemographics.length > 0) {
       setLoadingOptions(false);

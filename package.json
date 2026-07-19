@@ -7,6 +7,11 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:cov": "vitest run --coverage",
+    "test:e2e": "playwright test",
     "up": "node scripts/bump-sw-version.cjs && call com/db-sync-FTP-both.bat",
     "bup": "npm run build & npm run up"
   },
@@ -17,13 +22,20 @@
     "react-helmet-async": "^3.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "@vitejs/plugin-react-swc": "^3.0.0",
+    "@vitest/coverage-v8": "^4.1.10",
     "eslint": "^8.44.0",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.1",
-    "vite": "^4.2.0"
+    "jsdom": "^29.1.1",
+    "vite": "^4.2.0",
+    "vitest": "^4.1.10"
   }
 }

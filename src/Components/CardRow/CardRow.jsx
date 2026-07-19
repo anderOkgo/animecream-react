@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useState } from 'react';
 import './CardRow.css';
 import { useTextToSpeech } from '../../hooks/useTextToSpeech';
@@ -13,7 +12,6 @@ export default function CardRow({
   role,
   onEdit,
   onAddToList,
-  navigation,
 }) {
   let {
     production_name,
@@ -198,7 +196,8 @@ export default function CardRow({
           <div id="section1" className="tab-section">
             <div className="section-content">
               <img
-                fetchpriority="high"
+                // eslint-disable-next-line react/no-unknown-property -- fetchPriority is a real DOM attribute, just newer than this eslint-plugin-react release's known-properties list
+                fetchPriority="high"
                 width="140"
                 height="210"
                 src={production_image_path}
@@ -235,7 +234,6 @@ export default function CardRow({
                     <span
                       className="tag"
                       key={genre}
-                      variant="text"
                       onClick={(e) => handleGenreClick(e, genre)}
                       title={t('filterByGenre') || 'Filter by genre'}
                     >

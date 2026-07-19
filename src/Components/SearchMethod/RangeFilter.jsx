@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import './RangeFilter.css';
 
 const RangeFilter = ({ label, min, max, value, onChange, displayValue, step = 1, onReset }) => {

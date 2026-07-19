@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useMemo } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import { useLanguage, translateEN, translateApiMessage } from '../../hooks/useLanguage';
 import helpHttp from '../../helpers/helpHttp';
 import SearchMethod from '../SearchMethod/SearchMethod';
@@ -46,7 +46,6 @@ const Home = ({
   toggleLanguage,
   onLanguageDoubleClick,
   language,
-  setProc,
   showRealNumbers,
   setShowRealNumbers,
   sortOrder,
@@ -62,8 +61,6 @@ const Home = ({
   onSetOptReady,
   navigation,
   onShowListManager,
-  onScrollToggle,
-  isAtTop,
 }) => {
   const { t: translate, language: activeLanguage } = useLanguage();
   const [loadByIds, setLoadByIds] = useState(externalLoadByIds);
@@ -380,6 +377,10 @@ const Home = ({
         }, 100);
       }
     }
+    // `db`/`navigation` deliberately excluded: `navigation.currentState` is
+    // already the tracked dependency, and `db` is only read to compute the
+    // next `db`, not to decide whether to re-run.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation.currentState, onSeriesDataChange]);
 
   // Filtrar la información actual localmente (según lo solicitado por el usuario)
@@ -461,6 +462,10 @@ const Home = ({
     }
 
     return filtered;
+    // `getFullCatalogSource` is redefined every render from the same
+    // closure as the values already listed below; adding it as a dep would
+    // make this memo recompute on every render, defeating its purpose.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [db, yearFilter, decadeFilter, allYearValue, allDecadeValue, tipoYear, tipoDecade, opt, loadedByList]);
 
   // Sincronizar filteredDb con onSeriesDataChange siempre que cambie
@@ -691,7 +696,6 @@ const Home = ({
       return;
     }
 
-    const isRestoring = isRestoringRef.current;
     let cancelled = false;
     const fetchData = async () => {
       setLoading(true);
@@ -811,11 +815,15 @@ const Home = ({
       try {
         if (genreTs && now - genreTs < GENRES_DEMOS_TTL)
           genres = JSON.parse(localStorage.getItem('options_genres') || '[]');
-      } catch {}
+      } catch {
+        // Malformed cache entry -- falls through to the API fetch below.
+      }
       try {
         if (demoTs && now - demoTs < GENRES_DEMOS_TTL)
           demos = JSON.parse(localStorage.getItem('options_demographics') || '[]');
-      } catch {}
+      } catch {
+        // Malformed cache entry -- falls through to the API fetch below.
+      }
 
       if (genres.length === 0 || demos.length === 0) {
         const [gRes, dRes] = await Promise.all([

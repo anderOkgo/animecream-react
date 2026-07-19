@@ -1,7 +1,6 @@
 import './App.css';
 import Tab from './Components/Tab/Tab';
 import Menu from './Components/Menu/Menu';
-import Jumbotron from './Components/Jumbotron/Jumbotron';
 import Login from './Components/Auth/Login/Login';
 import Loader from './Components/Loader/Loader';
 import Message from './Components/Message/Message';
@@ -23,7 +22,6 @@ const App = () => {
     t,
   } = useLanguage();
   const navigation = useNavigationHistory();
-  const [username, setUsername] = useState(null);
   const [role, setRole] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
   const [globalMessage, setGlobalMessage] = useState(null);
@@ -33,10 +31,8 @@ const App = () => {
     const user = AuthService.getCurrentUser();
     if (user) {
       const userInfo = AuthService.getUserName(user.token);
-      setUsername(userInfo?.username || null);
       setRole(userInfo?.role || null);
     } else {
-      setUsername(null);
       setRole(null);
     }
   };

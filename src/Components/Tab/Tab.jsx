@@ -200,7 +200,13 @@ function Tab({
     }
   };
 
-  const handleTop100Click = () => {
+  // Fully implemented (mirrors handleTop250Click, and Home.jsx / the
+  // history-restore logic below both already anticipate a 'top100' request
+  // type) but never wired to a UI element -- no `.lang-top100` trigger
+  // exists next to `.lang-top250` below. Left in place, not deleted:
+  // flagged as a missing-wiring gap for a product decision, same class of
+  // finding as module-api's Phase 2.6 `validateInitialLoad`.
+  const _handleTop100Click = () => {
     if (homeSetOptRef.current) {
       const requestData = {
         method: 'POST',
@@ -306,6 +312,11 @@ function Tab({
           break;
       }
     }
+    // `navigation` (the object itself) and `handleScrollToTop` are
+    // deliberately excluded: `currentState`/`currentIndex` are the actual
+    // tracked values, and `navigation` is a new object identity every
+    // render, which would make this re-run on every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation?.currentState, navigation?.currentIndex]);
 
   // Cargar lista seleccionada al montar
