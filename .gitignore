@@ -22,6 +22,10 @@ dist-ssr
 *.sln
 *.sw?
 
-# settings and release folders
-keys
+# settings and release folders (no keys/ folder anymore -- WinSCP.com/.exe
+# are root-level now, provisioned by 0.symbolics.bat)
+WinSCP.com
+WinSCP.exe
+WinSCP.ini
 0.symbolics.bat
+.env

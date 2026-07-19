@@ -7,7 +7,7 @@ IF /I "%1"=="img" GOTO :ONLY_IMG
 :: --- MODO NORMAL ---
 IF EXIST setter.bat (CD.. & DEL /F /Q dist\img\tarjeta\) ELSE ( DEL /F /Q dist\img\tarjeta\ )
 IF EXIST setter.bat (CD.. & CALL com\setter.bat) ELSE ( CALL com\setter.bat )
-"keys/WinSCP.com" ^
+".\WinSCP.com" ^
   /command ^
     "open ftp://%FTPUsername.txt%:%FTPPss.txt%@%FTPserver.txt%" ^
     "option batch off" ^
@@ -21,7 +21,7 @@ GOTO :END
 :ONLY_IMG
 IF EXIST setter.bat (CD.. & CALL com\setter.bat) ELSE ( CALL com\setter.bat )
 
-"keys/WinSCP.com" ^
+".\WinSCP.com" ^
   /command ^
     "open ftp://%FTPUsername.txt%:%FTPPss.txt%@%FTPserver.txt%" ^
     "option batch off" ^

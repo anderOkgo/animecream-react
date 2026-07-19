@@ -1,5 +1,9 @@
 @ECHO OFF
-SET "source_folder=keys"
-FOR /f "delims=" %%f IN ('dir /b "%source_folder%\*.txt"') DO (
-SET /p  %%f=<%source_folder%\%%f
+IF EXIST ".env" (
+  FOR /F "usebackq eol=# tokens=1,* delims==" %%A IN (".env") DO (
+    IF NOT "%%A"=="" SET "%%A=%%B"
+  )
+) ELSE (
+  ECHO [setter] ERROR: .env not found. Copy .env.example to .env and fill it in, or run 0.symbolics.bat.
+  EXIT /B 1
 )
