@@ -27,6 +27,17 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],
+      // Set from the real aggregate after Phase 2.5's coverage-hardening
+      // pass (see docs/specification-roadmap.md) with a few points of
+      // margin below the actual numbers at the time -- gates a real
+      // regression (e.g. a large untested file added) without going
+      // flaky on normal day-to-day fluctuation.
+      thresholds: {
+        statements: 70,
+        branches: 58,
+        functions: 75,
+        lines: 72,
+      },
     },
   },
 })
