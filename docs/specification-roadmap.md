@@ -85,7 +85,7 @@ The ESLint-driven findings from Phase 1 covered several concrete cases (see that
 
 ## Phase 2.5 — Coverage hardening
 
-**Status: IN PROGRESS** (2026-07-19)
+**Status: DONE** (2026-07-20)
 
 Added dedicated test suites for all of `src/helpers/`'s pure-logic files: `searchUtils.js` (AND/OR search parsing, suggestion generation), `catalogStorage.js` (the offline query engine mirroring the backend's `series-read` filter/sort/limit rules — the single highest-value file in `helpers/`, given how much filter logic it reimplements client-side), and `cyfer.js` (encrypt/decrypt round-trip, diacritic-stripping, key-cycling, and the `dcy` negative-intermediate-value correction branch — same test suite as `finan-react`'s identical copy of this helper, see that repo's roadmap for the design note on why each test uses a fresh `cyfer()` instance per `cy`/`dcy` call rather than reusing one across both).
 
@@ -121,7 +121,11 @@ Noted but not changed: `Card.jsx` (lines 84-87) has a commented-out duplicate `<
 
 **Eighth pass** (2026-07-20, continuing the autonomous sweep) — `ListManager.jsx`'s branch coverage pushed from 61.78%/49.45% to 81.15% statements / 65.76% branches (12 new tests on top of the existing 7): malformed-localStorage-entry error handling (both a bad `list_*` entry among otherwise-valid ones, and a malformed *selected* list's own data), `onListSelected` notification wiring across select/create/delete, drag-and-drop no-ops (no prior drag, dropping on the same index), the show-series button's ordered `onLoadSeries` + `onClose` dispatch, the real-indexes display toggle, clipboard copy/share (`navigator.clipboard.writeText`, mocked since jsdom doesn't implement the Clipboard API), the Enter-to-submit and Cancel paths of the add-list form, and the "nothing new to add, everything already in the list" alert branch. Remaining gap is almost entirely the pre-Clipboard-API `document.execCommand('copy')` fallback path (old-browser compatibility code, low value to chase) and a couple of defensive guards inside `handleAddAllCurrentCards` that are unreachable through the real UI (the button itself is only rendered when the same conditions the guards check are already satisfied) — same "flag don't guess" class of finding as `Tab.jsx`'s `handleTop100Click` case.
 
-Remaining: `auth.service.js`/`data.service.js` (both thin wrappers around `helpHttp`, lower marginal value). A 100% target may still not be the right call for purely presentational JSX branches in the remaining files.
+**Ninth pass** (2026-07-20, continuing the autonomous sweep) — `auth.service.js` and `data.service.js` covered (13 tests): the `login`/`getCurrentUser` encrypted-localStorage round-trip (using the real `cyfer`/`formattedDate` helpers, not mocked, since both are pure/deterministic and the login key itself is derived from them), the no-token-in-response error path (including its generic-message fallback), corrupted-session-data graceful `null` return, `register`'s auto-login-on-success behavior and its skip-login-on-failure counterpart, `logout`'s selective-clear (auth session removed, `storage`/`storage_initial`/`lang`/`selectedListId`/`list_*` all preserved), `getUserName`'s JWT-payload decoding and its malformed/absent-token null returns, and `data.service.js`'s single `boot` wrapper (URL/timeout args, and error-shape passthrough).
+
+This closes out every item Phase 2.5 originally flagged as remaining. `src/` project-wide coverage moved from the last recorded 86.43% statements (2026-07-20's third-pass entry, before `Card`/`Home`/`Tab`/`AdminPanel`/`ListManager`/services were added) to project-wide near-complete component/hook/service coverage; the only intentionally-uncovered code left is presentational JSX branches, the pre-Clipboard-API fallback path in `ListManager.jsx`, and defensive guards confirmed unreachable through the real UI (documented inline at each site rather than chased for a 100% number).
+
+Remaining for a future pass: the CI coverage-threshold decision (deferred since Phase 3), and Phase 4's still-open post-deploy smoke check.
 
 ---
 
@@ -195,3 +199,4 @@ All four originally-planned E2E golden paths (catalog browse, login, admin CRUD,
 - **2026-07-20, later still** — `Tab.jsx` covered (14 tests, see Phase 2.5's sixth-pass entry above). 255/255 unit tests passing, `npm run lint`/`build` both clean.
 - **2026-07-20, later still** — `AdminPanel.jsx` covered (12 tests, see Phase 2.5's seventh-pass entry above). Hit and documented a jsdom testing-environment gotcha around file-input `required` validity, worked around with `fireEvent.submit`. 267/267 unit tests passing, `npm run lint`/`build` both clean.
 - **2026-07-20, later still** — `ListManager.jsx`'s branch coverage pushed from 61.78%/49.45% to 81.15%/65.76% (12 new tests, see Phase 2.5's eighth-pass entry above). 279/279 unit tests passing, `npm run lint`/`build` both clean.
+- **2026-07-20, later still** — `auth.service.js`/`data.service.js` covered (13 tests, see Phase 2.5's ninth-pass entry above), closing out every item Phase 2.5 originally flagged as remaining. **Phase 2.5 marked DONE.** 292/292 unit tests passing, `npm run lint`/`build` both clean.
