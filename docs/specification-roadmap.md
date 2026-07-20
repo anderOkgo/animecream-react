@@ -80,9 +80,13 @@ Remaining: for every file under `src/`, grep for import-by-basename references f
 
 ## Phase 2.5 — Coverage hardening
 
-**Status: TODO**
+**Status: IN PROGRESS** (2026-07-19)
 
-Baseline established in Phase 1: **22% statements / 30% branches** (`CardRow.jsx` only — the sole tested file today). Go file-by-file, lowest-covered first. Note going in: a 100% target may be less meaningful here than it was for the backend — a lot of JSX branches are purely presentational (conditional CSS classes, loading spinners) rather than business rules — so the right target is a judgment call to make once more files have real numbers, not a number to assume up front.
+Added dedicated test suites for all of `src/helpers/`'s pure-logic files: `searchUtils.js` (AND/OR search parsing, suggestion generation), `catalogStorage.js` (the offline query engine mirroring the backend's `series-read` filter/sort/limit rules — the single highest-value file in `helpers/`, given how much filter logic it reimplements client-side), and `cyfer.js` (encrypt/decrypt round-trip, diacritic-stripping, key-cycling, and the `dcy` negative-intermediate-value correction branch — same test suite as `finan-react`'s identical copy of this helper, see that repo's roadmap for the design note on why each test uses a fresh `cyfer()` instance per `cy`/`dcy` call rather than reusing one across both).
+
+Result: **`src/helpers/` at 98.09% statements / 92.85% branches**, and the project-wide aggregate went from 22% to **79.49% statements / 70% branches** (the remaining gap is almost entirely `CardRow.jsx`, the one component file with tests today — component-level testing hasn't started yet, this phase focused on pure-logic files first per the original plan's priority call).
+
+Remaining: the other 24 component files (0% today), the other 6 hooks, and the 3 services (`auth.service.js`, `data.service.js`, `data.local.service.js`) — deferred to a follow-up pass; a 100% target may still not be the right call for purely presentational JSX branches once component testing starts.
 
 ---
 
@@ -107,4 +111,5 @@ Added `.github/workflows/ci.yml`: checkout → `npm ci` → `npm run lint` → `
 ## Progress log
 
 - **2026-07-19** — Phase 0 baseline audit completed at the user's request, extending the executable-specification approach already applied to `module-api` to this frontend. Roadmap drafted.
-- **2026-07-19, same day** — Phases 0b, 1, and 3 executed in full: Vitest + Testing Library + Playwright installed, the orphaned `CardRow.test.jsx` fixed and passing (5/5), ESLint wired from scratch and brought to a clean pass (254 → 0 problems, with real bugs fixed along the way — see Phase 1's findings table), and a CI workflow added. `npm run lint`, `npm run test:cov`, and `npm run build` all pass from the current working tree. Phase 2 (dead-code sweep) partially covered as a side effect; Phase 2.5 (coverage hardening) and Phase 4 (spec layers) remain open.
+- **2026-07-19, same day** — Phases 0b, 1, and 3 executed in full: Vitest + Testing Library + Playwright installed, the orphaned `CardRow.test.jsx` fixed and passing (5/5), ESLint wired from scratch and brought to a clean pass (254 → 0 problems, with real bugs fixed along the way — see Phase 1's findings table), and a CI workflow added. `npm run lint`, `npm run test:cov`, and `npm run build` all pass from the current working tree. Committed and pushed (`48702fa`).
+- **2026-07-19, later same day** — Phase 2.5 started: added `searchUtils.test.js`, `catalogStorage.test.js`, and `cyfer.test.js`, bringing `src/helpers/` to 98.09% statements / 92.85% branches and the project-wide aggregate from 22% to 79.49% statements (56/56 tests passing). Component-level and service-level testing remain open for a follow-up pass.
