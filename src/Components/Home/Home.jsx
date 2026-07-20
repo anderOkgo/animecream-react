@@ -380,9 +380,14 @@ const Home = ({
     }
     // `db`/`navigation` deliberately excluded: `navigation.currentState` is
     // already the tracked dependency, and `db` is only read to compute the
-    // next `db`, not to decide whether to re-run.
+    // next `db`, not to decide whether to re-run. Optional chaining matters,
+    // not just style: dependency arrays are evaluated every render
+    // regardless of the `if (!navigation) return` guard inside the effect
+    // body above, so a plain `navigation.currentState` throws whenever
+    // `navigation` itself is omitted -- same bug class already fixed twice
+    // in TablePagination.jsx (both this repo and finan-react's copy).
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigation.currentState, onSeriesDataChange]);
+  }, [navigation?.currentState, onSeriesDataChange]);
 
   // Filtrar la información actual localmente (según lo solicitado por el usuario)
   const filteredDb = useMemo(() => {
