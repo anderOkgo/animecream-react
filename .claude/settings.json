@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run test)",
+      "Bash(npm run test *)",
+      "Bash(npm run test:watch)",
+      "Bash(npm run test:watch *)",
+      "Bash(npm run test:cov)",
+      "Bash(npm run test:cov *)",
+      "Bash(npm run test:e2e)",
+      "Bash(npm run test:e2e *)",
+      "Bash(npm run lint)",
+      "Bash(npm run lint *)",
+      "Bash(npm run build)",
+      "Bash(npm run build *)",
+      "Bash(npx vitest *)",
+      "Bash(npx eslint *)",
+      "Bash(mkdir *)",
+      "Bash(find *)",
+      "Bash(git status)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Edit",
+      "Write"
+    ]
+  }
+}
