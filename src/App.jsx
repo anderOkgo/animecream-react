@@ -136,7 +136,6 @@ const App = () => {
         }}
       />
       <div className="card-area">
-        {/* <Jumbotron {...{ t }} /> */}
         <Tab
           {...{
             t,

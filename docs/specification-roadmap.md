@@ -72,9 +72,14 @@ Confirmed: `npm run test`, `npm run lint`, `npm run build` all pass from the cur
 
 ## Phase 2 — Dead code sweep
 
-**Status: IN PROGRESS** — the ESLint-driven findings from Phase 1 covered several concrete cases (see that phase's findings table). One whole-file case was found and removed during Phase 2.5's component testing: `Components/Table/Table.jsx` (+ `Table.css`) had zero importers anywhere in `src/` — see Phase 2.5's findings. What still hasn't happened: a systematic, deliberate basename-grep sweep across *every* `src/` file the way the backend's Phase 2 did (as opposed to catching cases incidentally while working on something else).
+**Status: DONE** (2026-07-20)
 
-Remaining: for every file under `src/`, grep for import-by-basename references from any other file, excluding `main.jsx`/`App.jsx` as entry points. No path aliases are configured in `vite.config.js`, so basename-grep should catch all real edges here too. Manually verify each candidate (barrel exports, conditional dynamic imports) before deleting.
+The ESLint-driven findings from Phase 1 covered several concrete cases (see that phase's findings table), and `Components/Table/Table.jsx`/`MyLists.jsx`/`AddToListModal.jsx`/`ListView.jsx` were found and removed incidentally during Phase 2.5/Phase 4 work (see those sections). A final systematic, deliberate basename-grep sweep across *every* `src/` file (matching the backend's Phase 2 method exactly: for each file, grep every other file for an import referencing it by basename, excluding `main.jsx`/`App.jsx` as entry points) found two more real orphans, both confirmed zero-importer before deleting:
+
+- **`Components/Jumbotron/Jumbotron.jsx`** (+ `Jumbotron.css`) — only reference anywhere was a commented-out JSX line in `App.jsx` (`{/* <Jumbotron {...{ t }} /> */}`), left over from whenever the component was disabled. Deleted the component, its CSS, and the now-meaningless stale comment.
+- **`services/data.local.service.js`** — a small cookie CRUD helper (`createCookie`/`checkCookieExistence`/`deleteCookie`), exported but never imported anywhere; the app persists everything via `localStorage`, not cookies. **Identical file exists in `finan-react`** (byte-for-byte), also dead there — see that repo's roadmap.
+
+`npm run test`/`lint`/`build` all still pass after both deletions. No further candidates found on re-running the sweep.
 
 ---
 
@@ -159,3 +164,4 @@ All four originally-planned E2E golden paths (catalog browse, login, admin CRUD,
 - **2026-07-19, later still** — At the user's explicit go-ahead, deployed the `view_all_info_produtions` fix to production via `module-data`'s `db-deploy-schema.bat animecream-data` (real run, verified success via the `[db-remote-restore-swap] OK` signal; confirmed post-deploy against the live `info.animecream.com` API with a read-only check — no regression on existing data).
 - **2026-07-19, later still** — `MyLists` E2E (`mylists.spec.js`) added, completing all four originally-planned Phase 4 golden paths. Found and deleted 3 dead files (`MyLists.jsx`, `AddToListModal.jsx`, `ListView.jsx` — only `ListManager.jsx` is actually used) while scoping the test. All 5 E2E tests across 4 spec files pass together; `npm run test`/`lint`/`build` all still pass (74/74 unit tests).
 - **2026-07-19, later still** — `docs/SPECIFICATION.md` written, at the user's request alongside `finan-react`'s. Extracted from the real code, cross-referencing the sibling repo's own spec wherever the two apps genuinely diverge (state model, hook file extension, PropTypes ratio, `helpHttp.js` capability). One draft inaccuracy (PropTypes usage rate) caught and corrected before committing.
+- **2026-07-20** — At the user's request to finish the whole roadmap, Phase 2's final systematic sweep run: found and deleted `Jumbotron.jsx`/`Jumbotron.css` (only referenced from a stale commented-out line in `App.jsx`) and `services/data.local.service.js` (dead cookie helper, byte-identical to `finan-react`'s copy). Phase 2 closed.
