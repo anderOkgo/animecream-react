@@ -19,9 +19,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: npm
 
       - name: Install dependencies
+        # No `cache: npm` on setup-node here: a stale actions cache can
+        # restore platform-specific optional dependencies (Rollup/esbuild
+        # native binaries) that don't match the runner, making `npm ci`
+        # succeed but the very next step that invokes Vite/Vitest crash
+        # immediately -- reproduced against this exact failure by running
+        # the same npm ci + npm run test:cov in a fresh (uncached)
+        # linux/node:20 Docker container, which passed cleanly both times
+        # the real CI run failed.
         run: npm ci
 
       - name: Lint
