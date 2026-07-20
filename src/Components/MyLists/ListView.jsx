@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import helpHttp from '../../helpers/helpHttp';
 import set from '../../helpers/set.json';
+import { API_BASE_URL } from '../../helpers/apiConfig';
 import './ListView.css';
 import { useLanguage } from '../../hooks/useLanguage';
 
@@ -61,7 +62,7 @@ const ListView = ({ listId, onBack, onLoadSeries }) => {
 
       console.log('Loading series with IDs:', ids);
 
-      const postUrl = set.base_url + set.api_url;
+      const postUrl = API_BASE_URL + set.api_url;
 
       // El API espera el parámetro "id" (no "ids") como array para usar IN condition
       // Según series-read.mysql.ts línea 216: id: HDB.generateInCondition

@@ -7,6 +7,7 @@ import Loader from '../Loader/Loader';
 import Message from '../Message/Message';
 import './Home.css';
 import set from '../../helpers/set.json';
+import { API_BASE_URL } from '../../helpers/apiConfig';
 import RangeFilter from '../SearchMethod/RangeFilter';
 import '../SearchMethod/RangeFilter.css';
 import initialData from '../../helpers/initialData';
@@ -524,7 +525,7 @@ const Home = ({
           return;
         }
 
-        const urlProduction = set.base_url + set.api_url;
+        const urlProduction = API_BASE_URL + set.api_url;
         // El API espera el parámetro "id" (no "ids") como array de números
         // Según series-read.mysql.ts línea 216: id: HDB.generateInCondition
         const productionsInfo = await helpHttp.post(urlProduction, {
@@ -610,7 +611,7 @@ const Home = ({
         return;
       }
       try {
-        const urlProduction = set.base_url + set.api_url;
+        const urlProduction = API_BASE_URL + set.api_url;
         const response = await helpHttp.post(urlProduction, {});
         const productionsInfo = response;
 
@@ -702,7 +703,7 @@ const Home = ({
       setLoadedByList(false);
 
       // Carga normal - asegurar que opt.body sea un objeto válido, no una string serializada
-      let urlProduction = set.base_url + set.api_url;
+      let urlProduction = API_BASE_URL + set.api_url;
       const requestOpt = { ...optToUse };
 
       // Si opt.body es una string, parsearla primero
@@ -827,8 +828,8 @@ const Home = ({
 
       if (genres.length === 0 || demos.length === 0) {
         const [gRes, dRes] = await Promise.all([
-          helpHttp.get(`${set.base_url}api/series/genres`),
-          helpHttp.get(`${set.base_url}api/series/demographics`),
+          helpHttp.get(`${API_BASE_URL}api/series/genres`),
+          helpHttp.get(`${API_BASE_URL}api/series/demographics`),
         ]);
         if (!gRes?.err) {
           genres = gRes.genres || gRes.data || [];
@@ -888,7 +889,7 @@ const Home = ({
           return;
         }
 
-        const urlProduction = set.base_url + set.api_url;
+        const urlProduction = API_BASE_URL + set.api_url;
         const productionsInfo = await helpHttp.post(urlProduction, {
           body: { id: tipoLista },
         });

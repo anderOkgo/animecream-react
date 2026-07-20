@@ -106,10 +106,30 @@ Added `.github/workflows/ci.yml`: checkout → `npm ci` → `npm run lint` → `
 
 ## Phase 4 — Executable specification layers
 
-**Status: TODO**
+**Status: IN PROGRESS** (2026-07-19)
+
+### Playwright E2E — started, real backend, real browser, real results
+
+`test/e2e/` now exists and was run for real, not just written: Docker Desktop started, the `animecream-mariadb` container (already present, 6h-old) confirmed up, `module-api` built (`npm run build`) and run locally (`node dist/index.js`, port 3001, connected to the real dev DB), then the suite driven against it in a real Chromium browser via `npm run test:e2e`.
+
+**Enabling infrastructure work needed first (not previously in the plan):**
+- **`src/helpers/apiConfig.js`** (new) — `set.json`'s `base_url` was hardcoded to production with no override mechanism anywhere in the app. Added `API_BASE_URL = import.meta.env.VITE_API_BASE_URL || set.base_url`, and switched every direct `set.base_url` reference (6 files: `auth.service.js`, `data.service.js`, `AdminPanel.jsx`, `Home.jsx`, `ListView.jsx`, `SearchMethod.jsx`) to import from it instead. Behavior-preserving by default (falls back to the exact same production URL); `playwright.config.js`'s `webServer.env` sets `VITE_API_BASE_URL=http://localhost:3001/` so E2E never touches production.
+- **`playwright.config.js`** — `webServer` auto-starts the Vite dev server on a dedicated port (5180, avoiding collision with any other dev server) with the env override above; `reuseExistingServer: true` so a manually-running dev server is reused instead of double-started.
+- **Real credentials, never in the conversation or committed**: `.env.e2e.local` (gitignored, covered by the existing `*.local` pattern) holds `E2E_ADMIN_LOGIN`/`E2E_ADMIN_PASSWORD`, loaded via Node's built-in `--env-file-if-exists` flag (no new `dotenv` dependency needed) — same account as `module-api`'s own `scripts/smoke-test.js` credentials. `.env.e2e.local.example` (committed) documents the format. Tests needing credentials skip themselves cleanly when the file is absent.
+- **`vite.config.js`** — added `test.exclude: ['test/e2e/**']`: Vitest's default file-discovery glob also matches `*.spec.js` (Playwright's own convention), so without this it tried to run the Playwright specs too and failed immediately on Playwright's `test`/`expect` imports not being Vitest's.
+
+**Real bug found and fixed while wiring this up, unrelated to E2E itself:** `src/services/data.service.js` was a near-verbatim copy of `finan-react`'s `data.service.js` — `totalBank`/`insert`/`update`/`del`/`balanceMonthly` all pointing at `api/finan/...` endpoints, which don't exist for this app. Confirmed via grep that `DataService` is only imported once (`useAlive.js`), and only its `.boot()` method is ever called (which happens to not use the broken path — it hits `BASE_URL` directly). The other 5 functions were both dead *and* wrong. Stripped the file down to just `boot`.
+
+**Golden paths covered so far** (2 spec files, all passing against the real stack):
+- `catalog.spec.js` — public, unauthenticated, zero mutation: loads `/`, confirms real series cards render (title, image) from the real `module-api` catalog.
+- `auth.spec.js` — real login with a real admin account, confirms the login overlay closes on success. Skips itself if `.env.e2e.local` isn't present.
+
+**Not yet covered** (deferred, same session): admin CRUD via `AdminPanel` and `MyLists` create/add/remove. Both are real, valuable golden paths, but admin CRUD in particular mutates the shared long-running dev database (not a throwaway/CI-provisioned one) — writing and verifying disposable-fixture discipline for it (matching `module-api`'s own `__E2E_TEST_SERIES_<timestamp>__` naming/cleanup convention) needs its own careful pass rather than being rushed alongside the infrastructure work above.
+
+### Still open
 
 1. **`docs/SPECIFICATION.md`** — generative design rules: component/folder conventions (`Components/<Name>/<Name>.jsx` + co-located `.css`), hook conventions, the `services/` HTTP-client layer's contract with `module-api`, `localStorage` usage conventions (`catalogStorage.js`, auth token, `cyfer.js` encryption), context/state conventions.
-2. **Playwright E2E** (`test/e2e/` or `e2e/`) — drives the real built app in a real browser against a real running `module-api` instance (mirrors the backend's E2E-against-real-DB philosophy: no mocking the thing you're trying to prove works end to end). Covers the golden paths: browse/search catalog, login, admin CRUD via `AdminPanel`, `MyLists` create/add/remove.
+2. **Admin CRUD + `MyLists` E2E** (see above).
 3. **Post-deploy smoke check** — a small script (Playwright in headless mode, or even a plain script hitting the deployed URL) that confirms the built site actually loads and its key routes render after `npm run up` ships it — the frontend analogue of the backend's `scripts/smoke-test.js`, scoped to "does the deployed bundle work," not full behavioral coverage (that's Playwright E2E's job, run pre-deploy).
 
 ---
@@ -119,3 +139,5 @@ Added `.github/workflows/ci.yml`: checkout → `npm ci` → `npm run lint` → `
 - **2026-07-19** — Phase 0 baseline audit completed at the user's request, extending the executable-specification approach already applied to `module-api` to this frontend. Roadmap drafted.
 - **2026-07-19, same day** — Phases 0b, 1, and 3 executed in full: Vitest + Testing Library + Playwright installed, the orphaned `CardRow.test.jsx` fixed and passing (5/5), ESLint wired from scratch and brought to a clean pass (254 → 0 problems, with real bugs fixed along the way — see Phase 1's findings table), and a CI workflow added. `npm run lint`, `npm run test:cov`, and `npm run build` all pass from the current working tree. Committed and pushed (`48702fa`).
 - **2026-07-19, later same day** — Phase 2.5 started: added `searchUtils.test.js`, `catalogStorage.test.js`, and `cyfer.test.js`, bringing `src/helpers/` to 98.09% statements / 92.85% branches and the project-wide aggregate from 22% to 79.49% statements (56/56 tests passing). Component-level and service-level testing remain open for a follow-up pass.
+- **2026-07-19, later still** — Phase 2.5 continued: `ListManager.jsx` and `TablePagination.jsx` covered (74/74 tests). Found and fixed a real crash bug in `TablePagination` (optional `navigation` prop dereferenced unconditionally in `useEffect` dependency arrays) and deleted a fully orphaned `Table.jsx` (+ CSS), confirmed to have zero importers. Committed and pushed (`91f9cf9`).
+- **2026-07-19, later still** — Phase 4 started at the user's explicit request: Docker Desktop started, `module-api` built and run locally against the real `animecream-mariadb` container, `src/helpers/apiConfig.js` added (env-var override for the previously-hardcoded-to-production API base URL), and 2 Playwright E2E specs written and run for real (not just written) against that live stack — both passing. Along the way, found and fixed `data.service.js` being a dead/wrong copy of `finan-react`'s finance-module client. Admin CRUD and `MyLists` E2E, plus `docs/SPECIFICATION.md`, remain open.

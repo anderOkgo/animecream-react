@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './searchMethod.css';
 import helpHttp from '../../helpers/helpHttp';
-import set from '../../helpers/set.json';
+import { API_BASE_URL } from '../../helpers/apiConfig';
 import { useLanguage } from '../../hooks/useLanguage';
 
 const CACHE_GENRES = 'options_genres';
@@ -23,7 +23,7 @@ const SearchMethod = ({ setOpt, t, isFormVisible, setIsFormVisible }) => {
   const [demographicOptions, setDemographicOptions] = useState(() => readCache(CACHE_DEMOGRAPHICS) || []);
 
   useEffect(() => {
-    const base = set.base_url;
+    const base = API_BASE_URL;
     const cachedGenres = readCache(CACHE_GENRES);
     const cachedDemos = readCache(CACHE_DEMOGRAPHICS);
 

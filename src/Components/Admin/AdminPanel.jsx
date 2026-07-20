@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import helpHttp from '../../helpers/helpHttp';
 import set from '../../helpers/set.json';
+import { API_BASE_URL } from '../../helpers/apiConfig';
 import AuthService from '../../services/auth.service';
 import './AdminPanel.css';
 
@@ -93,8 +94,8 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
       const currentUser = AuthService.getCurrentUser();
       const token = currentUser?.token ? `Bearer ${currentUser.token}` : '';
 
-      const genresUrl = set.base_url + 'api/series/genres';
-      const demographicsUrl = set.base_url + 'api/series/demographics';
+      const genresUrl = API_BASE_URL + 'api/series/genres';
+      const demographicsUrl = API_BASE_URL + 'api/series/demographics';
 
       const [genresResponse, demographicsResponse] = await Promise.all([
         cachedGenres.length === 0 ? helpHttp.get(genresUrl, { token }) : Promise.resolve(null),
@@ -143,7 +144,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
       const currentUser = AuthService.getCurrentUser();
       const token = currentUser?.token ? `Bearer ${currentUser.token}` : '';
 
-      const url = set.base_url + set.api_url + seriesId;
+      const url = API_BASE_URL + set.api_url + seriesId;
       const response = await helpHttp.get(url, { token: token });
 
       if (activeEditIdRef.current !== myGeneration) return;
@@ -435,7 +436,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
 
         if (isEditMode && seriesId) {
           // Update existing series using PUT /api/series/{id}
-          const updateUrl = set.base_url + set.api_url + seriesId;
+          const updateUrl = API_BASE_URL + set.api_url + seriesId;
           const updateResponse = await helpHttp.put(updateUrl, {
             body: seriesData,
             token: token,
@@ -463,7 +464,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
           const genresChanged = JSON.stringify(newGenreIds) !== JSON.stringify(originalGenres);
 
           if (genresChanged) {
-            const genresUrl = set.base_url + set.api_url + `${seriesId}/genres`;
+            const genresUrl = API_BASE_URL + set.api_url + `${seriesId}/genres`;
             const genresResponse = await helpHttp.post(genresUrl, {
               body: { genreIds: newGenreIds },
               token: token,
@@ -494,7 +495,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
           if (titlesChanged) {
             // Remove all existing titles
             if (originalTitles.length > 0) {
-              const removeTitlesUrl = set.base_url + set.api_url + `${seriesId}/titles`;
+              const removeTitlesUrl = API_BASE_URL + set.api_url + `${seriesId}/titles`;
               const removeResponse = await helpHttp.del(removeTitlesUrl, {
                 body: { titleIds: originalTitles },
                 token: token,
@@ -519,7 +520,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
 
             // Add new titles if any
             if (newTitles.length > 0) {
-              const addTitlesUrl = set.base_url + set.api_url + `${seriesId}/titles`;
+              const addTitlesUrl = API_BASE_URL + set.api_url + `${seriesId}/titles`;
               const addResponse = await helpHttp.post(addTitlesUrl, {
                 body: { titles: newTitles },
                 token: token,
@@ -545,7 +546,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
 
           // Upload image if provided
           if (imageFile) {
-            const imageUrl = set.base_url + set.api_url + `${seriesId}/image`;
+            const imageUrl = API_BASE_URL + set.api_url + `${seriesId}/image`;
             const formDataImage = new FormData();
             formDataImage.append('image', imageFile);
 
@@ -615,7 +616,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
             return;
           }
 
-          const url = set.base_url + set.api_url + 'create-complete';
+          const url = API_BASE_URL + set.api_url + 'create-complete';
           const createResponse = await helpHttp.post(url, {
             body: seriesData,
             token: token,
@@ -652,7 +653,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
           }
 
           // Upload image with the returned ID
-          const imageUrl = set.base_url + set.api_url + `${newSeriesId}/image`;
+          const imageUrl = API_BASE_URL + set.api_url + `${newSeriesId}/image`;
           const formDataImage = new FormData();
           formDataImage.append('image', imageFile);
 

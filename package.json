@@ -11,7 +11,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:cov": "vitest run --coverage",
-    "test:e2e": "playwright test",
+    "test:e2e": "node --env-file-if-exists=.env.e2e.local node_modules/@playwright/test/cli.js test",
     "up": "node scripts/bump-sw-version.cjs && call com/db-sync-FTP-both.bat",
     "bup": "npm run build & npm run up"
   },

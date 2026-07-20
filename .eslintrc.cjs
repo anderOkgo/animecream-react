@@ -35,5 +35,11 @@ module.exports = {
       files: ['**/*.test.jsx', '**/*.test.js'],
       env: { jest: true },
     },
+    {
+      // Playwright specs run in Node (not the browser) and read
+      // process.env for E2E credentials.
+      files: ['test/e2e/**/*.spec.js'],
+      env: { node: true, browser: false },
+    },
   ],
 }

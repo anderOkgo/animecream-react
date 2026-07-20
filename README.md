@@ -17,10 +17,20 @@ npm run preview  # preview a production build locally
 npm run lint      # eslint src --ext js,jsx --max-warnings 0
 npm run test      # vitest run
 npm run test:cov  # vitest run --coverage
-npm run test:e2e  # playwright test (see docs/specification-roadmap.md, Phase 4 -- not written yet)
+npm run test:e2e  # Playwright, against a real local module-api -- see below
 ```
 
-All three (`lint`, `test:cov`, `build`) run in CI on every push/PR to `main` — see `.github/workflows/ci.yml`.
+`lint`, `test:cov`, and `build` run in CI on every push/PR to `main` — see `.github/workflows/ci.yml`. `test:e2e` does **not** run in CI (no backend available there); it's local/manual only.
+
+### Running the E2E suite
+
+`test/e2e/` drives the real app in a real browser against a real running `module-api` instance — no mocking, same philosophy as `module-api`'s own E2E suite. Requires:
+
+1. Docker Desktop running, with the `animecream-mariadb` container up (`docker ps` should show it).
+2. `module-api` built and running locally: `cd ../module-api && npm run build && node dist/index.js` (listens on `http://localhost:3001`).
+3. `npm run test:e2e` — this automatically starts the Vite dev server on port 5180 with `VITE_API_BASE_URL=http://localhost:3001/` (see `src/helpers/apiConfig.js`), overriding `set.json`'s production default.
+
+The admin-login test needs real credentials: copy `.env.e2e.local.example` to `.env.e2e.local` (gitignored) and fill in a real account. Without it, that test is skipped automatically — the public catalog tests still run.
 
 ## Deploy
 

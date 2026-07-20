@@ -2,8 +2,9 @@ import set from '../helpers/set.json';
 import helpHttp from '../helpers/helpHttp';
 import cyfer from '../helpers/cyfer';
 import { formattedDate } from '../helpers/operations';
+import { API_BASE_URL } from '../helpers/apiConfig';
 
-const BASE_URL = set.base_url;
+const BASE_URL = API_BASE_URL;
 const API_URL = BASE_URL + 'api/users/';
 
 const normalizeErrorMessage = (message, fallback) => {
