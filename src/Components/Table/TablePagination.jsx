@@ -47,9 +47,14 @@ function TablePagination({
     isInternalChangeRef.current = false;
     // `navigation` itself excluded: a new object identity every render
     // would re-run this on every render; `navigation.pushHistory` is
-    // already the tracked dependency.
+    // already the tracked dependency. Optional chaining here matters, not
+    // just style: dependency arrays are evaluated every render regardless
+    // of the `if (!navigation) return` guard above, so a plain
+    // `navigation.pushHistory` throws whenever `navigation` itself is
+    // omitted (it's optional per PropTypes) instead of the guard ever
+    // getting a chance to run.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, navigation.pushHistory, element]);
+  }, [currentPage, navigation?.pushHistory, element]);
 
   useEffect(() => {
     if (!navigation) return;
@@ -69,9 +74,10 @@ function TablePagination({
       setCurrentPage(1);
     }
     // Same reasoning as above: `navigation` itself excluded, only its
-    // `currentState` field is the actual tracked dependency.
+    // `currentState` field is the actual tracked dependency -- same
+    // optional-chaining fix, same reason (see the effect above).
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigation.currentState, element, currentPage, setCurrentPage, filteredData, itemsPerPage]);
+  }, [navigation?.currentState, element, currentPage, setCurrentPage, filteredData, itemsPerPage]);
 
   const renderPaginationButtons = () => {
     const maxButtons = set.pagination_max_buttons;

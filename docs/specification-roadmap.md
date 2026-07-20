@@ -72,7 +72,7 @@ Confirmed: `npm run test`, `npm run lint`, `npm run build` all pass from the cur
 
 ## Phase 2 — Dead code sweep
 
-**Status: IN PROGRESS** — the ESLint-driven findings above already covered several concrete cases (see Phase 1's findings table) as a side effect of wiring the linter. What Phase 1 did *not* do: a systematic basename-grep sweep across every `src/` file the way the backend's Phase 2 did (which catches whole-file dead code that ESLint's per-file analysis can't see, e.g. a component nobody imports at all).
+**Status: IN PROGRESS** — the ESLint-driven findings from Phase 1 covered several concrete cases (see that phase's findings table). One whole-file case was found and removed during Phase 2.5's component testing: `Components/Table/Table.jsx` (+ `Table.css`) had zero importers anywhere in `src/` — see Phase 2.5's findings. What still hasn't happened: a systematic, deliberate basename-grep sweep across *every* `src/` file the way the backend's Phase 2 did (as opposed to catching cases incidentally while working on something else).
 
 Remaining: for every file under `src/`, grep for import-by-basename references from any other file, excluding `main.jsx`/`App.jsx` as entry points. No path aliases are configured in `vite.config.js`, so basename-grep should catch all real edges here too. Manually verify each candidate (barrel exports, conditional dynamic imports) before deleting.
 
@@ -86,7 +86,13 @@ Added dedicated test suites for all of `src/helpers/`'s pure-logic files: `searc
 
 Result: **`src/helpers/` at 98.09% statements / 92.85% branches**, and the project-wide aggregate went from 22% to **79.49% statements / 70% branches** (the remaining gap is almost entirely `CardRow.jsx`, the one component file with tests today — component-level testing hasn't started yet, this phase focused on pure-logic files first per the original plan's priority call).
 
-Remaining: the other 24 component files (0% today), the other 6 hooks, and the 3 services (`auth.service.js`, `data.service.js`, `data.local.service.js`) — deferred to a follow-up pass; a 100% target may still not be the right call for purely presentational JSX branches once component testing starts.
+**Component testing started** (same day, second pass): `ListManager.jsx` (localStorage-backed list CRUD, drag-and-drop reordering, and the add-all-current-cards dedup logic — 7 tests) and `TablePagination.jsx` (11 tests, covering range display, prev/next/edge navigation, the range-slider double-click toggle, and its two-way sync with `navigation` history). Aggregate now **74.33% statements / 62.86% branches** project-wide.
+
+**Two real findings from writing `TablePagination.jsx`'s tests:**
+- **A real crash bug, fixed:** `TablePagination` unconditionally read `navigation.pushHistory`/`navigation.currentState` inside two `useEffect` dependency arrays, even though `navigation` is optional (not `.isRequired` in `PropTypes`, and both effects already guard with `if (!navigation) return`). Dependency arrays are evaluated every render *before* the guard inside the effect body ever runs, so any render without a `navigation` prop threw `TypeError: Cannot read properties of undefined (reading 'pushHistory')` and unmounted the whole component. Confirmed this was reachable in principle (not just theoretical) since the prop is genuinely optional per the component's own contract; the one live call site (`Card.jsx`) happens to always pass it today, so this hadn't been observed in production, but a test written before this fix reproduces the crash directly. Fixed with optional chaining (`navigation?.pushHistory`, `navigation?.currentState`) in both dependency arrays — behavior-preserving when `navigation` is provided, no more crash when it isn't.
+- **`Components/Table/Table.jsx` (+ its `Table.css`) was fully dead code**, discovered while checking every real call site of `TablePagination` to write the tests above: grepped for any import of it anywhere in `src/` and found none — `Card.jsx` (the component actually rendered in the app) uses `TableSearch`/`TablePagination` directly, not this wrapper. Deleted both files (Phase 2 dead-code sweep, folded in here since it was directly evidenced by this pass).
+
+Remaining: the other ~22 component files, the other 6 hooks, and the 3 services (`auth.service.js`, `data.service.js`, `data.local.service.js`) — deferred to a follow-up pass; a 100% target may still not be the right call for purely presentational JSX branches once more component testing happens.
 
 ---
 
