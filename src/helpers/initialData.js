@@ -40,7 +40,7 @@ const initialData = [
     production_description_en:
       'Lupin is a descendant of a dynasty of thieves, which is why he is pursued while trying to escape the police. He gathers new friends to form an invincible group. The picaresque touch is provided by the problematic Fujiko, who ends up getting Lupin into more trouble than he already has.',
     production_number_chapters: 23,
-    production_image_path: '/img/tarjeta/41.jpg',
+    production_image_path: '/img/tarjeta/41_1783047914352.jpg',
     production_ranking_number: 450,
     demographic_name: 'Seinen',
     genre_names: 'Acción,Aventura,Entretenimiento',
@@ -110,7 +110,7 @@ const initialData = [
     production_description_en:
       'A classic of Western entertainment, it tells the life of Candy, an orphan girl who goes through adventures, dramas, losses, and romances. The series combines emotion and human feelings to the limit, with several arcs focused on well-developed characters and melodramatic soundtracks that envelop the viewer.',
     production_number_chapters: 115,
-    production_image_path: '/img/tarjeta/62.jpg',
+    production_image_path: '/img/tarjeta/62_1783480561958.jpg',
     production_ranking_number: 266,
     demographic_name: 'Shōjo',
     genre_names: 'Drama,Romance',
@@ -236,7 +236,7 @@ const initialData = [
     production_description_en:
       'The design is very striking based on a love triangle between two twin brothers and their childhood friend, in an environment with very school-themed themes, where the sports field plays a very important role, providing events and situations typical of these works proclaiming itself as a great classic of entertainment.',
     production_number_chapters: 101,
-    production_image_path: '/img/tarjeta/70.jpg',
+    production_image_path: '/img/tarjeta/70_1778722223458.jpg',
     production_ranking_number: 58,
     demographic_name: 'Shōnen',
     genre_names: 'Romance,Deporte',
@@ -264,7 +264,7 @@ const initialData = [
     production_description_en:
       'A rather unusual and strange mix, possibly the most ridiculous anime ever created, with the typical connotations of modern "cancerous" anime but at the same time including an impeccable narrative formula, one of the best of its kind, telling stories based on one of the best waifu prototypes and the protagonist in his youth years.',
     production_number_chapters: 48,
-    production_image_path: '/img/tarjeta/33.jpg',
+    production_image_path: '/img/tarjeta/33_1778722006690.jpg',
     production_ranking_number: 65,
     demographic_name: 'Seinen',
     genre_names: 'Romance',
@@ -362,7 +362,7 @@ const initialData = [
     production_description_en:
       'After many personal changes and the terrifying encounter with Zone Zero, Hayato prepares to return to action in a sea of feelings, emotions, adrenaline, and the terrifying Zone Zero, trying to overcome his fears while competing in a bubbling race where everyone was playing for their destinies.',
     production_number_chapters: 8,
-    production_image_path: '/img/tarjeta/52_1765335402062.jpg',
+    production_image_path: '/img/tarjeta/52_1778868050306.jpg',
     production_ranking_number: 105,
     demographic_name: 'Shōnen',
     genre_names: 'Ciencia ficción,Deporte',
@@ -446,7 +446,7 @@ const initialData = [
     production_description_en:
       'In a universe of seemingly inconsequential absurdity, Haruko Haruhara arrives in the peaceful town of Mabase searching for someone with the power to emulate the Pirate King, capable of opening spatial portals and teleporting entire planets, creating conflicts with Medical Mechanica and the Space Brotherhood, dragging the protagonists into apparent nonsense.',
     production_number_chapters: 6,
-    production_image_path: '/img/tarjeta/5.jpg',
+    production_image_path: '/img/tarjeta/5_1778723098709.jpg',
     production_ranking_number: 3,
     demographic_name: 'Seinen',
     genre_names: 'Ciencia ficción,Musical,Otaku,Misterio',
@@ -558,7 +558,7 @@ const initialData = [
     production_description_en:
       'In a brilliant blend of mechas, dictatorships, and oppression with a unique touch of fantasy, it tells an intriguing story of military strategy between rebel factions and political ambition, in settings of mysteries like Geass, the power of kings, which has the authority to change the course of this worldwide revolution.',
     production_number_chapters: 25,
-    production_image_path: '/img/tarjeta/12.jpg',
+    production_image_path: '/img/tarjeta/12_1783046132495.jpg',
     production_ranking_number: 33,
     demographic_name: 'Seinen',
     genre_names: 'Ciencia ficción,Mecha,Triller Psicológico',
@@ -572,7 +572,7 @@ const initialData = [
     production_description_en:
       "It's a story that is very avant-garde, touching on many interesting Japanese social elements. In an attractive way, it creates a very fitting group of characters to tell a highly realistic plot attached to these issues and a dubious game, generating a very addictive environment and storyline.",
     production_number_chapters: 11,
-    production_image_path: '/img/tarjeta/9.jpg',
+    production_image_path: '/img/tarjeta/9_1781182455430.jpg',
     production_ranking_number: 21,
     demographic_name: 'Josei',
     genre_names: 'Romance,Suspenso,Aventura,Otaku,Realismo,Misterio,Triller Psicológico',
@@ -684,7 +684,7 @@ const initialData = [
     production_description_en:
       'Continuing with the unfinished story, using brilliant resources in the narrative and in the development of the plot, they present this second intriguing season revealing other secrets that had been left unfinished in the first, being one of the most addictive and apotheotic sagas of recent times.',
     production_number_chapters: 12,
-    production_image_path: '/img/tarjeta/131.jpg',
+    production_image_path: '/img/tarjeta/131_1783097745857.jpg',
     production_ranking_number: 29,
     demographic_name: 'Shōnen',
     genre_names: 'Acción,Drama,Ciencia ficción,Suspenso,Post Apocalíptico,Misterio',
@@ -698,7 +698,7 @@ const initialData = [
     production_description_en:
       'The third season carries the story forward while maintaining the pace and intensity the series had already established. Important questions begin to find answers, even as new conflicts raise the tension. Action takes on a stronger role, characters evolve, and the plot expands, making this season feel solid, engaging, and essential to the overall saga.',
     production_number_chapters: 22,
-    production_image_path: '/img/tarjeta/340.jpg',
+    production_image_path: '/img/tarjeta/340_1783116074505.jpg',
     production_ranking_number: 97,
     demographic_name: 'Shōnen',
     genre_names: 'Acción,Psicologico,Drama,Suspenso,Gore,Post Apocalíptico',
@@ -726,7 +726,7 @@ const initialData = [
     production_description_en:
       'It presents itself as a powerful antithesis to the traditional concept of war, questioning the roles of heroes and villains and the history written by the victors. Through multiple perspectives, it exposes humanity’s recurring mistakes in a work that blends intense action, emotional weight, and rich symbolism, achieving a result that is both devastating and apotheotic.',
     production_number_chapters: 16,
-    production_image_path: '/img/tarjeta/474.jpg',
+    production_image_path: '/img/tarjeta/474_1783169312384.jpg',
     production_ranking_number: 50,
     demographic_name: 'Shōnen-Seinen',
     genre_names: 'Acción,Drama,Fantasía,Suspenso,Misterio',
@@ -796,7 +796,7 @@ const initialData = [
     production_description_en:
       'In a not-so-distant future, a drug that once promised to eliminate all pain turns into a death sentence for humanity. From this ticking countdown, the series brings together a group of characters pushed to the margins of society who, despite their apparent insignificance, form a cohesive and engaging story supported by immersive action sequences and an unsettling science fiction backdrop.',
     production_number_chapters: 13,
-    production_image_path: '/img/tarjeta/475.jpg',
+    production_image_path: '/img/tarjeta/475_1778442428783.jpg',
     production_ranking_number: 101,
     demographic_name: 'Seinen',
     genre_names: 'Psicologico,Ciencia ficción,Suspenso,Neo-noir,Misterio',
@@ -978,7 +978,7 @@ const initialData = [
     production_description_en:
       'The world becomes increasingly chaotic, the consequences of ancestral battles have borne fruit, creating revolutions and sides among the demons themselves. Lina Inverse and her friends become involved in games of conspiracies and internal struggles among demons, where humans have no chance. This being the best adaptation of the franchise.',
     production_number_chapters: 26,
-    production_image_path: '/img/tarjeta/83_1766551167526.jpg',
+    production_image_path: '/img/tarjeta/83_1784566984734.jpg',
     production_ranking_number: 37,
     demographic_name: 'Shōnen',
     genre_names: 'Magia,Fantasía,Aventura',
