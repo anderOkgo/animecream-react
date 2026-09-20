@@ -275,6 +275,11 @@ const translations = {
     doubleClick: 'Double click',
     pleaseFillThisField: 'Please fill out this field',
     noDataFound: 'No Data Found',
+    installApp: 'Install Animecream',
+    installAppDescription: 'Add it to your home screen for quick, full-screen access.',
+    installAppIosDescription: "Tap the Share icon, then \"Add to Home Screen\" to install.",
+    install: 'Install',
+    notNow: 'Not now',
   },
   es: {
     welcome: 'AnimeCream APP',
@@ -542,6 +547,11 @@ const translations = {
     doubleClick: 'Doble clic',
     pleaseFillThisField: 'Por favor, completa este campo',
     noDataFound: 'No se encontraron resultados',
+    installApp: 'Instalar Animecream',
+    installAppDescription: 'Agrégala a tu pantalla de inicio para un acceso rápido y a pantalla completa.',
+    installAppIosDescription: 'Toca el ícono de Compartir y luego "Añadir a pantalla de inicio" para instalarla.',
+    install: 'Instalar',
+    notNow: 'Ahora no',
   },
 };
 

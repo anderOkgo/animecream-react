@@ -4,10 +4,12 @@ import Menu from './Components/Menu/Menu';
 import Login from './Components/Auth/Login/Login';
 import Loader from './Components/Loader/Loader';
 import Message from './Components/Message/Message';
+import InstallPrompt from './Components/InstallPrompt/InstallPrompt';
 import { useAlive } from './hooks/useAlive';
 import { useTheme } from './hooks/useTheme';
 import { useLanguage, translateApiMessage } from './hooks/useLanguage';
 import { useNavigationHistory } from './hooks/useNavigationHistory';
+import { useInstallPrompt } from './hooks/useInstallPrompt';
 import AuthService from './services/auth.service';
 import { useState, useEffect } from 'react';
 
@@ -22,6 +24,7 @@ const App = () => {
     t,
   } = useLanguage();
   const navigation = useNavigationHistory();
+  const { canInstall, showIosInstructions, promptInstall, dismissPrompt } = useInstallPrompt();
   const [role, setRole] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
   const [globalMessage, setGlobalMessage] = useState(null);
@@ -171,6 +174,8 @@ const App = () => {
         )}
       </div>
       {!!proc && <Loader />}
+      {canInstall && <InstallPrompt t={t} variant="native" onInstall={promptInstall} onDismiss={dismissPrompt} />}
+      {!canInstall && showIosInstructions && <InstallPrompt t={t} variant="ios" onDismiss={dismissPrompt} />}
       {globalMessage && (
         <Message
           msg={
