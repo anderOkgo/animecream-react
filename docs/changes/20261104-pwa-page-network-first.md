@@ -1,6 +1,6 @@
 # Page updates on the first open after a deploy
 
-**Date:** 2026-11-04 · **Branch:** `feature/20261104-pwa-page-network-first` · **Released in:** not released
+**Date:** 2026-11-04 · **Branch:** `feature/20261104-pwa-page-network-first` · **Released in:** https://animecream.com, 2026-11-04, sw 3.3.27 (deployed from the branch tip, not yet merged)
 **Implements:** no spec change; workspace rule in `module-docs/DEVELOPMENT-PROCESS.md` v2.7, D.1
 **Change ID:** `20261104-pwa-page-network-first`
 
