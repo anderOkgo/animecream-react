@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import './searchMethod.css';
+import './SearchMethod.css';
 import helpHttp from '../../helpers/helpHttp';
 import { API_BASE_URL } from '../../helpers/apiConfig';
 import { useLanguage } from '../../hooks/useLanguage';
