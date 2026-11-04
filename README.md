@@ -34,7 +34,7 @@ The admin-login test needs real credentials: copy `.env.e2e.local.example` to `.
 
 ## Deploy
 
-`npm run up` bumps the service-worker version and syncs the built assets to production over FTP (`com/db-sync-FTP-both.bat`, requires local FTP credentials). `npm run bup` does `build` + `up` in one step.
+`npm run bup` bumps the service-worker version, builds, and syncs the built assets to production over FTP (`com/db-sync-FTP-both.bat`, requires local FTP credentials). `npm run up` only does the FTP sync of the current build, with no version bump.
 
 ## Docs
 

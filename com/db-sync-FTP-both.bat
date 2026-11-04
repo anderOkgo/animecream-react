@@ -29,5 +29,8 @@ IF EXIST setter.bat (CD.. & CALL com\setter.bat) ELSE ( CALL com\setter.bat )
     "exit"
 
 :END
-IF %ERRORLEVEL% EQU 0 (Echo No error found) ELSE (Echo An error was found)
-TIMEOUT /T 5
+SET "RESULT=%ERRORLEVEL%"
+IF %RESULT% EQU 0 (Echo No error found) ELSE (Echo An error was found)
+REM Keeps the window open 5 seconds. Not TIMEOUT: it fails without a console (npm, redirected input).
+ping -n 6 127.0.0.1 >NUL
+EXIT /B %RESULT%

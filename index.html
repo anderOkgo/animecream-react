@@ -98,7 +98,13 @@
         function (event) {
           var target = event.target;
           if (target && (target.tagName === 'SCRIPT' || target.tagName === 'LINK')) {
-            recoverAndReload();
+            // Recovery wipes the service worker and reloads, so it only helps
+            // online and for this site's own files. Offline, or for a third-party
+            // script, it would destroy the offline copy and leave an error page.
+            var source = target.src || target.href || '';
+            if (navigator.onLine && source.indexOf(window.location.origin + '/') === 0) {
+              recoverAndReload();
+            }
           }
         },
         true
