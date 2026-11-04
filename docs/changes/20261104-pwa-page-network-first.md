@@ -1,6 +1,6 @@
 # Page updates on the first open after a deploy
 
-**Date:** 2026-11-04 · **Branch:** `feature/20261104-pwa-page-network-first` · **Released in:** https://animecream.com, 2026-11-04, sw 3.3.29 (deployed just before the merge)
+**Date:** 2026-11-04 · **Branch:** `feature/20261104-pwa-page-network-first` · **Released in:** https://animecream.com, 2026-11-04, sw 3.3.29; offline follow-up sw 3.3.30, same day
 **Implements:** no spec change; workspace rule in `module-docs/DEVELOPMENT-PROCESS.md` v2.7, D.1
 **Change ID:** `20261104-pwa-page-network-first`
 
@@ -74,3 +74,32 @@ own file is missing online, and stays out when only Analytics is blocked. Signed
 observed. The new `.bat` ending was tested alone with simulated results (exit 0 and 3, 5 s pause, no
 console); the whole script then ran on this release, exit 0.
 
+
+## Follow-up: offline still failed after the first release
+The owner reported that the app kept failing offline, on and off, right after this change was
+released. The first checks had opened only `/`, twice, online, so they missed three causes:
+
+- Pages were cached by exact URL, so `/` and `/?utm_source=homescreen` (the installed app's start
+  URL) were different entries, and so was each page URL.
+- The first open after a deploy stored files in the outgoing cache, which activation then deleted.
+  One online open was not enough, contrary to what was first stated.
+- Some successful opens came from the browser's HTTP cache, not from the worker: closing and reopening
+  gave mixed results.
+
+Fix, the approach Bitácora already uses: the worker keeps the page and its built files at install time,
+in its own cache, reading the file list from the page itself so no build plugin is needed. One cached
+copy under `/` serves every URL offline, and only an HTML response may replace it.
+
+Verified on the real build with the HTTP cache cleared before every offline open, and with the previous
+worker as a control. It must fail, or the test proves nothing:
+
+| Scenario | Previous worker | This worker |
+|---|---|---|
+| First open, then offline (`/` or installed app) | 0 of 3 | 3 of 3 |
+| Open one way, go offline the other way | 0 of 2 | 2 of 2 |
+| Offline on a page URL | 0 of 1 | 1 of 1 |
+| Deploy, one online open, offline | 0 of 2 | 2 of 2 |
+| Close and reopen 6 times | 4 of 6 | 6 of 6 |
+
+Also verified in production, six flows with the HTTP cache cleared: all open. Not verified on a physical
+phone. This makes the app open offline; data from the API may still be missing without a network.
