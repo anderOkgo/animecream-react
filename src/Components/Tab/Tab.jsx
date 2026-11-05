@@ -200,28 +200,6 @@ function Tab({
     }
   };
 
-  // Fully implemented (mirrors handleTop250Click, and Home.jsx / the
-  // history-restore logic below both already anticipate a 'top100' request
-  // type) but never wired to a UI element -- no `.lang-top100` trigger
-  // exists next to `.lang-top250` below. Left in place, not deleted:
-  // flagged as a missing-wiring gap for a product decision, same class of
-  // finding as module-api's Phase 2.6 `validateInitialLoad`.
-  const _handleTop100Click = () => {
-    if (homeSetOptRef.current) {
-      const requestData = {
-        method: 'POST',
-        body: {
-          limit: 100,
-          production_ranking_number: 'ASC',
-          _reverse: true,
-        },
-      };
-      navigation?.pushHistory('request', { type: 'top100', data: requestData });
-      homeSetOptRef.current(requestData);
-      handleScrollToTop();
-    }
-  };
-
   const tabsData = [
     {
       id: 1,
