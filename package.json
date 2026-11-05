@@ -14,7 +14,8 @@
     "test:e2e": "node --env-file-if-exists=.env.e2e.local node_modules/@playwright/test/cli.js test",
     "smoke": "node scripts/smoke-check.mjs",
     "up": "call com/db-sync-FTP-both.bat",
-    "bup": "node scripts/bump-sw-version.cjs && npm run build && npm run up"
+    "seed": "node scripts/sync-initial-data.mjs",
+    "bup": "npm run seed && node scripts/bump-sw-version.cjs && npm run build && npm run up"
   },
   "dependencies": {
     "@fontsource/roboto": "^5.0.8",

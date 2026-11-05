@@ -48,8 +48,9 @@ Each lesson says what happened, why, and what to do. Add a lesson when a change 
 
 ## SEO
 
-- **Seed data goes stale.** 13 series in `initialData.js` pointed at old images after covers changed (2026-07-22).
-  Treat it as derived data.
+- **Seed data goes stale.** 13 series in `initialData.js` pointed at old images after covers changed (2026-07-22),
+  and 53 of 71 had an old ranking by November. Treat it as derived data: `npm run seed` updates it, and `npm run bup`
+  runs it first. `sitemap.xml` needs nothing, since it lists genres and pages, not series.
 - **`set.json`'s `base_url` is the API, not this site.** The smoke check's first default was wrong because of it.
 
 ## Tests and CI
