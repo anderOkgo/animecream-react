@@ -1,11 +1,13 @@
 import set from '../helpers/set.json';
 import helpHttp from '../helpers/helpHttp';
 import cyfer from '../helpers/cyfer';
-import { formattedDate } from '../helpers/operations';
 import { API_BASE_URL } from '../helpers/apiConfig';
 
 const BASE_URL = API_BASE_URL;
 const API_URL = BASE_URL + 'api/users/';
+
+// A fixed key: the session lasts as long as its token. The API answers 401 once it expires.
+const SESSION_KEY = 'user-in';
 
 const normalizeErrorMessage = (message, fallback) => {
   if (typeof message === 'string' || Array.isArray(message)) {
@@ -48,7 +50,7 @@ const login = async (username, password) => {
   if (response.token === undefined) {
     return { err: { message: normalizeErrorMessage(response.err?.message, 'Login failed') } };
   } else {
-    localStorage.setItem(cyfer().cy('user-in', formattedDate()), cyfer().cy(JSON.stringify(response), set.salt));
+    localStorage.setItem(SESSION_KEY, cyfer().cy(JSON.stringify(response), set.salt));
     return { message: response.message };
   }
 };
@@ -92,7 +94,7 @@ const logout = () => {
 };
 
 const getCurrentUser = () => {
-  const storage = localStorage.getItem(cyfer().cy('user-in', formattedDate()));
+  const storage = localStorage.getItem(SESSION_KEY);
 
   if (storage !== null) {
     try {
