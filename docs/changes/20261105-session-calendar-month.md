@@ -1,6 +1,6 @@
 # The session survives the change of date
 
-**Date:** 2026-11-05 · **Branch:** `fix/20261105-session-calendar-month`
+**Date:** 2026-11-05 · **Branch:** `fix/20261105-session-calendar-month` · **Released in:** https://animecream.com, 2026-11-05
 **Implements:** `module-docs/apps/auth/SPEC.md` v0.3, §2, backlog B2
 **Change ID:** `20261105-session-calendar-month`
 
@@ -15,6 +15,10 @@ calendar month.
 
 ## Release and rollback
 `npm run bup`, after the API. Rollback: revert and deploy.
+
+## Verification
+Unit and local E2E pass; the next-day test fails on the old code. In production: the served bundle has the fixed key,
+`sw.js` matches the build, and `npm run smoke` passed. A real login was not tried: the owner confirms it.
 
 ## Version history
 | Date | Change |
