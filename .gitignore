@@ -34,3 +34,6 @@ WinSCP.exe
 WinSCP.ini
 0.symbolics.bat
 .env
+
+# Link to the image store on the owner's PC, created by 0.symbolics.bat
+public/img/tarjeta
