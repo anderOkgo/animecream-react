@@ -105,8 +105,9 @@ const ListManager = ({
     }
   };
 
+  // The delete button is only rendered with a list selected
   const handleDeleteList = () => {
-    if (selectedListId && window.confirm(t('confirmDeleteList') || 'Are you sure you want to delete this list?')) {
+    if (window.confirm(t('confirmDeleteList') || 'Are you sure you want to delete this list?')) {
       localStorage.removeItem(selectedListId);
       // Si la lista eliminada era la seleccionada, limpiar la selección
       if (onListSelected) {
@@ -131,7 +132,9 @@ const ListManager = ({
   const handleDrop = (e, dropIndex) => {
     e.preventDefault();
 
-    if (draggedItem === null || draggedItem === dropIndex || !listData) {
+    // Items (the drop targets) are only rendered with a list loaded; a drop without a drag start in
+    // this list (from outside) or onto itself does nothing
+    if (draggedItem === null || draggedItem === dropIndex) {
       return;
     }
 
@@ -150,9 +153,8 @@ const ListManager = ({
     setDraggedItem(null);
   };
 
+  // Remove buttons are only rendered on the items of a loaded list
   const handleRemoveItem = (index) => {
-    if (!listData) return;
-
     const newItems = listData.items.filter((_, i) => i !== index);
     const updatedList = {
       ...listData,
@@ -163,8 +165,9 @@ const ListManager = ({
     setListData(updatedList);
   };
 
+  // The Show button is only rendered with a list loaded, and disabled while it is empty
   const handleLoadSeries = () => {
-    if (onLoadSeries && listData && listData.items.length > 0) {
+    if (onLoadSeries) {
       // Enviar los IDs en el orden exacto que están en la lista (localStorage)
       const ids = listData.items.map((item) => item.id).filter(Boolean);
       onLoadSeries(ids);
@@ -180,9 +183,8 @@ const ListManager = ({
   };
 
   // Copiar lista al portapapeles
+  // Copy and share are only rendered with a list loaded, and disabled while it is empty
   const handleCopyList = async () => {
-    if (!listData || !listData.items || listData.items.length === 0) return;
-
     // Formatear la lista como texto (usar el formato actual según showRealIndexes)
     const listText = listData.items
       .map((item, index) => {
@@ -219,8 +221,6 @@ const ListManager = ({
   };
 
   const handleShareList = async () => {
-    if (!listData || !listData.items || listData.items.length === 0) return;
-
     const ids = listData.items
       .map((item) => item.id)
       .filter(Boolean)
@@ -251,21 +251,8 @@ const ListManager = ({
   const handleAddAllCurrentCards = () => {
     console.log('handleAddAllCurrentCards called', { currentSeries, listData, selectedListId });
 
-    if (!selectedListId) {
-      alert(t('selectListFirst') || 'Please select a list first');
-      return;
-    }
-
-    if (!listData) {
-      alert(t('selectListFirst') || 'Please select a list first');
-      return;
-    }
-
-    if (!currentSeries || !Array.isArray(currentSeries) || currentSeries.length === 0) {
-      alert(t('noSeriesToAdd') || 'No series available to add');
-      return;
-    }
-
+    // The Add Cards button is only rendered with a list selected and loaded, and is disabled while
+    // there are no current series, so none of those cases reach here.
     const existingIds = new Set(listData.items.map((item) => item.id));
     const newItems = [];
     let addedCount = 0;
