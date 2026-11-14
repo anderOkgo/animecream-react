@@ -45,12 +45,11 @@ const Card = ({
 
   const currentData = sortedData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
+  // Home renders Card only with a non-empty list (`filteredDb.length > 0`), so `data` is always set here
   useEffect(() => {
-    if (data) {
-      setCurrentPage(1);
-      setFilteredData(data);
-      setDataset(data);
-    }
+    setCurrentPage(1);
+    setFilteredData(data);
+    setDataset(data);
   }, [data]);
 
   // Notificar cambios en filteredData (series filtradas actualmente visibles)

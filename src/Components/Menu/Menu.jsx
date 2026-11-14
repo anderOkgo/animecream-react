@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import './Menu.css';
 import Status from '../Status/Status';
 import AuthService from '../../services/auth.service';
@@ -82,15 +82,15 @@ const Menu = ({
   ];
   const checkboxRef = useRef(null);
 
-  useEffect(() => {
+  // A layout effect: on unmount React removes this listener before it detaches the checkbox ref, so
+  // the ref is always set whenever the listener can run (same as finan-react's Menu).
+  useLayoutEffect(() => {
     const handleClick = (e) => {
       // El label .hamburger ya alterna el checkbox; solo cerrar al clic fuera
       if (e.target.closest('.hamburger') || e.target.closest('.navbar') !== null) {
         return;
       }
-      if (checkboxRef.current) {
-        checkboxRef.current.checked = false;
-      }
+      checkboxRef.current.checked = false;
     };
 
     document.addEventListener('click', handleClick);
