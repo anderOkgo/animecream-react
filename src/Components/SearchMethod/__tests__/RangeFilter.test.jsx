@@ -104,4 +104,34 @@ describe('RangeFilter', () => {
 
     expect(screen.getByRole('slider')).toBeDisabled();
   });
+
+  it('a swipe on the header does not toggle the range', () => {
+    const { container } = render(<RangeFilter label="Year" min={1990} max={2030} value={2010} onChange={() => {}} />);
+    const header = container.querySelector('.range-header');
+    fireEvent.touchStart(header, { touches: [{ clientX: 10, clientY: 10 }] });
+    fireEvent.touchMove(header);
+    fireEvent.touchEnd(header);
+    expect(screen.getByRole('slider')).not.toBeDisabled();
+  });
+
+  it('ignores other mouse buttons, moves with no button held, and small wobbles', () => {
+    const { container } = render(<RangeFilter label="Year" min={1990} max={2030} value={2010} onChange={() => {}} />);
+    const header = container.querySelector('.range-header');
+    fireEvent.mouseDown(header, { button: 2 });
+    fireEvent.mouseUp(header, { button: 2 });
+    expect(screen.getByRole('slider')).not.toBeDisabled();
+
+    // A vertical drag counts as a drag too
+    fireEvent.mouseDown(header, { button: 0, clientX: 10, clientY: 10 });
+    fireEvent.mouseMove(header, { buttons: 1, clientX: 10, clientY: 40 });
+    fireEvent.mouseUp(header, { button: 0 });
+    expect(screen.getByRole('slider')).not.toBeDisabled();
+
+    // A wobble of a few pixels, or a move with no button held, is still a click
+    fireEvent.mouseDown(header, { button: 0, clientX: 10, clientY: 10 });
+    fireEvent.mouseMove(header, { buttons: 1, clientX: 12, clientY: 12 });
+    fireEvent.mouseMove(header, { buttons: 0, clientX: 90, clientY: 90 });
+    fireEvent.mouseUp(header, { button: 0 });
+    expect(screen.getByRole('slider')).toBeDisabled();
+  });
 });
