@@ -65,4 +65,13 @@ describe('useSwipeableTabs', () => {
     act(() => result.current.setSelectedOption(3));
     expect(result.current.selectedOption).toBe(3);
   });
+
+  it('ignores a second touch end after a short swipe (no new touch start)', () => {
+    const { result } = renderHook(() => useSwipeableTabs(2, 4, 170));
+    // A short swipe changes no state, so the same handlers stay; the first end clears the start
+    act(() => result.current.handleTouchStart(touchEvent(100)));
+    act(() => result.current.handleTouchEnd(touchEvent(120)));
+    act(() => result.current.handleTouchEnd(touchEvent(500)));
+    expect(result.current.selectedOption).toBe(2);
+  });
 });

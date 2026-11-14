@@ -124,3 +124,16 @@ describe('AuthService.getUserName', () => {
     expect(AuthService.getUserName(undefined)).toBeNull();
   });
 });
+
+describe('AuthService.login error messages', () => {
+  it('reads a nested message object, and falls back for anything else', async () => {
+    helpHttp.post.mockResolvedValueOnce({ err: { message: { message: 'Locked' } } });
+    expect(await AuthService.login('a', 'b')).toEqual({ err: { message: 'Locked' } });
+
+    helpHttp.post.mockResolvedValueOnce({ err: { message: { code: 1 } } });
+    expect(await AuthService.login('a', 'b')).toEqual({ err: { message: 'Login failed' } });
+
+    helpHttp.post.mockResolvedValueOnce({ err: { message: ['Bad user', 'Bad password'] } });
+    expect(await AuthService.login('a', 'b')).toEqual({ err: { message: ['Bad user', 'Bad password'] } });
+  });
+});

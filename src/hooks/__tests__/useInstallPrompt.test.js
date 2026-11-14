@@ -115,4 +115,34 @@ describe('useInstallPrompt', () => {
     expect(result.current.showIosInstructions).toBe(false);
     expect(localStorage.getItem('pwaInstallDismissedAt')).not.toBeNull();
   });
+
+  it('promptInstall does nothing before the browser offers an install', async () => {
+    const { result } = renderHook(() => useInstallPrompt());
+    await act(async () => {
+      await result.current.promptInstall();
+    });
+    expect(result.current.canInstall).toBe(false);
+  });
+
+  it('remembers a declined install prompt, so it is not offered again soon', async () => {
+    const { result } = renderHook(() => useInstallPrompt());
+    const event = createBeforeInstallPromptEvent('dismissed');
+    act(() => window.dispatchEvent(event));
+    await act(async () => {
+      await result.current.promptInstall();
+    });
+    expect(result.current.canInstall).toBe(false);
+    expect(localStorage.getItem('pwaInstallDismissedAt')).not.toBeNull();
+  });
+
+  it('treats an iPad that reports a desktop Safari user agent as iOS', () => {
+    mockUserAgent(
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15'
+    );
+    Object.defineProperty(navigator, 'platform', { value: 'MacIntel', configurable: true });
+    Object.defineProperty(navigator, 'maxTouchPoints', { value: 5, configurable: true });
+    const { result } = renderHook(() => useInstallPrompt());
+    expect(result.current.showIosInstructions).toBe(true);
+    Object.defineProperty(navigator, 'maxTouchPoints', { value: 0, configurable: true });
+  });
 });
