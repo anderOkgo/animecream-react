@@ -117,3 +117,44 @@ describe('SearchMethod', () => {
     expect(nameInput).toHaveValue('');
   });
 });
+
+describe('SearchMethod, options cache', () => {
+  it('fetches genres and demographics, accepting a `data` list, and caches them', async () => {
+    helpHttp.get.mockImplementation((url) =>
+      Promise.resolve(url.endsWith('genres') ? { data: [{ id: 1, name: 'Action' }] } : { demographics: [{ id: 2, name: 'Seinen' }] })
+    );
+    renderSearch();
+    await waitFor(() => expect(localStorage.getItem('options_genres')).not.toBeNull());
+    await waitFor(() => expect(localStorage.getItem('options_demographics')).not.toBeNull());
+    expect(JSON.parse(localStorage.getItem('options_genres'))).toEqual([{ id: 1, name: 'Action' }]);
+  });
+
+  it('caches nothing on an error, or on an answer with no list', async () => {
+    helpHttp.get.mockImplementation((url) => Promise.resolve(url.endsWith('genres') ? { err: { message: 'down' } } : {}));
+    renderSearch();
+    await waitFor(() => expect(helpHttp.get).toHaveBeenCalledTimes(2));
+    await Promise.resolve();
+    expect(localStorage.getItem('options_genres')).toBeNull();
+    expect(localStorage.getItem('options_demographics')).toBeNull();
+  });
+
+  it('caches nothing on an error from the demographics endpoint, or genres with no list', async () => {
+    helpHttp.get.mockImplementation((url) => Promise.resolve(url.endsWith('genres') ? {} : { err: { message: 'down' } }));
+    renderSearch();
+    await waitFor(() => expect(helpHttp.get).toHaveBeenCalledTimes(2));
+    expect(localStorage.getItem('options_demographics')).toBeNull();
+  });
+
+  it('treats an unreadable cache as empty and fetches again', async () => {
+    localStorage.setItem('options_genres', '{not json');
+    renderSearch();
+    await waitFor(() => expect(helpHttp.get).toHaveBeenCalledWith(expect.stringMatching(/genres$/)));
+  });
+
+  it('submits without a setIsFormVisible callback', () => {
+    const setOpt = vi.fn();
+    renderSearch({ setOpt, setIsFormVisible: undefined });
+    fireEvent.submit(document.querySelector('form'));
+    expect(setOpt).toHaveBeenCalledWith({ method: 'POST', body: expect.any(Object) });
+  });
+});
