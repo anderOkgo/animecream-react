@@ -170,4 +170,62 @@ describe('TablePagination', () => {
 
     expect(setCurrentPage).toHaveBeenCalledWith(1);
   });
+
+  it('clamps the previous page, and goes to a numbered page, scrolling to its table or the top', () => {
+    const setCurrentPage = vi.fn();
+    window.scrollTo = vi.fn();
+    const target = document.createElement('div');
+    target.id = 'lists';
+    target.scrollIntoView = vi.fn();
+    document.body.appendChild(target);
+    const { rerender } = render(
+      <TablePagination currentPage={2} setCurrentPage={setCurrentPage} filteredData={filteredData} itemsPerPage={10} t={t} element="lists" />
+    );
+    fireEvent.click(screen.getByText('prev'));
+    expect(setCurrentPage.mock.calls[0][0](1)).toBe(1);
+    fireEvent.click(screen.getByText('3'));
+    expect(setCurrentPage).toHaveBeenLastCalledWith(3);
+    expect(target.scrollIntoView).toHaveBeenCalled();
+    expect(window.scrollTo).not.toHaveBeenCalled(); // another table: no scroll to the top
+    target.remove();
+
+    rerender(
+      <TablePagination currentPage={2} setCurrentPage={setCurrentPage} filteredData={filteredData} itemsPerPage={10} t={t} />
+    );
+    fireEvent.click(screen.getByText('1'));
+    expect(window.scrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
+  });
+
+  it('moves to the page the slider points at', () => {
+    const setCurrentPage = vi.fn();
+    render(<TablePagination currentPage={1} setCurrentPage={setCurrentPage} filteredData={filteredData} itemsPerPage={10} t={t} />);
+    fireEvent.change(screen.getByRole('slider'), { target: { value: '2' } });
+    expect(setCurrentPage).toHaveBeenCalledWith(2);
+  });
+
+  it('toggles the slider on a double tap, not on two slow taps', () => {
+    vi.useFakeTimers();
+    render(<TablePagination currentPage={1} setCurrentPage={() => {}} filteredData={filteredData} itemsPerPage={10} t={t} />);
+    const slider = screen.getByRole('slider');
+    fireEvent.touchEnd(slider.parentElement);
+    vi.advanceTimersByTime(500);
+    fireEvent.touchEnd(slider.parentElement);
+    expect(slider).not.toBeDisabled();
+    vi.advanceTimersByTime(100);
+    fireEvent.touchEnd(slider.parentElement);
+    expect(slider).toBeDisabled();
+    vi.useRealTimers();
+  });
+
+  it('does not record a page change that came from history, nor restore the page already shown', () => {
+    const pushHistory = vi.fn();
+    const setCurrentPage = vi.fn();
+    const navigation = { pushHistory, currentState: { type: 'pagination', data: { page: 2, id: 'main-content' } } };
+    const props = { setCurrentPage, filteredData, itemsPerPage: 10, t, navigation, element: 'main-content' };
+    const { rerender } = render(<TablePagination currentPage={1} {...props} />);
+    expect(setCurrentPage).toHaveBeenCalledWith(2);
+    rerender(<TablePagination currentPage={2} {...props} />);
+    expect(pushHistory).not.toHaveBeenCalled();
+    expect(setCurrentPage).toHaveBeenCalledTimes(1);
+  });
 });
