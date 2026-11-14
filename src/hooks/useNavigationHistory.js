@@ -40,12 +40,10 @@ export const useNavigationHistory = () => {
       const currentState = historyRef.current[currentIndexRef.current];
       const newDataStr = JSON.stringify(data);
 
-      // Verificar si la entrada actual es igual
-      if (currentState) {
-        const currentDataStr = JSON.stringify(currentState.data);
-        if (currentState.type === type && currentDataStr === newDataStr) {
-          return;
-        }
+      // Skip a push equal to the current entry. The index always points at an entry: pushes cut the
+      // history at it, and popstate only moves it inside the history (an index past the end is clamped).
+      if (currentState.type === type && JSON.stringify(currentState.data) === newDataStr) {
+        return;
       }
 
       // Agregar nueva entrada
