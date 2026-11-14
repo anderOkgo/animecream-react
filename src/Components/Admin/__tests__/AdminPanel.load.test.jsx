@@ -80,6 +80,14 @@ describe('AdminPanel, options', () => {
     expect(localStorage.getItem('options_demographics')).toBeNull();
   });
 
+  it('asks only for the genres when only the demographics are cached', async () => {
+    localStorage.setItem('options_demographics', JSON.stringify(DEMOS));
+    renderAdmin();
+    await waitFor(() => expect(localStorage.getItem('options_genres')).not.toBeNull());
+    expect(helpHttp.get).toHaveBeenCalledTimes(1);
+    expect(helpHttp.get).toHaveBeenCalledWith(expect.stringMatching(/genres$/), { token: '' });
+  });
+
   it('shows Loading for the genres while the options load', () => {
     helpHttp.get.mockReturnValue(new Promise(() => {}));
     renderAdmin({ t: () => '' });
