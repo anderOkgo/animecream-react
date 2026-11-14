@@ -161,4 +161,43 @@ describe('useSearchSuggestions -- DOM-dependent effects', () => {
     fireEvent.mouseDown(screen.getByText('close'));
     expect(screen.queryByTestId('suggestions')).not.toBeInTheDocument();
   });
+
+  it('keeps the list open on a click inside it, and a close button blurs nothing when the input is not focused', () => {
+    render(<SearchHarness term="" />);
+    const input = screen.getByRole('textbox');
+    input.focus();
+    fireEvent.change(input, { target: { value: 'na' } });
+    fireEvent.mouseDown(screen.getByTestId('suggestions').firstChild);
+    expect(screen.getByTestId('suggestions')).toBeInTheDocument();
+
+    input.blur();
+    fireEvent.mouseDown(screen.getByText('close'));
+    expect(screen.queryByTestId('suggestions')).not.toBeInTheDocument();
+  });
+
+  it('scrolls the selected suggestion into view, and skips an index with no element', () => {
+    const scrolled = vi.fn();
+    Element.prototype.scrollIntoView = scrolled;
+    const { result } = renderHook(() => useSearchSuggestions(dataset, 'na', 2, 10));
+    result.current.suggestionsRef.current = { children: [{ scrollIntoView: scrolled }] };
+    act(() => result.current.setSelectedIndex(0));
+    expect(scrolled).toHaveBeenCalledWith({ block: 'nearest', behavior: 'smooth' });
+    act(() => result.current.setSelectedIndex(5));
+    expect(scrolled).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('useSearchSuggestions -- without callbacks', () => {
+  it('Enter and selectSuggestion work with no callback given', () => {
+    const { result } = renderHook(() => useSearchSuggestions(dataset, 'na', 2, 10));
+    act(() => result.current.setShowSuggestions(true));
+    act(() => result.current.setSelectedIndex(0));
+    let handled;
+    act(() => {
+      handled = result.current.handleKeyDown({ key: 'Enter', preventDefault: vi.fn() });
+    });
+    expect(handled).toBe(true);
+    act(() => result.current.selectSuggestion('Nana'));
+    expect(result.current.showSuggestions).toBe(false);
+  });
 });
