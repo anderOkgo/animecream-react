@@ -1,6 +1,6 @@
 # The offline filter answers like the API (G2), and one cache for genres and demographics (G6)
 
-**Date:** 2026-11-15 · **Branch:** `feature/20261115-animecream-gaps` · **Released in:** not yet
+**Date:** 2026-11-15 · **Branch:** `feature/20261115-animecream-gaps` · **Released in:** https://animecream.com, 2026-11-15 (PR #12, `sw.js` 3.3.35)
 **Implements:** `module-docs/apps/animecream/SPEC.md` v0.8 — G2 (P8), G6 (P10)
 **Change ID:** `20261115-animecream-gaps` (the same in `module-api` for G3 and in `finan-react` for G9)
 
@@ -60,3 +60,4 @@ bundle. Rollback: revert the PR and deploy.
 | Date | Change |
 |---|---|
 | 2026-11-15 | Created; unit 100% (545), parity 30/30 local with its negative control, Playwright 5/5 |
+| 2026-11-15 | **Merged** (PR #12, `15719f4`). **Deployed** from `main`: `node scripts/sync-initial-data.mjs --check` found 0 stale entries (512 series), so the seed was not rewritten; unit 545 at 100%, lint and build pass, `npm run up` "No error found". Served: `/version.json` commit `15719f4`, `dirty: false`; `sw.js` 3.3.35; bundle `index-d0affa16.js`. **Parity against production** (`PARITY_API=https://info.animecream.com`, read-only searches): every case matches (30), on the live catalog of 512 series |
