@@ -1,6 +1,6 @@
 # version.json: the commit a build was made from
 
-**Date:** 2026-11-14 · **Branch:** `feature/20261114-front-version-json` · **Released in:** not deployed yet (merged: PR #11, `f8ddf6d`); goes out with the next deploy
+**Date:** 2026-11-14 · **Branch:** `feature/20261114-front-version-json` · **Released in:** production 2026-11-14, from `main` at `4e06de0`
 **Implements:** `module-docs/DEVELOPMENT-PROCESS.md` v2.11 — D.1 Release, E.4 (no app spec section: nothing a user sees changes)
 **Change ID:** `20261114-front-version-json` (the same in `bitacora-react`, `finan-react` and `animecream-react`)
 
@@ -55,10 +55,11 @@ Goes out with the next deploy: `npm run bup` (seed and `public/sw.js` bump first
 `vite.config.js`; the file is not read by the app.
 
 ## Pending / out of scope
-- The first deploy that carries the file (no deploy was made for this change alone).
+Nothing.
 
 ## Version history
 | Date | Version | Change |
 |---|---|---|
 | 2026-11-14 | 0.1 | Built and verified locally; PR open, not deployed |
 | 2026-11-14 | 1.0 | Merged with the owner's authorization (PR #11, `f8ddf6d`, CI green), branch deleted. Not deployed: the file appears on the site with the next deploy of this front |
+| 2026-11-14 | 1.1 | **Deployed** at the owner's request (`npm run build && npm run up` from `main` at `4e06de0`). `curl https://animecream.com/version.json` answers with that commit, `branch: main`, `dirty: false`. The app itself is unchanged: same bundle `index-feb1b7f3.js` and `sw.js` 3.3.34 as before. Deployed without the `sw.js` bump or the seed: the build was first compared with production and the app files were identical, so there was nothing for clients to refresh and `main` stayed clean. `npm run smoke` 7/7. |
