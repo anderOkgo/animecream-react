@@ -68,6 +68,8 @@ const baseProps = {
   setIsAdvancedSearchVisible: vi.fn(),
   onAddToList: vi.fn(),
   navigation: null,
+  onSeriesDataChange: vi.fn(),
+  onSetOptReady: vi.fn(),
 };
 
 const renderHome = (props = {}) =>
