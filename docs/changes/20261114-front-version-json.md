@@ -1,6 +1,6 @@
 # version.json: the commit a build was made from
 
-**Date:** 2026-11-14 · **Branch:** `feature/20261114-front-version-json` · **Released in:** —
+**Date:** 2026-11-14 · **Branch:** `feature/20261114-front-version-json` · **Released in:** not deployed yet (merged: PR #11, `f8ddf6d`); goes out with the next deploy
 **Implements:** `module-docs/DEVELOPMENT-PROCESS.md` v2.11 — D.1 Release, E.4 (no app spec section: nothing a user sees changes)
 **Change ID:** `20261114-front-version-json` (the same in `bitacora-react`, `finan-react` and `animecream-react`)
 
@@ -61,3 +61,4 @@ Goes out with the next deploy: `npm run bup` (seed and `public/sw.js` bump first
 | Date | Version | Change |
 |---|---|---|
 | 2026-11-14 | 0.1 | Built and verified locally; PR open, not deployed |
+| 2026-11-14 | 1.0 | Merged with the owner's authorization (PR #11, `f8ddf6d`, CI green), branch deleted. Not deployed: the file appears on the site with the next deploy of this front |
