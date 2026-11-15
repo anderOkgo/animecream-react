@@ -13,6 +13,7 @@
     "test:cov": "vitest run --coverage",
     "test:e2e": "node --env-file-if-exists=.env.e2e.local node_modules/@playwright/test/cli.js test",
     "smoke": "node scripts/smoke-check.mjs",
+    "parity": "node scripts/offline-parity.mjs",
     "up": "call com/db-sync-FTP-both.bat",
     "seed": "node scripts/sync-initial-data.mjs",
     "bup": "npm run seed && node scripts/bump-sw-version.cjs && npm run build && npm run up"

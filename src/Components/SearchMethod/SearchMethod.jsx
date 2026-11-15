@@ -1,54 +1,23 @@
 import { useState, useEffect } from 'react';
 import './SearchMethod.css';
-import helpHttp from '../../helpers/helpHttp';
-import { API_BASE_URL } from '../../helpers/apiConfig';
 import { useLanguage } from '../../hooks/useLanguage';
-
-const CACHE_GENRES = 'options_genres';
-const CACHE_DEMOGRAPHICS = 'options_demographics';
-
-const readCache = (key) => {
-  try {
-    const raw = localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-};
+import { loadOptions, readOptions } from '../../helpers/optionsCache';
 
 const SearchMethod = ({ setOpt, t, isFormVisible, setIsFormVisible }) => {
   const { t: translate, language } = useLanguage();
 
-  const [genreOptions, setGenreOptions] = useState(() => readCache(CACHE_GENRES) || []);
-  const [demographicOptions, setDemographicOptions] = useState(() => readCache(CACHE_DEMOGRAPHICS) || []);
+  // Any cached list shows at once; one older than 24 hours is refreshed below (G6)
+  const [genreOptions, setGenreOptions] = useState(() => readOptions('genres', { fresh: false }) || []);
+  const [demographicOptions, setDemographicOptions] = useState(
+    () => readOptions('demographics', { fresh: false }) || []
+  );
 
   useEffect(() => {
-    const base = API_BASE_URL;
-    const cachedGenres = readCache(CACHE_GENRES);
-    const cachedDemos = readCache(CACHE_DEMOGRAPHICS);
-
-    if (!cachedGenres?.length) {
-      helpHttp.get(`${base}api/series/genres`).then((res) => {
-        if (!res?.err) {
-          const list = res.genres || res.data || [];
-          if (list.length > 0) {
-            localStorage.setItem(CACHE_GENRES, JSON.stringify(list));
-            setGenreOptions(list);
-          }
-        }
-      });
+    if (!readOptions('genres')) {
+      loadOptions('genres').then((list) => list.length > 0 && setGenreOptions(list));
     }
-
-    if (!cachedDemos?.length) {
-      helpHttp.get(`${base}api/series/demographics`).then((res) => {
-        if (!res?.err) {
-          const list = res.demographics || res.data || [];
-          if (list.length > 0) {
-            localStorage.setItem(CACHE_DEMOGRAPHICS, JSON.stringify(list));
-            setDemographicOptions(list);
-          }
-        }
-      });
+    if (!readOptions('demographics')) {
+      loadOptions('demographics').then((list) => list.length > 0 && setDemographicOptions(list));
     }
   }, []);
 
