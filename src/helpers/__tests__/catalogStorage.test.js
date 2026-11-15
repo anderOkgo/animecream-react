@@ -132,9 +132,44 @@ describe('applyCatalogQuery', () => {
     expect(applyCatalogQuery(undefined, {})).toEqual([]);
   });
 
-  it('defaults to ranking-ASC order when no criteria are given', () => {
-    const result = applyCatalogQuery(catalog);
+  it('orders by ranking ASC when asked', () => {
+    const result = applyCatalogQuery(catalog, { production_ranking_number: 'ASC' });
     expect(result.map((i) => i.id)).toEqual([2, 3, 1]);
+  });
+
+  it('orders by newest id when no order is asked, as the API does (ORDER BY id DESC, G2)', () => {
+    expect(applyCatalogQuery(catalog).map((i) => i.id)).toEqual([3, 2, 1]);
+    expect(applyCatalogQuery(catalog, { production_ranking_number: '' }).map((i) => i.id)).toEqual([3, 2, 1]);
+  });
+
+  describe('compares text like the database collation, utf8_spanish_ci (found by the parity check, G2)', () => {
+    const spanish = [
+      { id: 1, production_name: 'Acción total', production_description: 'Un niño valiente', genre_names: 'Acción,Comedia', demographic_name: 'Shōnen', production_ranking_number: 1 },
+      { id: 2, production_name: 'Pingüino', production_description: 'Un nino sin tilde', genre_names: 'Drama', demographic_name: 'Seinen', production_ranking_number: 2 },
+    ];
+    const ids = (body) => applyCatalogQuery(spanish, { ...body, production_ranking_number: 'ASC' }).map((s) => s.id);
+
+    it('ignores accents and case in names, descriptions and genres', () => {
+      expect(ids({ production_name: 'ACCION' })).toEqual([1]);
+      expect(ids({ production_name: 'pinguino' })).toEqual([2]);
+      expect(ids({ genre_names: 'accion' })).toEqual([1]);
+      expect(ids({ production_description_en: 'x' })).toEqual([]);
+    });
+
+    it('keeps ñ as its own letter', () => {
+      expect(ids({ production_description: 'niño' })).toEqual([1]);
+      expect(ids({ production_description: 'nino' })).toEqual([2]);
+    });
+
+    it('matches a demographic with or without its accent, in any case', () => {
+      expect(ids({ demographic_name: 'shonen' })).toEqual([1]);
+      expect(ids({ demographic_name: 'SHŌNEN' })).toEqual([1]);
+    });
+
+    it('reads text written in decomposed form the same way', () => {
+      expect(ids({ production_name: 'Acción' })).toEqual([1]);
+      expect(ids({ production_description: 'niño' })).toEqual([1]);
+    });
   });
 
   it('sorts DESC when requested', () => {

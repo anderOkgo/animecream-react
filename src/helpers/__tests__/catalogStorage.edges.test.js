@@ -25,9 +25,10 @@ describe('catalogStorage, edge cases', () => {
   });
 
   it('sorts by ranking with unranked series last, both ways round', () => {
-    expect(names(applyCatalogQuery(series, {}))).toEqual(['Beta', 'Alpha', 'Gamma']);
+    const asc = { production_ranking_number: 'ASC' };
+    expect(names(applyCatalogQuery(series, asc))).toEqual(['Beta', 'Alpha', 'Gamma']);
     const unrankedFirst = [{ id: 9, production_name: 'Omega' }, ...series];
-    expect(names(applyCatalogQuery(unrankedFirst, {})).slice(0, 2)).toEqual(['Beta', 'Alpha']);
+    expect(names(applyCatalogQuery(unrankedFirst, asc)).slice(0, 2)).toEqual(['Beta', 'Alpha']);
   });
 
   it('ignores a year or chapter filter with no number in it', () => {
@@ -36,8 +37,9 @@ describe('catalogStorage, edge cases', () => {
   });
 
   it('filters one year or one chapter count', () => {
-    expect(names(applyCatalogQuery(series, { production_year: '2005' }))).toEqual(['Beta', 'Gamma']);
-    expect(names(applyCatalogQuery(series, { production_number_chapters: '12' }))).toEqual(['Alpha', 'Gamma']);
+    const asc = { production_ranking_number: 'ASC' };
+    expect(names(applyCatalogQuery(series, { production_year: '2005', ...asc }))).toEqual(['Beta', 'Gamma']);
+    expect(names(applyCatalogQuery(series, { production_number_chapters: '12', ...asc }))).toEqual(['Alpha', 'Gamma']);
   });
 
   it('skips series with no demographic or no genres', () => {

@@ -3,6 +3,7 @@ import helpHttp from '../../helpers/helpHttp';
 import set from '../../helpers/set.json';
 import { API_BASE_URL } from '../../helpers/apiConfig';
 import AuthService from '../../services/auth.service';
+import { loadOptions as loadCachedOptions, readOptions } from '../../helpers/optionsCache';
 import './AdminPanel.css';
 
 const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, proc, init, setGlobalMessage }) => {
@@ -70,53 +71,24 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [seriesToEdit]);
 
+  // Genres and demographics: the shared 24-hour cache, then the API (G6)
   const loadOptions = async () => {
     setLoadingOptions(true);
-
-    let cachedGenres = [];
-    let cachedDemographics = [];
-    try {
-      cachedGenres = JSON.parse(localStorage.getItem('options_genres') || '[]');
-      cachedDemographics = JSON.parse(localStorage.getItem('options_demographics') || '[]');
-      if (cachedGenres.length > 0) setGenres(cachedGenres);
-      if (cachedDemographics.length > 0) setDemographics(cachedDemographics);
-    } catch {
-      // Malformed/missing cache entry -- the pre-declared empty-array
-      // defaults above already cover this, so there's nothing to do here.
-    }
-
-    if (cachedGenres.length > 0 && cachedDemographics.length > 0) {
-      setLoadingOptions(false);
-      return;
-    }
-
+    // Any cached list is shown at once, before the first await, so a series loading at the same time can map
+    // its demographic by name; a list older than 24 hours is then refreshed below
+    const cachedGenres = readOptions('genres', { fresh: false });
+    const cachedDemographics = readOptions('demographics', { fresh: false });
+    if (cachedGenres) setGenres(cachedGenres);
+    if (cachedDemographics) setDemographics(cachedDemographics);
     try {
       const currentUser = AuthService.getCurrentUser();
       const token = currentUser?.token ? `Bearer ${currentUser.token}` : '';
-
-      const genresUrl = API_BASE_URL + 'api/series/genres';
-      const demographicsUrl = API_BASE_URL + 'api/series/demographics';
-
-      const [genresResponse, demographicsResponse] = await Promise.all([
-        cachedGenres.length === 0 ? helpHttp.get(genresUrl, { token }) : Promise.resolve(null),
-        cachedDemographics.length === 0 ? helpHttp.get(demographicsUrl, { token }) : Promise.resolve(null),
+      const [genresList, demographicsList] = await Promise.all([
+        loadCachedOptions('genres', { token }),
+        loadCachedOptions('demographics', { token }),
       ]);
-
-      if (genresResponse && !genresResponse?.err) {
-        const genresList = genresResponse.genres || genresResponse.data || [];
-        if (genresList.length > 0) {
-          localStorage.setItem('options_genres', JSON.stringify(genresList));
-          setGenres(genresList);
-        }
-      }
-
-      if (demographicsResponse && !demographicsResponse?.err) {
-        const demographicsList = demographicsResponse.demographics || demographicsResponse.data || [];
-        if (demographicsList.length > 0) {
-          localStorage.setItem('options_demographics', JSON.stringify(demographicsList));
-          setDemographics(demographicsList);
-        }
-      }
+      if (genresList.length > 0) setGenres(genresList);
+      if (demographicsList.length > 0) setDemographics(demographicsList);
     } catch (error) {
       // Silent error handling
     } finally {

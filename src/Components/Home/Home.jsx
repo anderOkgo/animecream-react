@@ -11,6 +11,7 @@ import { API_BASE_URL } from '../../helpers/apiConfig';
 import RangeFilter from '../SearchMethod/RangeFilter';
 import '../SearchMethod/RangeFilter.css';
 import initialData from '../../helpers/initialData';
+import { loadOptions } from '../../helpers/optionsCache';
 import {
   getCachedFullCatalog,
   persistFullCatalog,
@@ -780,43 +781,8 @@ const Home = ({
         }
       }
 
-      // Slow path: catalog not cached yet \u2014 fetch genres/demographics from API
-      const GENRES_DEMOS_TTL = 24 * 60 * 60 * 1000; // 24 hours
-      const now = Date.now();
-
-      let genres = [];
-      let demos = [];
-      const genreTs = parseInt(localStorage.getItem('options_genres_ts') || '0', 10);
-      const demoTs = parseInt(localStorage.getItem('options_demographics_ts') || '0', 10);
-      try {
-        if (genreTs && now - genreTs < GENRES_DEMOS_TTL)
-          genres = JSON.parse(localStorage.getItem('options_genres') || '[]');
-      } catch {
-        // Malformed cache entry -- falls through to the API fetch below.
-      }
-      try {
-        if (demoTs && now - demoTs < GENRES_DEMOS_TTL)
-          demos = JSON.parse(localStorage.getItem('options_demographics') || '[]');
-      } catch {
-        // Malformed cache entry -- falls through to the API fetch below.
-      }
-
-      if (genres.length === 0 || demos.length === 0) {
-        const [gRes, dRes] = await Promise.all([
-          helpHttp.get(`${API_BASE_URL}api/series/genres`),
-          helpHttp.get(`${API_BASE_URL}api/series/demographics`),
-        ]);
-        if (!gRes?.err) {
-          genres = gRes.genres || gRes.data || [];
-          localStorage.setItem('options_genres', JSON.stringify(genres));
-          localStorage.setItem('options_genres_ts', now.toString());
-        }
-        if (!dRes?.err) {
-          demos = dRes.demographics || dRes.data || [];
-          localStorage.setItem('options_demographics', JSON.stringify(demos));
-          localStorage.setItem('options_demographics_ts', now.toString());
-        }
-      }
+      // Slow path: catalog not cached yet \u2014 genres/demographics from the shared 24-hour cache or the API (G6)
+      const [genres, demos] = await Promise.all([loadOptions('genres'), loadOptions('demographics')]);
 
       const genre = genres.find(
         (g) => slugify(g.name) === tipoParam || slugify(translateEN(g.name)) === tipoParam

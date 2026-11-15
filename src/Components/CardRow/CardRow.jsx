@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './CardRow.css';
 import { useTextToSpeech } from '../../hooks/useTextToSpeech';
+import { readOptions } from '../../helpers/optionsCache';
 
 export default function CardRow({
   el,
@@ -90,9 +91,8 @@ export default function CardRow({
   const handleDemographicClick = (e) => {
     e.stopPropagation();
     if (onFilterChange && demographic_name) {
-      const cached = (() => {
-        try { return JSON.parse(localStorage.getItem('options_demographics') || '[]'); } catch { return []; }
-      })();
+      // Only for the slug: any cached list will do, however old (G6)
+      const cached = readOptions('demographics', { fresh: false }) || [];
       const match = cached.find(
         (d) => d.name && d.name.toLowerCase() === demographic_name.toLowerCase()
       );

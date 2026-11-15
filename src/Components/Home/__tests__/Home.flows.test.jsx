@@ -430,7 +430,8 @@ describe('Home, offline', () => {
     getCachedFullCatalog.mockReturnValue(null); // the request effect falls back to the source in memory
     await sendOpt({ method: 'POST', body: { production_name: 'gam' } });
     expect(names()).toBe('Gamma');
-    await sendOpt({ method: 'POST', body: { _reverse: true } });
+    // As the app's Top 100/250 send it: the ranking order, reversed
+    await sendOpt({ method: 'POST', body: { production_ranking_number: 'ASC', _reverse: true } });
     expect(names()).toBe('Delta|Eps|Alpha|Gamma|Beta');
     await sendOpt({ method: 'POST', body: { production_year: 2005 } }); // the slider path
     expect(names()).toBe('Beta|Alpha');
@@ -610,13 +611,20 @@ describe('Home, a genre or demographic slug', () => {
     localStorage.setItem('options_demographics_ts', String(Date.now()));
     helpHttp.get.mockImplementation((url) => Promise.resolve(url.endsWith('genres') ? { err: {} } : {}));
     const { unmount } = renderHome({}, '/drama');
-    await waitFor(() => expect(lastBody()).toEqual({ production_ranking_number: 'ASC' }));
+    // The refresh failed, so the old list still resolves the slug (G6: shared helper, stale list on failure)
+    await waitFor(() => expect(lastBody()).toEqual({ genre_names: 'Drama', production_ranking_number: 'ASC' }));
     expect(localStorage.getItem('options_genres_ts')).toBe(old);
     unmount();
     localStorage.clear();
+    // Nothing cached and the API fails: the ranking, as before
+    helpHttp.get.mockImplementation((url) => Promise.resolve(url.endsWith('genres') ? { err: {} } : {}));
+    const second = renderHome({}, '/drama');
+    await waitFor(() => expect(lastBody()).toEqual({ production_ranking_number: 'ASC' }));
+    second.unmount();
+    localStorage.clear();
     helpHttp.get.mockImplementation((url) => Promise.resolve(url.endsWith('genres') ? {} : { err: {} }));
     renderHome({}, '/drama');
-    await waitFor(() => expect(helpHttp.get).toHaveBeenCalledTimes(4));
+    await waitFor(() => expect(helpHttp.get).toHaveBeenCalledTimes(6));
   });
 
   it('falls back to the ranking when the cached catalog has no such slug, or is empty', async () => {

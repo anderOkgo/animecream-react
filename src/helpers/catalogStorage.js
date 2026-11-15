@@ -84,14 +84,34 @@ const sortByRanking = (items, direction = 'ASC') => {
   });
 };
 
+const ENYE_MARK = '\u0001';
+
+/**
+ * Text as the database compares it (`utf8_spanish_ci`): case and accents are ignored, so "accion" finds
+ * "Acción", but ñ is its own letter, so "nino" does not find "niño" (both found by scripts/offline-parity.mjs,
+ * SPEC v0.8 G2).
+ */
+const fold = (str) =>
+  String(str ?? '')
+    .normalize('NFC')
+    .toLowerCase()
+    .replace(/ñ/g, ENYE_MARK)
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(new RegExp(ENYE_MARK, 'g'), 'ñ');
+
+/** The API's order when the request names none: newest id first (`ORDER BY id DESC`). */
+const sortByIdDesc = (items) => [...items].sort((a, b) => Number(b.id) - Number(a.id));
+
 /**
  * Local filter/sort mirroring series-read API rules (LIKE, BETWEEN, AND genres, ORDER BY, LIMIT).
- * Used offline with the same `opt.body` shape as POST searches.
+ * Used offline with the same `opt.body` shape as POST searches. `npm run parity` checks it against the API.
  */
 export const applyCatalogQuery = (catalog, body = {}) => {
   if (!catalog?.length) return [];
 
   const criteria = { ...body };
+  const hasRankOrder = criteria.production_ranking_number != null && criteria.production_ranking_number !== '';
   const rankOrder = criteria.production_ranking_number === 'DESC' ? 'DESC' : 'ASC';
   delete criteria.production_ranking_number;
 
@@ -139,44 +159,34 @@ export const applyCatalogQuery = (catalog, body = {}) => {
     }
   }
 
-  if (criteria.production_name) {
-    const term = String(criteria.production_name).toLowerCase();
-    result = result.filter((item) => item.production_name?.toLowerCase().includes(term));
-  }
-
-  if (criteria.production_description) {
-    const term = String(criteria.production_description).toLowerCase();
-    result = result.filter((item) => item.production_description?.toLowerCase().includes(term));
-  }
-
-  if (criteria.production_description_en) {
-    const term = String(criteria.production_description_en).toLowerCase();
-    result = result.filter((item) => item.production_description_en?.toLowerCase().includes(term));
+  for (const field of ['production_name', 'production_description', 'production_description_en']) {
+    if (criteria[field]) {
+      const term = fold(criteria[field]);
+      result = result.filter((item) => fold(item[field]).includes(term));
+    }
   }
 
   if (criteria.demographic_name) {
     const target = String(criteria.demographic_name);
+    // fold: the database's `=` ignores case and accents; slugify: a demographic named in the URL
     result = result.filter(
-      (item) =>
-        item.demographic_name === target ||
-        slugify(item.demographic_name) === slugify(target) ||
-        item.demographic_name?.toLowerCase() === target.toLowerCase()
+      (item) => fold(item.demographic_name) === fold(target) || slugify(item.demographic_name) === slugify(target)
     );
   }
 
   if (criteria.genre_names) {
     const genres = String(criteria.genre_names)
       .split(',')
-      .map((g) => g.trim())
+      .map((g) => fold(g.trim()))
       .filter(Boolean);
     result = result.filter((item) => {
-      const haystack = (item.genre_names || '').toLowerCase();
-      return genres.every((g) => haystack.includes(g.toLowerCase()));
+      const haystack = fold(item.genre_names);
+      return genres.every((g) => haystack.includes(g));
     });
   }
 
   if (!orderedByIds) {
-    result = sortByRanking(result, rankOrder);
+    result = hasRankOrder ? sortByRanking(result, rankOrder) : sortByIdDesc(result);
   }
 
   if (limit > 0) {

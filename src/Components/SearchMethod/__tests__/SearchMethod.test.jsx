@@ -7,6 +7,7 @@ vi.mock('../../../helpers/helpHttp', () => ({
   default: { get: vi.fn() },
 }));
 import helpHttp from '../../../helpers/helpHttp';
+import { writeOptions } from '../../../helpers/optionsCache';
 
 const t = (key) => key;
 
@@ -49,13 +50,33 @@ describe('SearchMethod', () => {
     expect(helpHttp.get.mock.calls[1][0]).toContain('api/series/demographics');
   });
 
-  it('skips fetching genres/demographics that are already cached', async () => {
-    localStorage.setItem('options_genres', JSON.stringify([{ id: 1, name: 'Action' }]));
-    localStorage.setItem('options_demographics', JSON.stringify([{ id: 1, name: 'Shounen' }]));
+  it('skips fetching genres/demographics cached less than 24 hours ago', async () => {
+    writeOptions('genres', [{ id: 1, name: 'Action' }]);
+    writeOptions('demographics', [{ id: 1, name: 'Shounen' }]);
     renderSearch();
 
     await new Promise((r) => setTimeout(r, 0));
     expect(helpHttp.get).not.toHaveBeenCalled();
+  });
+
+  it('shows an old cached list at once and refreshes it from the API (G6)', async () => {
+    writeOptions('genres', [{ id: 1, name: 'Action' }], Date.now() - 25 * 60 * 60 * 1000);
+    localStorage.setItem('options_demographics', JSON.stringify([{ id: 1, name: 'Shounen' }])); // no date
+    let answer;
+    helpHttp.get.mockImplementation(
+      (url) =>
+        new Promise((resolve) => {
+          if (url.endsWith('genres')) answer = () => resolve({ genres: [{ id: 2, name: 'Comedy' }] });
+          else resolve({ err: { message: 'down' } });
+        })
+    );
+    renderSearch();
+    const genreSelect = () => document.querySelector('select[name="genre_names"]');
+    expect(genreSelect().textContent).toContain('Action');
+    answer();
+    await waitFor(() => expect(genreSelect().textContent).toContain('Comedy'));
+    // The failed refresh keeps the old demographics on screen
+    expect(document.querySelector('select[name="demographic_name"]').textContent).toContain('Shounen');
   });
 
   it('appends (not replaces) genre_names as a comma-joined list', () => {

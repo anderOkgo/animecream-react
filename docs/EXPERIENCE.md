@@ -22,7 +22,9 @@ Each lesson says what happened, why, and what to do. Add a lesson when a change 
 - **Keep an immutable first snapshot.** `storage_initial` survives a filtered response overwriting `storage`, so a
   cold start offline still has the full catalog.
 - **The offline filter must behave like the API.** `applyCatalogQuery` mirrors its `LIKE`, `BETWEEN`, genre `AND` and
-  order. A change in the API's filters must change it too.
+  order, and compares text like the database's `utf8_spanish_ci` (case and accents ignored, ñ its own letter). It
+  also serves online searches whenever the catalog is cached. A change in the API's filters must change it too, and
+  `npm run parity` (local API) must still say "every case matches" (2026-11-15, SPEC v0.8 G2).
 - **When the catalog is cached, use it.** Genres and demographics come from it with no network call; the API is the
   slow path.
 - **A malformed cache entry falls through to the network.** Never let `JSON.parse` of old data break a screen.

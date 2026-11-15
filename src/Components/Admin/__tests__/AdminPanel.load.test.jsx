@@ -8,6 +8,7 @@ vi.mock('../../../helpers/helpHttp', () => ({ default: { get: vi.fn(), post: vi.
 import helpHttp from '../../../helpers/helpHttp';
 vi.mock('../../../services/auth.service', () => ({ default: { getCurrentUser: vi.fn(() => null) } }));
 import AuthService from '../../../services/auth.service';
+import { writeOptions } from '../../../helpers/optionsCache';
 
 const GENRES = [{ id: 1, name: 'Action' }, { id: 2, name: 'Comedy' }];
 const DEMOS = [{ id: 1, name: 'Shounen' }, { id: 3, name: 'Seinen' }];
@@ -40,8 +41,8 @@ beforeEach(() => {
 
 describe('AdminPanel, options', () => {
   it('uses cached options and asks the API for nothing', async () => {
-    localStorage.setItem('options_genres', JSON.stringify(GENRES));
-    localStorage.setItem('options_demographics', JSON.stringify(DEMOS));
+    writeOptions('genres', GENRES);
+    writeOptions('demographics', DEMOS);
     renderAdmin();
     fireEvent.click(screen.getByLabelText('useForm'));
     expect(await screen.findByRole('option', { name: 'Seinen' })).toBeInTheDocument();
@@ -49,7 +50,7 @@ describe('AdminPanel, options', () => {
   });
 
   it('asks only for what is not cached, with the token, accepting a `data` list', async () => {
-    localStorage.setItem('options_genres', JSON.stringify(GENRES));
+    writeOptions('genres', GENRES);
     AuthService.getCurrentUser.mockReturnValue({ token: 'tok' });
     helpHttp.get.mockResolvedValue({ data: DEMOS });
     renderAdmin();
@@ -81,11 +82,23 @@ describe('AdminPanel, options', () => {
   });
 
   it('asks only for the genres when only the demographics are cached', async () => {
-    localStorage.setItem('options_demographics', JSON.stringify(DEMOS));
+    writeOptions('demographics', DEMOS);
     renderAdmin();
     await waitFor(() => expect(localStorage.getItem('options_genres')).not.toBeNull());
     expect(helpHttp.get).toHaveBeenCalledTimes(1);
     expect(helpHttp.get).toHaveBeenCalledWith(expect.stringMatching(/genres$/), { token: '' });
+  });
+
+  it('asks again for options cached more than 24 hours ago, or with no date (G6)', async () => {
+    writeOptions('genres', GENRES, Date.now() - 24 * 60 * 60 * 1000);
+    localStorage.setItem('options_demographics', JSON.stringify(DEMOS)); // written by the old code, no date
+    helpHttp.get.mockImplementation((url) =>
+      Promise.resolve(url.endsWith('genres') ? { genres: [{ id: 9, name: 'New' }] } : { demographics: DEMOS })
+    );
+    renderAdmin();
+    await waitFor(() => expect(JSON.parse(localStorage.getItem('options_genres'))).toEqual([{ id: 9, name: 'New' }]));
+    expect(helpHttp.get).toHaveBeenCalledTimes(2);
+    expect(localStorage.getItem('options_demographics_ts')).not.toBeNull();
   });
 
   it('shows Loading for the genres while the options load', () => {
@@ -123,8 +136,8 @@ describe('AdminPanel, the series to edit', () => {
   });
 
   it('reads the other field names, visible_flag, and the demographic by name', async () => {
-    localStorage.setItem('options_genres', JSON.stringify(GENRES));
-    localStorage.setItem('options_demographics', JSON.stringify(DEMOS));
+    writeOptions('genres', GENRES);
+    writeOptions('demographics', DEMOS);
     api({
       name: 'Alt',
       year: 1999,
@@ -147,8 +160,8 @@ describe('AdminPanel, the series to edit', () => {
   });
 
   it('falls back to defaults: no name, demography 1, visible, an unknown demographic name', async () => {
-    localStorage.setItem('options_genres', JSON.stringify(GENRES));
-    localStorage.setItem('options_demographics', JSON.stringify(DEMOS));
+    writeOptions('genres', GENRES);
+    writeOptions('demographics', DEMOS);
     api({ id: 8, demography: { id: 3 }, chapter_number: 5, description_en: 'x', demographic_name: 'Nope' });
     const { rerender } = renderAdmin();
     rerender(<AdminPanel {...baseProps} seriesToEdit={{ id: 8 }} />);
@@ -183,8 +196,8 @@ describe('AdminPanel, the series to edit', () => {
   });
 
   it('ignores an answer that arrives after the edit moved on to another series', async () => {
-    localStorage.setItem('options_genres', JSON.stringify(GENRES));
-    localStorage.setItem('options_demographics', JSON.stringify(DEMOS));
+    writeOptions('genres', GENRES);
+    writeOptions('demographics', DEMOS);
     const pending = {};
     api((url) => new Promise((resolve, reject) => (pending[url.match(/\d+$/)[0]] = { resolve, reject })));
     const { rerender } = renderAdmin({ seriesToEdit: { id: 1 } });
