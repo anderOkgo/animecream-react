@@ -30,6 +30,15 @@ const formatHttpErrMessage = (err, translate) => translateApiMessage(translate, 
 const resolveAppError = (payload, translate) =>
   payload.type === 'i18nKey' ? translate(payload.key) : formatHttpErrMessage(payload.err, translate);
 
+// G15: a series answer is accepted only as a list or { data: list }. Anything else (an empty answer,
+// another object) gives null, and the caller treats it as a load error: the series shown stay, the
+// error message appears and nothing is cached.
+const readSeriesList = (answer) => {
+  if (Array.isArray(answer)) return answer;
+  return Array.isArray(answer?.data) ? answer.data : null;
+};
+const UNEXPECTED_ANSWER = 'Unexpected answer: not a list of series';
+
 // Home's only caller, Tab, always passes setSortOrder, onSeriesDataChange and onSetOptReady, so they
 // are called without the `if (prop)` guards they used to have.
 const Home = ({
@@ -506,9 +515,8 @@ const Home = ({
         console.log('Home: Response from API:', productionsInfo);
 
         if (!productionsInfo?.err) {
-          const allData = Array.isArray(productionsInfo)
-            ? productionsInfo
-            : productionsInfo.data || productionsInfo;
+          const allData = readSeriesList(productionsInfo);
+          if (!allData) throw new Error(UNEXPECTED_ANSWER); // the catch below shows the error
 
           // Filtrar y reordenar según el orden de la lista
           const seriesMap = new Map();
@@ -581,7 +589,8 @@ const Home = ({
         const productionsInfo = response;
 
         if (!productionsInfo?.err) {
-          const data = Array.isArray(productionsInfo) ? productionsInfo : productionsInfo.data || productionsInfo;
+          const data = readSeriesList(productionsInfo);
+          if (!data) throw new Error(UNEXPECTED_ANSWER); // the catch below shows the error
           persistFullCatalog(data);
           if (!userNavigatedRef.current) {
             setDb(data);
@@ -690,8 +699,8 @@ const Home = ({
       if (cancelled) return;
       const productionsInfo = response;
 
-      if (!productionsInfo?.err) {
-        const data = Array.isArray(productionsInfo) ? productionsInfo : productionsInfo.data || productionsInfo;
+      const data = productionsInfo?.err ? null : readSeriesList(productionsInfo);
+      if (data) {
         if (isFullCatalogRequest(requestOpt)) {
           persistFullCatalog(data);
           initialDbRef.current = data;
@@ -701,8 +710,12 @@ const Home = ({
         setErrorPayload(null);
         onSeriesDataChange(finalData);
       } else {
-        setErrorPayload({ type: 'http', err: productionsInfo.err });
         // No limpiar db si hay error, mantener los datos anteriores
+        setErrorPayload(
+          productionsInfo?.err
+            ? { type: 'http', err: productionsInfo.err }
+            : { type: 'i18nKey', key: 'errorLoadingData' } // G15: not a list of series
+        );
       }
       setLoading(false);
     };
@@ -857,9 +870,8 @@ const Home = ({
         });
 
         if (!productionsInfo?.err) {
-          const allData = Array.isArray(productionsInfo)
-            ? productionsInfo
-            : productionsInfo.data || productionsInfo;
+          const allData = readSeriesList(productionsInfo);
+          if (!allData) throw new Error(UNEXPECTED_ANSWER); // the catch below shows the error
 
           // Preserve the exact order of IDs from the URL param
           const ordered = tipoLista.map((id) => allData.find((s) => Number(s.id) === id)).filter(Boolean);

@@ -68,10 +68,24 @@ describe('useSwipeableTabs', () => {
 
   it('ignores a second touch end after a short swipe (no new touch start)', () => {
     const { result } = renderHook(() => useSwipeableTabs(2, 4, 170));
-    // A short swipe changes no state, so the same handlers stay; the first end clears the start
+    // The first end clears the start
     act(() => result.current.handleTouchStart(touchEvent(100)));
     act(() => result.current.handleTouchEnd(touchEvent(120)));
     act(() => result.current.handleTouchEnd(touchEvent(500)));
+    expect(result.current.selectedOption).toBe(2);
+  });
+
+  it('ignores a touch end with no touch start', () => {
+    const { result } = renderHook(() => useSwipeableTabs(2, 4, 170));
+    act(() => result.current.handleTouchEnd(touchEvent(500)));
+    expect(result.current.selectedOption).toBe(2);
+  });
+
+  it('keeps the swipe when the component re-renders between touch start and end (G14)', () => {
+    const { result, rerender } = renderHook(({ n }) => useSwipeableTabs(1, n, 170), { initialProps: { n: 4 } });
+    act(() => result.current.handleTouchStart(touchEvent(300)));
+    rerender({ n: 4 }); // new handlers, as when the app re-renders mid-swipe
+    act(() => result.current.handleTouchEnd(touchEvent(100)));
     expect(result.current.selectedOption).toBe(2);
   });
 });
