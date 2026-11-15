@@ -1,6 +1,6 @@
 # Coverage gate at 100%
 
-**Date:** 2026-11-14 · **Branch:** `feature/20261114-animecream-coverage-100` · **Released in:** not yet
+**Date:** 2026-11-14 · **Branch:** `feature/20261114-animecream-coverage-100` · **Released in:** https://animecream.com, 2026-11-14 (sw.js 3.3.34, with `20261114-animecream-g14-g15`)
 **Implements:** `module-docs/apps/animecream/SPEC.md` v0.7.2, gap G11 (backlog B4)
 **Change ID:** `20261114-animecream-coverage-100`
 
@@ -105,3 +105,4 @@ Front only, with no API or data change: after the merge, run `npm run bup`. Roll
 | Date | Change |
 |---|---|
 | 2026-11-14 | Created: gate at 100% on all four, unreachable branches removed with behavior unchanged, G14 and G15 found |
+| 2026-11-14 | Merged (PR #8) and deployed with PR #9: sw.js 3.3.34, production serves bundle `index-feb1b7f3.js` |
