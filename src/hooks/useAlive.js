@@ -41,8 +41,9 @@ export const useAlive = () => {
   }, [setInit]);
 
   useEffect(() => {
-    // First boot, with the loader. The dependencies are stable, so this effect runs once, at mount,
-    // before any boot has answered: the app is never initialized yet here.
+    // First boot, with the loader. The dependencies are stable, so this effect runs only at mount
+    // (twice in a row under StrictMode in development), before any boot has answered: the app is
+    // never initialized yet here, so the old `if (!isOnlineRef.current)` always held.
     boot(true);
 
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
