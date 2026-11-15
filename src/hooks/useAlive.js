@@ -8,7 +8,8 @@ export const useAlive = () => {
   // Tracked but not currently exposed by this hook's return value -- kept
   // as internal state (not deleted) since `setOnline` is called throughout
   // the online/offline/visibility handling below.
-  const [_online, setOnline] = useState(() => typeof navigator !== 'undefined' ? navigator.onLine : true);
+  // The app only runs in a browser, where `navigator` always exists (the effect below uses it too).
+  const [_online, setOnline] = useState(() => navigator.onLine);
 
   const isOnlineRef = useRef(false);
   const isFetchingRef = useRef(false);
@@ -40,10 +41,10 @@ export const useAlive = () => {
   }, [setInit]);
 
   useEffect(() => {
-    // If we are online and not yet initialized, trigger the boot process with loader
-    if (!isOnlineRef.current) {
-      boot(true);
-    }
+    // First boot, with the loader. The dependencies are stable, so this effect runs only at mount
+    // (twice in a row under StrictMode in development), before any boot has answered: the app is
+    // never initialized yet here, so the old `if (!isOnlineRef.current)` always held.
+    boot(true);
 
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 

@@ -76,10 +76,9 @@ const SearchMethod = ({ setOpt, t, isFormVisible, setIsFormVisible }) => {
   };
 
   const handleScrollToTop = () => {
+    // `document.documentElement` always exists, so there is always a container to scroll
     const scrollContainer = document.querySelector('.section-tab') || document.documentElement;
-    if (scrollContainer) {
-      scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSubmit = (e) => {

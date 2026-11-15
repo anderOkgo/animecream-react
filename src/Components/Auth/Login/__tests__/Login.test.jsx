@@ -85,4 +85,15 @@ describe('Login', () => {
     expect(AuthService.login).toHaveBeenCalledTimes(1);
     await waitFor(() => resolveLogin({ message: 'ok' }));
   });
+
+  it('shows the translated "please fill" message on an empty field, and clears it on input', () => {
+    render(<Login t={t} init={true} setInit={() => {}} />);
+    ['username', 'password'].forEach((label) => {
+      const field = screen.getByLabelText(label);
+      fireEvent.invalid(field);
+      expect(field.validationMessage).toBe('pleaseFillThisField');
+      fireEvent.input(field);
+      expect(field.validationMessage).not.toBe('pleaseFillThisField');
+    });
+  });
 });

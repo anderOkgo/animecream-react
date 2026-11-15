@@ -153,9 +153,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
         createJsonFromSeriesData(seriesToEdit);
         loadFormFromSeriesData(seriesToEdit);
         setSeriesId(seriesId);
-        if (setGlobalMessage) {
-          setGlobalMessage({ type: 'warning', error: response.err.message, fallbackKey: 'errorLoadingData' });
-        }
+        setGlobalMessage({ type: 'warning', error: response.err.message, fallbackKey: 'errorLoadingData' });
         return;
       }
 
@@ -170,7 +168,7 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
       loadFormFromSeriesData(seriesToEdit);
     } finally {
       setLoadingSeries(false);
-      if (setProc) setProc(false);
+      setProc(false);
     }
   };
 
@@ -384,18 +382,16 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
       const mySubmitGen = submitGenerationRef.current;
 
       setLoading(true);
-      if (setProc) setProc(true);
-      if (setGlobalMessage) setGlobalMessage(null);
+      setProc(true);
+      setGlobalMessage(null);
 
       if (!isEditMode && !imageFile) {
-        if (setGlobalMessage) {
-          setGlobalMessage({
-            type: 'error',
-            key: 'imageRequiredToCreate',
-          });
-        }
+        setGlobalMessage({
+          type: 'error',
+          key: 'imageRequiredToCreate',
+        });
         setLoading(false);
-        if (setProc) setProc(false);
+        setProc(false);
         isSubmitting.current = false;
         return;
       }
@@ -406,16 +402,14 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
         try {
           seriesData = getSeriesDataForSubmit();
         } catch (parseError) {
-          if (setGlobalMessage) {
-            setGlobalMessage({
-              type: 'error',
-              prefixKey: 'invalidDataFormat',
-              error: parseError.message,
-              fallbackKey: 'errorUnknown',
-            });
-          }
+          setGlobalMessage({
+            type: 'error',
+            prefixKey: 'invalidDataFormat',
+            error: parseError.message,
+            fallbackKey: 'errorUnknown',
+          });
           setLoading(false);
-          if (setProc) setProc(false);
+          setProc(false);
           isSubmitting.current = false;
           return;
         }
@@ -425,11 +419,9 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
         const token = currentUser?.token ? `Bearer ${currentUser.token}` : '';
 
         if (isEditMode && !seriesId) {
-          if (setGlobalMessage) {
-            setGlobalMessage({ type: 'error', key: 'errorUpdatingSeries' });
-          }
+          setGlobalMessage({ type: 'error', key: 'errorUpdatingSeries' });
           setLoading(false);
-          if (setProc) setProc(false);
+          setProc(false);
           isSubmitting.current = false;
           return;
         }
@@ -442,17 +434,15 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
             token: token,
           });
 
-          if (submitGenerationRef.current !== mySubmitGen) { setLoading(false); if (setProc) setProc(false); isSubmitting.current = false; return; }
+          if (submitGenerationRef.current !== mySubmitGen) { setLoading(false); setProc(false); isSubmitting.current = false; return; }
           if (updateResponse?.err) {
-            if (setGlobalMessage) {
-              setGlobalMessage({
-                type: 'error',
-                error: updateResponse.err.message,
-                fallbackKey: 'errorUpdatingSeries',
-              });
-            }
+            setGlobalMessage({
+              type: 'error',
+              error: updateResponse.err.message,
+              fallbackKey: 'errorUpdatingSeries',
+            });
             setLoading(false);
-            if (setProc) setProc(false);
+            setProc(false);
             isSubmitting.current = false;
             return;
           }
@@ -470,18 +460,16 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
               token: token,
             });
 
-            if (submitGenerationRef.current !== mySubmitGen) { setLoading(false); if (setProc) setProc(false); isSubmitting.current = false; return; }
+            if (submitGenerationRef.current !== mySubmitGen) { setLoading(false); setProc(false); isSubmitting.current = false; return; }
             if (genresResponse?.err) {
-              if (setGlobalMessage) {
-                setGlobalMessage({
-                  type: 'warning',
-                  prefixKey: 'genresUpdateFailed',
-                  error: genresResponse.err.message,
-                  fallbackKey: 'errorUnknown',
-                });
-              }
+              setGlobalMessage({
+                type: 'warning',
+                prefixKey: 'genresUpdateFailed',
+                error: genresResponse.err.message,
+                fallbackKey: 'errorUnknown',
+              });
               setLoading(false);
-              if (setProc) setProc(false);
+              setProc(false);
               isSubmitting.current = false;
               return;
             }
@@ -501,18 +489,16 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
                 token: token,
               });
 
-              if (submitGenerationRef.current !== mySubmitGen) { setLoading(false); if (setProc) setProc(false); isSubmitting.current = false; return; }
+              if (submitGenerationRef.current !== mySubmitGen) { setLoading(false); setProc(false); isSubmitting.current = false; return; }
               if (removeResponse?.err) {
-                if (setGlobalMessage) {
-                  setGlobalMessage({
-                    type: 'warning',
-                    prefixKey: 'titlesRemoveFailed',
-                    error: removeResponse.err.message,
-                    fallbackKey: 'errorUnknown',
-                  });
-                }
+                setGlobalMessage({
+                  type: 'warning',
+                  prefixKey: 'titlesRemoveFailed',
+                  error: removeResponse.err.message,
+                  fallbackKey: 'errorUnknown',
+                });
                 setLoading(false);
-                if (setProc) setProc(false);
+                setProc(false);
                 isSubmitting.current = false;
                 return;
               }
@@ -526,18 +512,16 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
                 token: token,
               });
 
-              if (submitGenerationRef.current !== mySubmitGen) { setLoading(false); if (setProc) setProc(false); isSubmitting.current = false; return; }
+              if (submitGenerationRef.current !== mySubmitGen) { setLoading(false); setProc(false); isSubmitting.current = false; return; }
               if (addResponse?.err) {
-                if (setGlobalMessage) {
-                  setGlobalMessage({
-                    type: 'warning',
-                    prefixKey: 'titlesAddFailed',
-                    error: addResponse.err.message,
-                    fallbackKey: 'errorUnknown',
-                  });
-                }
+                setGlobalMessage({
+                  type: 'warning',
+                  prefixKey: 'titlesAddFailed',
+                  error: addResponse.err.message,
+                  fallbackKey: 'errorUnknown',
+                });
                 setLoading(false);
-                if (setProc) setProc(false);
+                setProc(false);
                 isSubmitting.current = false;
                 return;
               }
@@ -556,65 +540,44 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
               timeout: 30000,
             });
 
-            if (submitGenerationRef.current !== mySubmitGen) { setLoading(false); if (setProc) setProc(false); isSubmitting.current = false; return; }
+            if (submitGenerationRef.current !== mySubmitGen) { setLoading(false); setProc(false); isSubmitting.current = false; return; }
             if (imageResult?.err) {
-              if (setGlobalMessage) {
-                setGlobalMessage({
-                  type: 'warning',
-                  prefixKey: 'imageUploadFailed',
-                  error: imageResult.err.message,
-                  fallbackKey: 'errorUnknown',
-                });
-              }
+              setGlobalMessage({
+                type: 'warning',
+                prefixKey: 'imageUploadFailed',
+                error: imageResult.err.message,
+                fallbackKey: 'errorUnknown',
+              });
               setLoading(false);
-              if (setProc) setProc(false);
+              setProc(false);
               isSubmitting.current = false;
               return;
             }
           }
 
-          if (setGlobalMessage) {
-            setGlobalMessage({
-              type: 'success',
-              prefixKey: 'seriesUpdated',
-              prefixParams: { id: seriesId, useParentheses: false },
-              error: null, // triggers Dynamic Formatter
-            });
-          }
+          setGlobalMessage({
+            type: 'success',
+            prefixKey: 'seriesUpdated',
+            prefixParams: { id: seriesId, useParentheses: false },
+            error: null, // triggers Dynamic Formatter
+          });
 
           // Reset form immediately so it's empty during the transition
           setJsonData('');
           resetForm();
           setImageFile(null);
 
-          if (onEditComplete) {
-            const capturedGen = mySubmitGen;
-            setTimeout(() => {
-              if (submitGenerationRef.current !== capturedGen) return;
-              setLoading(false);
-              if (setProc) setProc(false);
-              isSubmitting.current = false;
-              onEditComplete();
-            }, 500);
-          } else {
+          // Tab, the only caller, always passes onEditComplete (and setProc, setGlobalMessage)
+          const capturedGen = mySubmitGen;
+          setTimeout(() => {
+            if (submitGenerationRef.current !== capturedGen) return;
             setLoading(false);
-            if (setProc) setProc(false);
+            setProc(false);
             isSubmitting.current = false;
-          }
+            onEditComplete();
+          }, 500);
         } else {
-          // Create new series
-          if (!imageFile) {
-            if (setGlobalMessage) {
-              setGlobalMessage({
-                type: 'error',
-                key: 'imageRequiredToCreate',
-              });
-            }
-            setLoading(false);
-            if (setProc) setProc(false);
-            isSubmitting.current = false;
-            return;
-          }
+          // Create new series. A missing image was already refused at the start of the submit.
 
           const url = API_BASE_URL + set.api_url + 'create-complete';
           const createResponse = await helpHttp.post(url, {
@@ -622,17 +585,15 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
             token: token,
           });
 
-          if (submitGenerationRef.current !== mySubmitGen) { setLoading(false); if (setProc) setProc(false); isSubmitting.current = false; return; }
+          if (submitGenerationRef.current !== mySubmitGen) { setLoading(false); setProc(false); isSubmitting.current = false; return; }
           if (createResponse?.err) {
-            if (setGlobalMessage) {
-              setGlobalMessage({
-                type: 'error',
-                error: createResponse.err.message,
-                fallbackKey: 'errorCreatingSeries',
-              });
-            }
+            setGlobalMessage({
+              type: 'error',
+              error: createResponse.err.message,
+              fallbackKey: 'errorCreatingSeries',
+            });
             setLoading(false);
-            if (setProc) setProc(false);
+            setProc(false);
             isSubmitting.current = false;
             return;
           }
@@ -640,14 +601,12 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
           const newSeriesId = createResponse.id;
 
           if (!newSeriesId) {
-            if (setGlobalMessage) {
-              setGlobalMessage({
-                type: 'error',
-                key: 'noIdReturned',
-              });
-            }
+            setGlobalMessage({
+              type: 'error',
+              key: 'noIdReturned',
+            });
             setLoading(false);
-            if (setProc) setProc(false);
+            setProc(false);
             isSubmitting.current = false;
             return;
           }
@@ -663,74 +622,62 @@ const AdminPanel = ({ t, seriesToEdit, onEditCancel, onEditComplete, setProc, pr
             timeout: 30000,
           });
 
-          if (submitGenerationRef.current !== mySubmitGen) { setLoading(false); if (setProc) setProc(false); isSubmitting.current = false; return; }
+          if (submitGenerationRef.current !== mySubmitGen) { setLoading(false); setProc(false); isSubmitting.current = false; return; }
           if (imageResult?.err) {
-            if (setGlobalMessage) {
-              setGlobalMessage({
-                type: 'warning',
-                prefixKey: 'seriesCreated',
-                prefixParams: { id: newSeriesId, useParentheses: true },
-                suffixKey: 'imageUploadFailed',
-                error: imageResult.err.message,
-                fallbackKey: 'errorUnknown',
-              });
-            }
+            setGlobalMessage({
+              type: 'warning',
+              prefixKey: 'seriesCreated',
+              prefixParams: { id: newSeriesId, useParentheses: true },
+              suffixKey: 'imageUploadFailed',
+              error: imageResult.err.message,
+              fallbackKey: 'errorUnknown',
+            });
             setLoading(false);
-            if (setProc) setProc(false);
+            setProc(false);
             isSubmitting.current = false;
             return;
           }
 
-          if (setGlobalMessage) {
-            setGlobalMessage({
-              type: 'success',
-              prefixKey: 'seriesCreated',
-              prefixParams: { id: newSeriesId, useParentheses: false },
-              error: null,
-            });
-          }
+          setGlobalMessage({
+            type: 'success',
+            prefixKey: 'seriesCreated',
+            prefixParams: { id: newSeriesId, useParentheses: false },
+            error: null,
+          });
 
           // Reset form
           setJsonData('');
           resetForm();
           setImageFile(null);
-          const fileInput = document.getElementById('image');
-          if (fileInput) {
-            fileInput.value = '';
-          }
+          // The #image file input is always rendered
+          document.getElementById('image').value = '';
 
           // Refresh series and switch to Series tab
-          if (onEditComplete) {
-            const capturedGen = mySubmitGen;
-            setTimeout(() => {
-              if (submitGenerationRef.current !== capturedGen) return;
-              setLoading(false);
-              if (setProc) setProc(false);
-              isSubmitting.current = false;
-              onEditComplete();
-            }, 1500);
-          }
+          const capturedGen = mySubmitGen;
+          setTimeout(() => {
+            if (submitGenerationRef.current !== capturedGen) return;
+            setLoading(false);
+            setProc(false);
+            isSubmitting.current = false;
+            onEditComplete();
+          }, 1500);
         }
       } catch (error) {
-        if (setGlobalMessage) {
-          setGlobalMessage({
-            type: 'error',
-            prefixKey: 'errorPrefix',
-            error: error.message,
-            fallbackKey: 'errorUnknown',
-          });
-        }
+        setGlobalMessage({
+          type: 'error',
+          prefixKey: 'errorPrefix',
+          error: error.message,
+          fallbackKey: 'errorUnknown',
+        });
         setLoading(false);
-        if (setProc) setProc(false);
+        setProc(false);
         isSubmitting.current = false;
       }
     } else {
-      if (setGlobalMessage) {
-        setGlobalMessage({
-          type: 'warning',
-          key: 'transactionWaiting',
-        });
-      }
+      setGlobalMessage({
+        type: 'warning',
+        key: 'transactionWaiting',
+      });
     }
   };
 

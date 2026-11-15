@@ -120,4 +120,41 @@ describe('Menu -- hamburger checkbox / outside click', () => {
     fireEvent.click(container.querySelector('.logo'));
     expect(checkbox.checked).toBe(true);
   });
+
+  it('stops listening for outside clicks once unmounted', () => {
+    const { unmount } = render(<Menu {...baseProps} />);
+    unmount();
+    expect(() => fireEvent.click(document.body)).not.toThrow();
+  });
+});
+
+describe('Menu -- theme message language and login without a handler', () => {
+  beforeEach(() => {
+    AuthService.getCurrentUser.mockReturnValue(null);
+    vi.spyOn(window, 'alert').mockImplementation(() => {});
+  });
+  afterEach(() => window.alert.mockRestore());
+
+  it('speaks Spanish when the browser does and nothing is stored', () => {
+    Object.defineProperty(window.navigator, 'language', { value: 'es-CO', configurable: true });
+    const { container } = render(<Menu {...baseProps} />);
+    fireEvent.doubleClick(container.querySelector('.icon-activity'));
+    expect(window.alert).toHaveBeenCalledWith('Tema: Predeterminado del Usuario');
+    Object.defineProperty(window.navigator, 'language', { value: 'en-US', configurable: true });
+  });
+
+  it('falls back to English for a stored language with no messages', () => {
+    localStorage.setItem('lang', 'fr');
+    const { container } = render(<Menu {...baseProps} />);
+    fireEvent.doubleClick(container.querySelector('.icon-activity'));
+    expect(window.alert).toHaveBeenLastCalledWith('Theme: User Default');
+    localStorage.setItem('themePreference', 'dark');
+    fireEvent.doubleClick(container.querySelector('.icon-activity'));
+    expect(window.alert).toHaveBeenLastCalledWith('Theme: System Default');
+  });
+
+  it('Login does nothing without an onLoginClick handler', () => {
+    render(<Menu {...baseProps} onLoginClick={undefined} />);
+    expect(() => fireEvent.click(screen.getByText('Login'))).not.toThrow();
+  });
 });

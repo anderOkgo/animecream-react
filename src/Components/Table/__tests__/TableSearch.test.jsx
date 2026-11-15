@@ -68,4 +68,30 @@ describe('TableSearch', () => {
 
     expect(input).toHaveValue('Naruto');
   });
+
+  it('picks a suggestion with a click, and lets other keys through', () => {
+    const setCurrentPage = vi.fn();
+    const { container } = renderTableSearch({ setCurrentPage });
+    const input = screen.getByPlaceholderText('search');
+    input.focus();
+    fireEvent.change(input, { target: { value: 'na' } });
+    fireEvent.keyDown(input, { key: 'a' }); // not a suggestion key: left to the input
+    fireEvent.click(container.querySelector('.suggestion-item'));
+    expect(input).toHaveValue('Naruto');
+    expect(setCurrentPage).toHaveBeenLastCalledWith(1);
+  });
+
+  it('shows the suggestions again when the input gets the focus back, but not without a term', () => {
+    const { container } = renderTableSearch();
+    const input = screen.getByPlaceholderText('search');
+    fireEvent.focus(input);
+    expect(container.querySelector('.search-suggestions')).toBeNull();
+
+    input.focus();
+    fireEvent.change(input, { target: { value: 'na' } });
+    fireEvent.keyDown(input, { key: 'Escape' });
+    expect(container.querySelector('.search-suggestions')).toBeNull();
+    fireEvent.focus(input);
+    expect(container.querySelector('.search-suggestions')).not.toBeNull();
+  });
 });

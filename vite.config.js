@@ -27,16 +27,17 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],
-      // Set from the real aggregate after Phase 2.5's coverage-hardening
-      // pass (see docs/specification-roadmap.md) with a few points of
-      // margin below the actual numbers at the time -- gates a real
-      // regression (e.g. a large untested file added) without going
-      // flaky on normal day-to-day fluctuation.
+      // Every app source file counts, loaded by a test or not (Vitest 4 reports only loaded files
+      // otherwise). main.jsx only mounts the app; scripts/ are build tools, not the app.
+      // Change 20261114-animecream-coverage-100.
+      include: ['src/**/*.{js,jsx}'],
+      exclude: ['src/**/__tests__/**', 'src/**/*.test.*', 'src/main.jsx'],
+      // 100% on every metric (Animecream SPEC G11): a new line needs its test
       thresholds: {
-        statements: 70,
-        branches: 58,
-        functions: 75,
-        lines: 72,
+        statements: 100,
+        branches: 100,
+        functions: 100,
+        lines: 100,
       },
     },
   },

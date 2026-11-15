@@ -76,8 +76,8 @@ function Tab({
     }
   };
 
+  // Only called by handleAddToList when a list is selected
   const addSeriesToSelectedList = (series) => {
-    if (!selectedListId) return false;
 
     try {
       const stored = localStorage.getItem(selectedListId);
@@ -120,51 +120,29 @@ function Tab({
     }
   };
 
-  // Función helper para obtener el contenedor con scroll activo
-  const getScrollContainer = () => {
-    const radioInput = document.getElementById(`tab-${selectedOption}`);
-    let scrollContainer = null;
+  // The scrolling container of the selected tab. `sectionTabRef` is attached to exactly that tab's
+  // `.section-tab` (see the render below), which is what walking radio → label → panel found. While
+  // no tab matches `selectedOption` (an admin tab left for a moment after the role changes), the
+  // first section is used, as before. Tab always renders at least one section.
+  const getScrollContainer = () => sectionTabRef.current || document.querySelector('.section-tab');
 
-    if (radioInput) {
-      // Encontrar el panel-tab que sigue al label-tab que sigue al radio checked
-      const labelTab = radioInput.nextElementSibling;
-      if (labelTab && labelTab.classList.contains('label-tab')) {
-        const panelTab = labelTab.nextElementSibling;
-        if (panelTab && panelTab.classList.contains('panel-tab')) {
-          scrollContainer = panelTab.querySelector('.section-tab');
-        }
-      }
-    }
-
-    // Fallback: usar el ref o buscar cualquier section-tab
-    if (!scrollContainer) {
-      scrollContainer =
-        sectionTabRef.current || document.querySelector('.section-tab') || document.documentElement;
-    }
-
-    return scrollContainer;
-  };
-
+  // getScrollContainer always returns an element (it falls back to document.documentElement)
   const handleScrollToTop = () => {
     const scrollContainer = getScrollContainer();
-    if (scrollContainer) {
-      scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
-      setIsAtTop(true);
-    }
+    scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    setIsAtTop(true);
   };
 
   const handleScrollToEnd = () => {
     const scrollContainer = getScrollContainer();
-    if (scrollContainer) {
-      if (isAtTop) {
-        // Ir al final del contenedor
-        scrollContainer.scrollTo({ top: scrollContainer.scrollHeight, behavior: 'smooth' });
-        setIsAtTop(false);
-      } else {
-        // Ir al inicio del contenedor
-        scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
-        setIsAtTop(true);
-      }
+    if (isAtTop) {
+      // Ir al final del contenedor
+      scrollContainer.scrollTo({ top: scrollContainer.scrollHeight, behavior: 'smooth' });
+      setIsAtTop(false);
+    } else {
+      // Ir al inicio del contenedor
+      scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+      setIsAtTop(true);
     }
   };
 
@@ -183,21 +161,20 @@ function Tab({
     }
   };
 
+  // Home hands over its setOpt in its mount effect, before the Top 250 button can be pressed
   const handleTop250Click = () => {
-    if (homeSetOptRef.current) {
-      const requestData = {
-        method: 'POST',
-        body: {
-          limit: 250,
-          production_ranking_number: 'ASC',
-          _reverse: true,
-        },
-      };
-      navigator.clipboard?.writeText(`${window.location.origin}/top250`);
-      navigation?.pushHistory('request', { type: 'top250', data: requestData });
-      homeSetOptRef.current(requestData);
-      handleScrollToTop();
-    }
+    const requestData = {
+      method: 'POST',
+      body: {
+        limit: 250,
+        production_ranking_number: 'ASC',
+        _reverse: true,
+      },
+    };
+    navigator.clipboard?.writeText(`${window.location.origin}/top250`);
+    navigation?.pushHistory('request', { type: 'top250', data: requestData });
+    homeSetOptRef.current(requestData);
+    handleScrollToTop();
   };
 
   const tabsData = [

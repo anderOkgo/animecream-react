@@ -22,26 +22,16 @@ import {
 } from '../../helpers/catalogStorage';
 import { Helmet } from 'react-helmet-async';
 
-const formatHttpErrMessage = (err, translate) => {
-  if (!err) {
-    return '';
-  }
-  return translateApiMessage(translate, err.message ?? 'errorGeneric');
-};
+// An error payload is only ever set as { type: 'i18nKey', key } or { type: 'http', err } with the
+// API's err (always an object), and resolved only when there is one, so the old checks for a missing
+// payload, a missing err or another type never applied.
+const formatHttpErrMessage = (err, translate) => translateApiMessage(translate, err.message ?? 'errorGeneric');
 
-const resolveAppError = (payload, translate) => {
-  if (!payload) {
-    return null;
-  }
-  if (payload.type === 'i18nKey') {
-    return translate(payload.key);
-  }
-  if (payload.type === 'http') {
-    return formatHttpErrMessage(payload.err, translate);
-  }
-  return null;
-};
+const resolveAppError = (payload, translate) =>
+  payload.type === 'i18nKey' ? translate(payload.key) : formatHttpErrMessage(payload.err, translate);
 
+// Home's only caller, Tab, always passes setSortOrder, onSeriesDataChange and onSetOptReady, so they
+// are called without the `if (prop)` guards they used to have.
 const Home = ({
   t,
   toggleLanguage,
@@ -164,11 +154,12 @@ const Home = ({
   const isRestoringRef = useRef(false);
   const initialDbRef = useRef(initialSeed);
 
+  // Always a list: the last fallback, `db`, is never empty-valued (see filteredDb)
   const getFullCatalogSource = () =>
     (initialDbRef.current?.length ? initialDbRef.current : null) ?? getCachedFullCatalog() ?? db;
 
   // Calcular límites de años dinámicamente basados en la data
-  const { minYear, maxYear, minDecade, maxDecade } = useMemo(() => {
+  const { minYear, maxYear, minDecade } = useMemo(() => {
     const fallbackYear = new Date().getFullYear();
     if (!db || db.length === 0) {
       return { minYear: 1969, maxYear: fallbackYear, minDecade: 1960, maxDecade: 2020 };
@@ -246,9 +237,7 @@ const Home = ({
 
   // Exponer setOpt al componente padre
   useEffect(() => {
-    if (onSetOptReady) {
-      onSetOptReady(setOpt);
-    }
+    onSetOptReady(setOpt);
   }, [onSetOptReady]);
 
   // Sync sliders with opt
@@ -345,32 +334,11 @@ const Home = ({
         isRestoringRef.current = true;
         setOpt({});
 
-        // Si tenemos datos iniciales guardados, los restauramos
-        if (initialDbRef.current) {
-          setDb(initialDbRef.current);
-          if (onSeriesDataChange) {
-            onSeriesDataChange(initialDbRef.current);
-          }
-        } else {
-          // Si por alguna razón no los tenemos (ej: refresh), los cargamos del localStorage
-          try {
-            const data = getCachedFullCatalog();
-            if (data) {
-              setDb(data);
-              initialDbRef.current = data;
-              if (onSeriesDataChange) onSeriesDataChange(data);
-            } else {
-              // Si no hay nada en cache, mantener initialData en lugar de poner null
-              if (!db || db === initialData) {
-                // No hacemos nada, mantenemos el estado actual
-              } else {
-                setDb(null);
-              }
-            }
-          } catch (e) {
-            setDb(null);
-          }
-        }
+        // Restore the first catalog. initialDbRef always holds one: it starts as initialSeed (the
+        // cache or 10 bundled series, never empty) and is only ever replaced by another catalog, so
+        // the old fallback for a missing one (re-read the cache, else clear the list) never ran.
+        setDb(initialDbRef.current);
+        onSeriesDataChange(initialDbRef.current);
 
         // Resetear el flag después de un delay
         setTimeout(() => {
@@ -390,9 +358,9 @@ const Home = ({
   }, [navigation?.currentState, onSeriesDataChange]);
 
   // Filtrar la información actual localmente (según lo solicitado por el usuario)
+  // `db` is never empty-valued: it starts as initialSeed and is only ever set to a catalog or a query
+  // result, so the old `if (!db) return null` here and the empty-source fallbacks below never ran.
   const filteredDb = useMemo(() => {
-    if (!db) return null;
-
     const isOffline = isAppOffline();
     const isOptActive = opt && Object.keys(opt).length > 0;
     const optBody = isOptActive ? parseOptBody(opt) : {};
@@ -406,10 +374,10 @@ const Home = ({
       const offlineBody = { ...parseOptBody(opt) };
       const reverseOffline = offlineBody._reverse === true;
       delete offlineBody._reverse;
-      const offlineResult = source ? applyCatalogQuery(source, offlineBody) : [];
+      const offlineResult = applyCatalogQuery(source, offlineBody);
       filtered = reverseOffline ? [...offlineResult].reverse() : offlineResult;
     } else if (isOffline && !loadedByList) {
-      filtered = [...(getFullCatalogSource() || db)];
+      filtered = [...getFullCatalogSource()];
     } else {
       filtered = [...db];
     }
@@ -474,11 +442,9 @@ const Home = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [db, yearFilter, decadeFilter, allYearValue, allDecadeValue, tipoYear, tipoDecade, opt, loadedByList]);
 
-  // Sincronizar filteredDb con onSeriesDataChange siempre que cambie
+  // Sincronizar filteredDb con onSeriesDataChange siempre que cambie (filteredDb is always a list)
   useEffect(() => {
-    if (filteredDb && Array.isArray(filteredDb) && onSeriesDataChange) {
-      onSeriesDataChange(filteredDb);
-    }
+    onSeriesDataChange(filteredDb);
   }, [filteredDb, onSeriesDataChange]);
 
   // Sincronizar loadByIds externo
@@ -490,9 +456,7 @@ const Home = ({
 
   useEffect(() => {
     // Resetear orden a default cuando cambia la consulta
-    if (setSortOrder) {
-      setSortOrder(null);
-    }
+    setSortOrder(null);
   }, [opt, setSortOrder]);
 
   // Efecto separado para cargar por IDs (solo cuando loadByIds cambia y no está vacío)
@@ -526,7 +490,7 @@ const Home = ({
           setDb(filtered);
           setLoadedByList(true);
           setErrorPayload(null);
-          if (onSeriesDataChange) onSeriesDataChange(filtered);
+          onSeriesDataChange(filtered);
           return;
         }
 
@@ -559,9 +523,7 @@ const Home = ({
           setLoadedByList(true);
           setErrorPayload(null);
           // Notificar cambios en los datos de series
-          if (onSeriesDataChange) {
-            onSeriesDataChange(filtered);
-          }
+          onSeriesDataChange(filtered);
         } else {
           setErrorPayload({ type: 'http', err: productionsInfo.err });
         }
@@ -594,7 +556,7 @@ const Home = ({
         hasInitialLoad.current = true;
         setDb(cached);
         initialDbRef.current = cached;
-        if (onSeriesDataChange) onSeriesDataChange(cached);
+        onSeriesDataChange(cached);
         return;
       }
       // Sin caché: cae al fetch completo que corre en paralelo con resolveSlug
@@ -604,9 +566,7 @@ const Home = ({
     if (cachedFull) {
       setDb(cachedFull);
       initialDbRef.current = cachedFull;
-      if (onSeriesDataChange) {
-        onSeriesDataChange(cachedFull);
-      }
+      onSeriesDataChange(cachedFull);
     }
 
     // Siempre hacer carga inicial completa del API al recargar
@@ -627,7 +587,7 @@ const Home = ({
             setDb(data);
             initialDbRef.current = data;
             setErrorPayload(null);
-            if (onSeriesDataChange) onSeriesDataChange(data);
+            onSeriesDataChange(data);
             if (tipoParam) cleanUrlParam();
           }
         } else {
@@ -681,7 +641,7 @@ const Home = ({
       if (!hasFilter) initialDbRef.current = cached;
       const finalResult = reverseResults ? [...result].reverse() : result;
       setDb(finalResult);
-      if (onSeriesDataChange) onSeriesDataChange(finalResult);
+      onSeriesDataChange(finalResult);
       return;
     }
 
@@ -689,16 +649,15 @@ const Home = ({
       const source = cached || getFullCatalogSource();
       setLoadedByList(false);
       setErrorPayload(null);
-      if (source) {
-        const body = { ...parseOptBody(optToUse) };
-        const reverseResults = body._reverse === true;
-        delete body._reverse;
-        const hasFilter = Object.keys(body).length > 0;
-        const result = hasFilter ? applyCatalogQuery(source, body) : [...source];
-        const finalResult = reverseResults ? [...result].reverse() : result;
-        setDb(finalResult);
-        if (onSeriesDataChange) onSeriesDataChange(finalResult);
-      }
+      // `source` is always a list (getFullCatalogSource), so the old `if (source)` always held
+      const body = { ...parseOptBody(optToUse) };
+      const reverseResults = body._reverse === true;
+      delete body._reverse;
+      const hasFilter = Object.keys(body).length > 0;
+      const result = hasFilter ? applyCatalogQuery(source, body) : [...source];
+      const finalResult = reverseResults ? [...result].reverse() : result;
+      setDb(finalResult);
+      onSeriesDataChange(finalResult);
       return;
     }
 
@@ -740,9 +699,7 @@ const Home = ({
         const finalData = reverseResults ? [...data].reverse() : data;
         setDb(finalData);
         setErrorPayload(null);
-        if (onSeriesDataChange) {
-          onSeriesDataChange(finalData);
-        }
+        onSeriesDataChange(finalData);
       } else {
         setErrorPayload({ type: 'http', err: productionsInfo.err });
         // No limpiar db si hay error, mantener los datos anteriores
@@ -886,11 +843,11 @@ const Home = ({
       try {
         if (isAppOffline()) {
           const source = getFullCatalogSource();
-          const result = source ? applyCatalogQuery(source, { id: tipoLista }) : [];
+          const result = applyCatalogQuery(source, { id: tipoLista }); // always a list, see getFullCatalogSource
           setDb(result);
           setLoadedByList(true);
           setErrorPayload(null);
-          if (onSeriesDataChange) onSeriesDataChange(result);
+          onSeriesDataChange(result);
           return;
         }
 
@@ -910,7 +867,7 @@ const Home = ({
 
           setDb(result);
           setErrorPayload(null);
-          if (onSeriesDataChange) onSeriesDataChange(result);
+          onSeriesDataChange(result);
         } else {
           setErrorPayload({ type: 'http', err: productionsInfo.err });
         }
@@ -1087,7 +1044,8 @@ const Home = ({
                 scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
               }
             }}
-            title={isAdvancedSearchVisible ? translate('closeAdvancedSearch') || 'Cerrar' : translate('search')}
+            // closeAdvancedSearch is translated in both languages, so the old `|| 'Cerrar'` never applied
+            title={isAdvancedSearchVisible ? translate('closeAdvancedSearch') : translate('search')}
           >
             {isAdvancedSearchVisible ? '✕' : '🔍'}
           </button>
@@ -1126,7 +1084,9 @@ const Home = ({
             <RangeFilter
               label={translate('filterByDecade')}
               min={allDecadeValue}
-              max={maxYear ? Math.floor(maxYear / 10) * 10 : maxDecade}
+              // maxYear is always a year (the latest one, or the current year), never 0, so the old
+              // `: maxDecade` fallback never applied
+              max={Math.floor(maxYear / 10) * 10}
               step={10}
               value={decadeFilter < allDecadeValue ? allDecadeValue : decadeFilter}
               onChange={handleDecadeChange}
