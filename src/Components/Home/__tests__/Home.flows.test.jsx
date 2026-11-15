@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import { StrictMode, Component } from 'react';
+import { StrictMode } from 'react';
 import { render, screen, waitFor, fireEvent, act } from '@testing-library/react';
 import Home from '../Home';
 import { LanguageProvider } from '../../../hooks/useLanguage';
@@ -737,25 +737,20 @@ describe('Home, the toolbar', () => {
 });
 
 describe('Home, unusual answers and data', () => {
-  class Boundary extends Component {
-    state = { error: null };
-    static getDerivedStateFromError(error) {
-      return { error };
-    }
-    render() {
-      return this.state.error ? <div data-testid="broken">{this.state.error.message}</div> : this.props.children;
-    }
-  }
+  // G15: only a list or { data: list } is a series answer. Anything else is a load error: the series
+  // shown stay, the error message appears and nothing is cached.
+  const UNEXPECTED = [{ unexpected: true }, { data: null }, { data: 'x' }, null, 'text'];
 
-  // Known gap, recorded in the spec: an answer that is neither a list nor { data: list } is kept as
-  // the catalog and the page breaks on it. These tests pin today's behavior.
-  it('breaks on a catalog answer that is neither a list nor { data }', async () => {
-    helpHttp.post.mockResolvedValue({ unexpected: true });
-    window.history.pushState({}, '', '/');
-    props = baseProps();
-    render(<Boundary>{ui(props)}</Boundary>);
-    expect(await screen.findByTestId('broken')).toHaveTextContent(/not iterable|is not a function/);
-    expect(persistFullCatalog).toHaveBeenCalledWith({ unexpected: true });
+  it('keeps the bundled seed and caches nothing when the catalog answer is not a list', async () => {
+    for (const answer of UNEXPECTED) {
+      helpHttp.post.mockResolvedValue(answer);
+      const { unmount } = renderHome();
+      const seed = names();
+      expect(await screen.findByTestId('message')).toHaveTextContent('Error loading data');
+      expect(names()).toBe(seed);
+      unmount();
+    }
+    expect(persistFullCatalog).not.toHaveBeenCalled();
   });
 
   it('reads a { data } answer to a request', async () => {
@@ -766,23 +761,30 @@ describe('Home, unusual answers and data', () => {
     await waitFor(() => expect(names()).toBe('Inside'));
   });
 
-  it('breaks on a request answer that is neither a list nor { data }', async () => {
-    window.history.pushState({}, '', '/');
-    props = baseProps();
-    render(<Boundary>{ui(props)}</Boundary>);
-    await waitFor(() => expect(helpHttp.post).toHaveBeenCalledTimes(1));
-    helpHttp.post.mockResolvedValue({ unexpected: true });
-    await sendOpt({ method: 'POST', body: { id: 6 } });
-    expect(await screen.findByTestId('broken')).toBeInTheDocument();
+  it('keeps the series shown and caches nothing when a request answer is not a list', async () => {
+    renderHome();
+    await waitFor(() => expect(names()).toBe('Alpha|Beta|Gamma|Delta|Eps'));
+    for (const [i, answer] of UNEXPECTED.entries()) {
+      helpHttp.post.mockResolvedValue(answer);
+      await sendOpt({ method: 'POST', body: i % 2 ? {} : { id: i + 1 } }); // the full catalog too
+      expect(await screen.findByTestId('message')).toHaveTextContent('Error loading data');
+      expect(names()).toBe('Alpha|Beta|Gamma|Delta|Eps');
+      expect(screen.queryByTestId('loader')).toBeNull();
+      fireEvent.doubleClick(screen.getByTestId('message'));
+    }
+    expect(persistFullCatalog).toHaveBeenCalledTimes(1); // the first, valid load only
   });
 
-  it('says a list could not be loaded when its answer is neither a list nor { data }', async () => {
-    helpHttp.post.mockImplementation((url, opt) => Promise.resolve(opt.body?.id ? { unexpected: true } : CAT));
-    const { unmount } = renderHome({ loadByIds: [1] });
-    expect(await screen.findByTestId('message')).toHaveTextContent('Error loading series by IDs');
-    unmount();
-    renderHome({}, '/list/1');
-    expect(await screen.findByTestId('message')).toHaveTextContent('Error loading data');
+  it('says a list could not be loaded when its answer is not a list', async () => {
+    for (const answer of UNEXPECTED) {
+      helpHttp.post.mockImplementation((url, opt) => Promise.resolve(opt.body?.id ? answer : CAT));
+      const { unmount } = renderHome({ loadByIds: [1] });
+      expect(await screen.findByTestId('message')).toHaveTextContent('Error loading series by IDs');
+      unmount();
+      const route = renderHome({}, '/list/1');
+      expect(await screen.findByTestId('message')).toHaveTextContent('Error loading data');
+      route.unmount();
+    }
   });
 
   it('sorts unranked series and series without a valid year on a route, ranked first', async () => {

@@ -64,8 +64,8 @@ ones; this was checked with `grep` over `src/`.
 | `Home/Home.jsx` | `\|\| 'Cerrar'` after `translate('closeAdvancedSearch')`; `maxYear ? … : maxDecade` | The key is translated in both languages. `maxYear` is always a year, never 0 |
 
 ## Bugs found during development
-Neither bug is fixed here, because fixing them would change behavior. Both are recorded as gaps in the spec, for
-the owner to decide on:
+Neither bug is fixed here, because fixing them would change behavior. Both were recorded as gaps in the spec. The
+owner chose to fix both (P6, P7), and they are fixed in `20261114-animecream-g14-g15.md`:
 - **G14, a swipe is lost on a re-render.** `useSwipeableTabs` keeps `startX` in a plain `let` inside the hook,
   so a re-render between touch start and touch end resets it and the swipe does nothing. Finanz's twin hook uses
   `useRef`.
