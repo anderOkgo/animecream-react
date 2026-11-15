@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
+import versionJson from './scripts/version-json.mjs'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -7,7 +8,8 @@ export default defineConfig({
   // request URL and breaks under Vitest's jsdom environment (no fast refresh
   // is needed for a one-shot test run anyway) -- skip it when running tests,
   // esbuild's default automatic JSX transform covers .jsx compilation instead.
-  plugins: process.env.VITEST ? [] : [react()],
+  // versionJson: dist/version.json with the commit that was built (playbook v2.11, D.1).
+  plugins: process.env.VITEST ? [] : [react(), versionJson()],
   test: {
     globals: true,
     environment: 'jsdom',
