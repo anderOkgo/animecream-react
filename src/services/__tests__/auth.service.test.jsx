@@ -5,6 +5,8 @@ vi.mock('../../helpers/helpHttp', () => ({
 }));
 import helpHttp from '../../helpers/helpHttp';
 import AuthService from '../auth.service';
+import cyfer from '../../helpers/cyfer';
+import set from '../../helpers/set.json';
 
 beforeEach(() => {
   localStorage.clear();
@@ -56,6 +58,18 @@ describe('AuthService.getCurrentUser', () => {
     });
 
     expect(AuthService.getCurrentUser()).toBeNull();
+  });
+
+  it('logs and returns null when the stored session opens but is not JSON (change 20261120-cyfer-v2)', async () => {
+    helpHttp.post.mockResolvedValue({ token: 'jwt-token', message: 'ok' });
+    await AuthService.login('alice', 'secret');
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+    Object.keys(localStorage).forEach((key) => {
+      localStorage.setItem(key, cyfer().cy('not json', set.salt));
+    });
+    expect(AuthService.getCurrentUser()).toBeNull();
+    expect(error).toHaveBeenCalled();
+    error.mockRestore();
   });
 });
 
